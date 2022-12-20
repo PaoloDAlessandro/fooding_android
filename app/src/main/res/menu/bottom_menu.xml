@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/homeButton"
+    android:title="home"
+    android:icon="@drawable/house_icon"
+    android:iconTint="@color/icon"
+    />
+
+<item
+    android:id="@+id/pantryButton"
+    android:title="pantry"
+    android:icon="@drawable/box_icon"
+    android:iconTint="@color/icon"
+    />
+
+<item
+    android:id="@+id/reciptsButton"
+    android:title="recipts"
+    android:icon="@drawable/utensils_icon"
+    android:iconTint="@color/icon"
+    />
+
+<item
+    android:id="@+id/userButton"
+    android:title="user"
+    android:icon="@drawable/user_icon"
+    android:iconTint="@color/icon"
+/>
+</menu>

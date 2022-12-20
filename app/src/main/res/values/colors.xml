@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="icon">#5F6178</color>
+    <color name="crema_carciofi">#418C43</color>
+    <color name="product_name">#080C2F</color>
+    <color name="product_marca">#5F627A</color>
+    <color name="background">#F8FAFF</color>
+    <color name="fragmentTitle">#454865</color>
+</resources>
