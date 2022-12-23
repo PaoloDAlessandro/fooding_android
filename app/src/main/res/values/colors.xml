@@ -9,8 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="icon">#5F6178</color>
     <color name="crema_carciofi">#418C43</color>
+    <color name="ragù_contadino">#AA3C24</color>
     <color name="product_name">#080C2F</color>
     <color name="product_marca">#5F627A</color>
     <color name="background">#F8FAFF</color>
+    <color name="primary">#51A8FF</color>
     <color name="fragmentTitle">#454865</color>
 </resources>

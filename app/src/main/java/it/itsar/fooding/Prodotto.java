@@ -65,4 +65,16 @@ public class Prodotto {
     public void setPreparazione(int preparazione) {
         this.preparazione = preparazione;
     }
+
+    @Override
+    public String toString() {
+        return "Prodotto{" +
+                "nome='" + nome + '\'' +
+                ", marca='" + marca + '\'' +
+                ", peso=" + peso +
+                ", giacenza=" + giacenza +
+                ", preparazione=" + preparazione +
+                ", image=" + image +
+                '}';
+    }
 }

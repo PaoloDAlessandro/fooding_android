@@ -22,15 +22,13 @@
             android:id="@+id/productImageCard"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:backgroundTint="@color/crema_carciofi"
             app:cardCornerRadius="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
 
                 <ImageView
                     android:id="@+id/productImage"
@@ -77,6 +75,7 @@
             android:layout_height="12dp"
             android:layout_marginTop="2dp"
             android:layout_marginRight="2dp"
+            app:tint="@color/product_name"
             android:src="@drawable/product_weight"
             android:layout_toEndOf="@id/productImageCard"
             android:layout_below="@id/productBrand"
@@ -98,6 +97,7 @@
             android:layout_height="12dp"
             android:src="@drawable/box_closed"
             android:layout_marginTop="2dp"
+            app:tint="@color/product_name"
             android:layout_marginRight="2dp"
             android:layout_toEndOf="@id/productWeight"
             android:layout_below="@id/productBrand"
@@ -119,6 +119,7 @@
             android:layout_height="12dp"
             android:src="@drawable/product_timer"
             android:layout_marginTop="2dp"
+            app:tint="@color/product_name"
             android:layout_marginRight="2dp"
             android:layout_toEndOf="@id/productStock"
             android:layout_below="@id/productBrand"

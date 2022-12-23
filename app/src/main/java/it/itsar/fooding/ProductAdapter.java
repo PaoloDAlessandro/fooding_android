@@ -1,5 +1,6 @@
 package it.itsar.fooding;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -34,6 +36,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return prodotti.length;
     }
 
+    public void setProdotti(Prodotto[] prodotti) {
+        this.prodotti = prodotti;
+    }
+
     static class ProductViewHolder extends RecyclerView.ViewHolder {
 
         private TextView productName;
@@ -42,6 +48,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         private TextView productStock;
         private TextView productWeight;
         private TextView productTimer;
+        private CardView imageCardView;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,6 +58,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productStock = itemView.findViewById(R.id.productStock);
             productWeight = itemView.findViewById(R.id.productWeight);
             productTimer = itemView.findViewById(R.id.productTimer);
+            imageCardView = itemView.findViewById(R.id.productImageCard);
         }
 
         void bind(Prodotto prodotto) {
