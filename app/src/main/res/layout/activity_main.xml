@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:name="it.itsar.fooding.Home"
-        />
+        tools:layout="@layout/fragment_pantry" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

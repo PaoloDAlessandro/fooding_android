@@ -1,12 +1,17 @@
 package it.itsar.fooding;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,9 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private Prodotto[] prodotti;
+    private Context context;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
-    public ProductAdapter(Prodotto[] prodotti) {
+    public ProductAdapter(Prodotto[] prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
         this.prodotti = prodotti;
+        this.context = context;
+        this.activityResultLauncher = activityResultLauncher;
     }
 
     @NonNull
@@ -40,7 +49,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.prodotti = prodotti;
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+     class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView productName;
         private TextView productBrand;
@@ -52,6 +61,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             productName = itemView.findViewById(R.id.productName);
             productBrand = itemView.findViewById(R.id.productBrand);
             productImage = itemView.findViewById(R.id.productImage);
@@ -61,6 +71,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             imageCardView = itemView.findViewById(R.id.productImageCard);
         }
 
+
         void bind(Prodotto prodotto) {
             productName.setText(prodotto.getNome());
             productBrand.setText(prodotto.getMarca());
@@ -68,6 +79,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productStock.setText(prodotto.getGiacenza() + "");
             productWeight.setText(prodotto.getPeso() + "g");
             productTimer.setText(prodotto.getPreparazione() + "min");
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = this.getAdapterPosition();
+            Prodotto prodotto = prodotti[position];
+            Intent intent = new Intent(context, ProductDetails.class);
+            intent.putExtra("prodotto", prodotto);
+            intent.putExtra("position", position);
+            activityResultLauncher.launch(intent);
         }
     }
 }

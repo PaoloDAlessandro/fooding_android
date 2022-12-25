@@ -1,30 +1,19 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:endX="85.84757"
-                android:endY="92.4963"
-                android:startX="42.9492"
-                android:startY="49.59793"
-                android:type="linear">
-                <item
-                    android:color="#44000000"
-                    android:offset="0.0" />
-                <item
-                    android:color="#00000000"
-                    android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
-    <path
-        android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
-        android:strokeWidth="1"
-        android:strokeColor="#00000000" />
-</vector>
+<?xml version="1.0" standalone="no"?>
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+    width="436.000000pt" height="437.000000pt" viewBox="0 0 436.000000 437.000000"
+    preserveAspectRatio="xMidYMid meet">
+
+    <g transform="translate(0.000000,437.000000) scale(0.100000,-0.100000)"
+        fill="#000000" stroke="none">
+        <path d="M410 4359 c-143 -23 -287 -134 -354 -271 -75 -154 -75 -372 0 -526
+69 -142 211 -248 364 -272 42 -6 667 -10 1770 -10 1443 0 1715 3 1773 15 196
+41 355 208 387 405 32 207 -15 391 -132 512 -59 61 -116 97 -204 130 l-59 23
+-1745 1 c-989 1 -1769 -2 -1800 -7z"/>
+        <path d="M369 2736 c-111 -31 -238 -126 -295 -222 -62 -105 -89 -279 -64 -422
+18 -106 75 -216 148 -284 65 -60 161 -110 240 -127 75 -15 2400 -15 2474 0
+169 35 310 161 370 331 18 53 22 84 21 198 0 181 -18 246 -93 339 -82 103
+-163 157 -275 187 -71 19 -2457 19 -2526 0z"/>
+        <path d="M411 1089 c-84 -14 -193 -72 -260 -137 -202 -199 -204 -586 -3 -791
+200 -203 586 -203 793 -1 156 153 197 445 93 659 -105 215 -340 317 -623 270z"/>
+    </g>
+</svg>
