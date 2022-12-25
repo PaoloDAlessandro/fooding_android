@@ -10,8 +10,9 @@ public class Prodotto implements Serializable {
     private int giacenza;
     private int preparazione;
     private int image;
+    private ValoriNutrizionali valoriNutrizionali;
 
-
+/*
     public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, int image) {
         this.nome = nome;
         this.marca = marca;
@@ -20,6 +21,19 @@ public class Prodotto implements Serializable {
         this.giacenza = giacenza;
         this.preparazione = preparazione;
         this.image = image;
+    }
+
+ */
+
+    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, int image, ValoriNutrizionali valoriNutrizionali) {
+        this.nome = nome;
+        this.marca = marca;
+        this.ingredienti = ingredienti;
+        this.peso = peso;
+        this.giacenza = giacenza;
+        this.preparazione = preparazione;
+        this.image = image;
+        this.valoriNutrizionali = valoriNutrizionali;
     }
 
     public String getNome() {
@@ -88,5 +102,13 @@ public class Prodotto implements Serializable {
 
     public void setIngredienti(String ingredienti) {
         this.ingredienti = ingredienti;
+    }
+
+    public ValoriNutrizionali getValoriNutrizionali() {
+        return valoriNutrizionali;
+    }
+
+    public void setValoriNutrizionali(ValoriNutrizionali valoriNutrizionali) {
+        this.valoriNutrizionali = valoriNutrizionali;
     }
 }

@@ -25,6 +25,25 @@ public class ProductDetails extends AppCompatActivity {
     private Button increaseStock;
     private Button decreaseStock;
     private Prodotto prodotto;
+    private TextView productEnergiaValue;
+    private TextView productEnergiaAR;
+    private TextView productEnergiaValue2;
+    private TextView productGrassiValue;
+    private TextView productGrassiAR;
+    private TextView productGrassiSaturiAR;
+    private TextView productGrassiSaturiValue;
+    private TextView productCarboidratiValue;
+    private TextView getProductCarboidratiAR;
+    private TextView getProductZuccheriValue;
+    private TextView getProductZuccheriAR;
+    private TextView getProductFibreValue;
+    private TextView getProductFibreAR;
+    private TextView getProductProteineValue;
+    private TextView getProductProteineAR;
+    private TextView getProductSaleValue;
+    private TextView getProductSaleAR;
+
+
     private Intent resultIntent = new Intent();
 
     @Override
@@ -75,6 +94,23 @@ public class ProductDetails extends AppCompatActivity {
         productStock = findViewById(R.id.productStock);
         increaseStock = findViewById(R.id.increaseStockButton);
         decreaseStock = findViewById(R.id.decreaseStockButton);
+        productEnergiaValue = findViewById(R.id.productEnergiaValue);
+        productEnergiaValue2 = findViewById(R.id.productEnergiaValue2);
+        productEnergiaAR = findViewById(R.id.productEnergiaAR);
+        productGrassiValue = findViewById(R.id.productGrassiValue);
+        productGrassiAR = findViewById(R.id.productGrassiAR);
+        productGrassiSaturiValue = findViewById(R.id.productGrassiSaturiValue);
+        productGrassiSaturiAR = findViewById(R.id.productGrassiSaturiAR);
+        productCarboidratiValue = findViewById(R.id.productCarboidratiValue);
+        getProductCarboidratiAR = findViewById(R.id.productCarboidratiAR);
+        getProductZuccheriValue = findViewById(R.id.productZuccheriValue);
+        getProductZuccheriAR = findViewById(R.id.productZuccheriAR);
+        getProductFibreValue = findViewById(R.id.productFibreValue);
+        getProductFibreAR = findViewById(R.id.productFibreAR);
+        getProductProteineValue = findViewById(R.id.productProteineValue);
+        getProductProteineAR = findViewById(R.id.productFibreAR);
+        getProductSaleValue = findViewById(R.id.productSaleValue);
+        getProductSaleAR = findViewById(R.id.productSaleAR);
     }
 
     void xmlPopulation() {
@@ -83,5 +119,8 @@ public class ProductDetails extends AppCompatActivity {
         productIngredienti.setText(prodotto.getIngredienti());
         productStock.setText("In stock: " + prodotto.getGiacenza());
         productImage.setImageResource(prodotto.getImage());
+        productEnergiaValue.setText(prodotto.getValoriNutrizionali().getEnergia() + "kj");
+        productEnergiaAR.setText(prodotto.getValoriNutrizionali().getEnergiaAR() + "%");
+        productEnergiaValue2.setText(prodotto.getValoriNutrizionali().convertToKcal() + "kcal");
     }
 }
