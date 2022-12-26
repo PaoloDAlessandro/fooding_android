@@ -130,6 +130,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:cardCornerRadius="20dp"
         android:elevation="4dp"
+        android:layout_marginBottom="200dp"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="-20dp"
         app:layout_constraintTop_toBottomOf="@id/valoriNutrizionaliContainer">
@@ -146,7 +147,7 @@
                 <TextView
                     android:text="Porzione"
                     android:textColor="@color/product_marca"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     />
 
                 <TextView
@@ -158,6 +159,7 @@
                     />
             </TableRow>
             <View
+                android:alpha="0.4"
                 android:layout_height="1dip"
                 android:background="#FF909090" />
 
@@ -180,16 +182,17 @@
 
             <View
                 android:layout_height="1dip"
+                android:alpha="0.4"
                 android:background="#FF909090" />
 
             <TableRow>
                 <TextView
                     android:text="Energia"
                     android:textColor="@color/product_marca"
-                    android:fontFamily="@font/poppins"/>
+                    android:fontFamily="@font/poppins_medium"/>
                 <TextView
                     android:id="@+id/productEnergiaValue"
-                    tools:text="724kj"
+                    tools:text="0kj"
                     android:layout_column="1"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -197,7 +200,7 @@
 
                 <TextView
                     android:id="@+id/productEnergiaAR"
-                    tools:text="9%"
+                    tools:text="0%"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/product_marca"/>
@@ -206,8 +209,9 @@
             <TableRow>
                 <TextView
                     android:id="@+id/productEnergiaValue2"
-                    tools:text="173 Kcal"
+                    tools:text="0Kcal"
                     android:fontFamily="@font/poppins"
+                    android:textColor="@color/product_marca"
                     android:gravity="right"
                     android:layout_column="1"
                     />
@@ -215,17 +219,18 @@
 
             <View
                 android:layout_height="1dip"
+                android:alpha="0.4"
                 android:background="#FF909090" />
 
             <TableRow>
                 <TextView
                     android:text="Grassi"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/product_marca"/>
 
                 <TextView
                     android:id="@+id/productGrassiValue"
-                    android:text="11,00g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:fontFamily="@font/poppins"
                     android:layout_gravity="right"
@@ -233,7 +238,7 @@
 
                 <TextView
                     android:id="@+id/productGrassiAR"
-                    android:text="16%"
+                    android:text="0%"
                     android:layout_column="2"
                     android:fontFamily="@font/poppins"
                     android:layout_gravity="right"
@@ -250,7 +255,7 @@
 
                 <TextView
                     android:id="@+id/productGrassiSaturiValue"
-                    android:text="6,3g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -258,7 +263,7 @@
 
                 <TextView
                     android:id="@+id/productGrassiSaturiAR"
-                    android:text="32%"
+                    android:text="0%"
                     android:layout_column="2"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -267,17 +272,18 @@
 
             <View
                 android:layout_height="1dip"
+                android:alpha="0.4"
                 android:background="#FF909090" />
 
             <TableRow>
                 <TextView
                     android:text="Carboidrati"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/product_marca"/>
 
                 <TextView
                     android:id="@+id/productCarboidratiValue"
-                    android:text="17,00g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -285,7 +291,7 @@
 
                 <TextView
                     android:id="@+id/productCarboidratiAR"
-                    android:text="7%"
+                    android:text="0%"
                     android:layout_column="2"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -302,7 +308,7 @@
 
                 <TextView
                     android:id="@+id/productZuccheriValue"
-                    android:text="1,3g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -310,7 +316,7 @@
 
                 <TextView
                     android:id="@+id/productZuccheriAR"
-                    android:text="1%"
+                    android:text="0%"
                     android:layout_column="2"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -319,17 +325,18 @@
 
             <View
                 android:layout_height="1dip"
+                android:alpha="0.4"
                 android:background="#FF909090" />
 
             <TableRow>
                 <TextView
                     android:text="Fibre"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/product_marca"/>
 
                 <TextView
                     android:id="@+id/productFibreValue"
-                    android:text="1,3g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:layout_gravity="right"
                     android:fontFamily="@font/poppins"
@@ -347,17 +354,18 @@
 
             <View
                 android:layout_height="1dip"
+                android:alpha="0.4"
                 android:background="#FF909090" />
 
             <TableRow>
                 <TextView
                     android:text="Proteine"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/product_marca"/>
 
                 <TextView
                     android:id="@+id/productProteineValue"
-                    android:text="2,5g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:fontFamily="@font/poppins"
                     android:layout_gravity="right"
@@ -365,7 +373,7 @@
 
                 <TextView
                     android:id="@+id/productProteineAR"
-                    android:text="5%"
+                    android:text="0%"
                     android:layout_column="2"
                     android:fontFamily="@font/poppins"
                     android:layout_gravity="right"
@@ -375,17 +383,18 @@
 
             <View
                 android:layout_height="1dip"
+                android:alpha="0.4"
                 android:background="#FF909090" />
 
-            <TableRow>
+            <TableRow android:paddingBottom="10dp">
                 <TextView
                     android:text="Sale"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/product_marca"/>
 
                 <TextView
                     android:id="@+id/productSaleValue"
-                    android:text="0,00g"
+                    android:text="0g"
                     android:layout_column="1"
                     android:fontFamily="@font/poppins"
                     android:layout_gravity="right"
@@ -422,6 +431,11 @@
             android:text="Valori nutrizionali"
             android:textColor="@color/white" />
     </androidx.cardview.widget.CardView>
+
+            <View
+                app:layout_constraintTop_toBottomOf="@id/valoriNutrizionaliLabel"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

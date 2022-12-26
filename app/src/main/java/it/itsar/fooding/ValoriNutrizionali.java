@@ -4,24 +4,24 @@ import java.io.Serializable;
 
 public class ValoriNutrizionali implements Serializable {
     private double energia; //espressa in kj e convertita in kcal tramite convertToKcal() method
-    private int energiaAR;
+    private double energiaAR;
     private double grassi;
-    private int grassiAR;
+    private double grassiAR;
     private double grassiSaturi;
-    private int grassiSaturiAR;
+    private double grassiSaturiAR;
     private double carboidrati;
-    private int carboidratiAR;
+    private double carboidratiAR;
     private double zuccheri;
-    private int zuccheriAR;
+    private double zuccheriAR;
     private double fibre;
-    private int fibreAR;
+    private double fibreAR;
     private double proteine;
-    private int proteineAR;
+    private double proteineAR;
     private double sale;
-    private int saleAR;
+    private double saleAR;
 
 
-    public ValoriNutrizionali(double energia, int energiaAR, double grassi, int grassiAR, double grassiSaturi, int grassiSaturiAR, double carboidrati, int carboidratiAR, double zuccheri, int zuccheriAR, double fibre, int fibreAR, double proteine, int proteineAR, double sale, int saleAR) {
+    public ValoriNutrizionali(double energia, double energiaAR, double grassi, double grassiAR, double grassiSaturi, double grassiSaturiAR, double carboidrati, double carboidratiAR, double zuccheri, double zuccheriAR, double fibre, double fibreAR, double proteine, double proteineAR, double sale, double saleAR) {
         this.energia = energia;
         this.energiaAR = energiaAR;
         this.grassi = grassi;
@@ -40,6 +40,11 @@ public class ValoriNutrizionali implements Serializable {
         this.saleAR = saleAR;
     }
 
+
+    public int convertToKcal() {
+        return (int) ((int) energia / 4.184);
+    }
+
     public double getEnergia() {
         return energia;
     }
@@ -48,11 +53,11 @@ public class ValoriNutrizionali implements Serializable {
         this.energia = energia;
     }
 
-    public int getEnergiaAR() {
+    public double getEnergiaAR() {
         return energiaAR;
     }
 
-    public void setEnergiaAR(int energiaAR) {
+    public void setEnergiaAR(double energiaAR) {
         this.energiaAR = energiaAR;
     }
 
@@ -64,11 +69,11 @@ public class ValoriNutrizionali implements Serializable {
         this.grassi = grassi;
     }
 
-    public int getGrassiAR() {
+    public double getGrassiAR() {
         return grassiAR;
     }
 
-    public void setGrassiAR(int grassiAR) {
+    public void setGrassiAR(double grassiAR) {
         this.grassiAR = grassiAR;
     }
 
@@ -80,11 +85,11 @@ public class ValoriNutrizionali implements Serializable {
         this.grassiSaturi = grassiSaturi;
     }
 
-    public int getGrassiSaturiAR() {
+    public double getGrassiSaturiAR() {
         return grassiSaturiAR;
     }
 
-    public void setGrassiSaturiAR(int grassiSaturiAR) {
+    public void setGrassiSaturiAR(double grassiSaturiAR) {
         this.grassiSaturiAR = grassiSaturiAR;
     }
 
@@ -96,11 +101,11 @@ public class ValoriNutrizionali implements Serializable {
         this.carboidrati = carboidrati;
     }
 
-    public int getCarboidratiAR() {
+    public double getCarboidratiAR() {
         return carboidratiAR;
     }
 
-    public void setCarboidratiAR(int carboidratiAR) {
+    public void setCarboidratiAR(double carboidratiAR) {
         this.carboidratiAR = carboidratiAR;
     }
 
@@ -112,6 +117,14 @@ public class ValoriNutrizionali implements Serializable {
         this.zuccheri = zuccheri;
     }
 
+    public double getZuccheriAR() {
+        return zuccheriAR;
+    }
+
+    public void setZuccheriAR(double zuccheriAR) {
+        this.zuccheriAR = zuccheriAR;
+    }
+
     public double getFibre() {
         return fibre;
     }
@@ -120,11 +133,11 @@ public class ValoriNutrizionali implements Serializable {
         this.fibre = fibre;
     }
 
-    public int getFibreAR() {
+    public double getFibreAR() {
         return fibreAR;
     }
 
-    public void setFibreAR(int fibreAR) {
+    public void setFibreAR(double fibreAR) {
         this.fibreAR = fibreAR;
     }
 
@@ -136,11 +149,11 @@ public class ValoriNutrizionali implements Serializable {
         this.proteine = proteine;
     }
 
-    public int getProteineAR() {
+    public double getProteineAR() {
         return proteineAR;
     }
 
-    public void setProteineAR(int proteineAR) {
+    public void setProteineAR(double proteineAR) {
         this.proteineAR = proteineAR;
     }
 
@@ -152,23 +165,11 @@ public class ValoriNutrizionali implements Serializable {
         this.sale = sale;
     }
 
-    public int getSaleAR() {
+    public double getSaleAR() {
         return saleAR;
     }
 
-    public void setSaleAR(int saleAR) {
+    public void setSaleAR(double saleAR) {
         this.saleAR = saleAR;
-    }
-
-    public int getZuccheriAR() {
-        return zuccheriAR;
-    }
-
-    public void setZuccheriAR(int zuccheriAR) {
-        this.zuccheriAR = zuccheriAR;
-    }
-
-    public int convertToKcal() {
-        return (int) ((int) energia / 4.184);
     }
 }

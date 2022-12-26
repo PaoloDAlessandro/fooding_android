@@ -117,7 +117,7 @@
             android:id="@+id/productTimerImage"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:src="@drawable/product_timer"
+            android:src="@drawable/calendar_expiration_date_v2"
             android:layout_marginTop="2dp"
             app:tint="@color/product_name"
             android:layout_marginRight="2dp"
@@ -126,7 +126,7 @@
             />
 
         <TextView
-            android:id="@+id/productTimer"
+            android:id="@+id/productExpirationDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/productBrand"

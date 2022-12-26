@@ -33,15 +33,15 @@ public class ProductDetails extends AppCompatActivity {
     private TextView productGrassiSaturiAR;
     private TextView productGrassiSaturiValue;
     private TextView productCarboidratiValue;
-    private TextView getProductCarboidratiAR;
-    private TextView getProductZuccheriValue;
-    private TextView getProductZuccheriAR;
-    private TextView getProductFibreValue;
-    private TextView getProductFibreAR;
-    private TextView getProductProteineValue;
-    private TextView getProductProteineAR;
-    private TextView getProductSaleValue;
-    private TextView getProductSaleAR;
+    private TextView productCarboidratiAR;
+    private TextView productZuccheriValue;
+    private TextView productZuccheriAR;
+    private TextView productFibreValue;
+    private TextView productFibreAR;
+    private TextView productProteineValue;
+    private TextView productProteineAR;
+    private TextView productSaleValue;
+    private TextView productSaleAR;
 
 
     private Intent resultIntent = new Intent();
@@ -102,15 +102,15 @@ public class ProductDetails extends AppCompatActivity {
         productGrassiSaturiValue = findViewById(R.id.productGrassiSaturiValue);
         productGrassiSaturiAR = findViewById(R.id.productGrassiSaturiAR);
         productCarboidratiValue = findViewById(R.id.productCarboidratiValue);
-        getProductCarboidratiAR = findViewById(R.id.productCarboidratiAR);
-        getProductZuccheriValue = findViewById(R.id.productZuccheriValue);
-        getProductZuccheriAR = findViewById(R.id.productZuccheriAR);
-        getProductFibreValue = findViewById(R.id.productFibreValue);
-        getProductFibreAR = findViewById(R.id.productFibreAR);
-        getProductProteineValue = findViewById(R.id.productProteineValue);
-        getProductProteineAR = findViewById(R.id.productFibreAR);
-        getProductSaleValue = findViewById(R.id.productSaleValue);
-        getProductSaleAR = findViewById(R.id.productSaleAR);
+        productCarboidratiAR = findViewById(R.id.productCarboidratiAR);
+        productZuccheriValue = findViewById(R.id.productZuccheriValue);
+        productZuccheriAR = findViewById(R.id.productZuccheriAR);
+        productFibreValue = findViewById(R.id.productFibreValue);
+        productFibreAR = findViewById(R.id.productFibreAR);
+        productProteineValue = findViewById(R.id.productProteineValue);
+        productProteineAR = findViewById(R.id.productFibreAR);
+        productSaleValue = findViewById(R.id.productSaleValue);
+        productSaleAR = findViewById(R.id.productSaleAR);
     }
 
     void xmlPopulation() {
@@ -122,5 +122,20 @@ public class ProductDetails extends AppCompatActivity {
         productEnergiaValue.setText(prodotto.getValoriNutrizionali().getEnergia() + "kj");
         productEnergiaAR.setText(prodotto.getValoriNutrizionali().getEnergiaAR() + "%");
         productEnergiaValue2.setText(prodotto.getValoriNutrizionali().convertToKcal() + "kcal");
+        productGrassiValue.setText(prodotto.getValoriNutrizionali().getGrassi() + "g");
+        productGrassiAR.setText(prodotto.getValoriNutrizionali().getGrassiAR() + "%");
+        productGrassiSaturiValue.setText(prodotto.getValoriNutrizionali().getGrassiSaturi() + "g");
+        productGrassiSaturiAR.setText(prodotto.getValoriNutrizionali().getGrassiSaturiAR() + "%");
+        productCarboidratiValue.setText(prodotto.getValoriNutrizionali().getCarboidrati() + "g");
+        productCarboidratiAR.setText(prodotto.getValoriNutrizionali().getCarboidratiAR() + "%");
+        productZuccheriValue.setText(prodotto.getValoriNutrizionali().getZuccheri() + "g");
+        productZuccheriAR.setText(prodotto.getValoriNutrizionali().getZuccheriAR() + "%");
+        productFibreValue.setText(prodotto.getValoriNutrizionali().getFibre() + "g");
+        productFibreAR.setText(prodotto.getValoriNutrizionali().getFibreAR() + "%");
+        productProteineValue.setText(prodotto.getValoriNutrizionali().getProteine() + "g");
+        productProteineAR.setText(prodotto.getValoriNutrizionali().getProteineAR() + "%");
+        productSaleValue.setText(prodotto.getValoriNutrizionali().getSale() + "g");
+        productSaleAR.setText(prodotto.getValoriNutrizionali().getSaleAR() + "%");
+
     }
 }

@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.format.DateTimeFormatter;
+
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private Prodotto[] prodotti;
@@ -56,7 +58,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         private ImageView productImage;
         private TextView productStock;
         private TextView productWeight;
-        private TextView productTimer;
+        private TextView productExpirationDate;
         private CardView imageCardView;
 
         public ProductViewHolder(@NonNull View itemView) {
@@ -67,7 +69,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productImage = itemView.findViewById(R.id.productImage);
             productStock = itemView.findViewById(R.id.productStock);
             productWeight = itemView.findViewById(R.id.productWeight);
-            productTimer = itemView.findViewById(R.id.productTimer);
+            productExpirationDate = itemView.findViewById(R.id.productExpirationDate);
             imageCardView = itemView.findViewById(R.id.productImageCard);
         }
 
@@ -78,7 +80,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productImage.setImageResource(prodotto.getImage());
             productStock.setText(prodotto.getGiacenza() + "");
             productWeight.setText(prodotto.getPeso() + "g");
-            productTimer.setText(prodotto.getPreparazione() + "min");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                productExpirationDate.setText(prodotto.getDataScadenza().format(dateTimeFormatter));
+            }
+            imageCardView.setBackgroundColor(prodotto.getColore());
         }
 
         @Override

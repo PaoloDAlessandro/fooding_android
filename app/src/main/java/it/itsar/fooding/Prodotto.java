@@ -1,6 +1,7 @@
 package it.itsar.fooding;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Prodotto implements Serializable {
     private String nome;
@@ -9,30 +10,21 @@ public class Prodotto implements Serializable {
     private int peso;
     private int giacenza;
     private int preparazione;
+    private LocalDate dataScadenza;
     private int image;
+    private int colore;
     private ValoriNutrizionali valoriNutrizionali;
 
-/*
-    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, int image) {
+    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, LocalDate dataScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
         this.nome = nome;
         this.marca = marca;
         this.ingredienti = ingredienti;
         this.peso = peso;
         this.giacenza = giacenza;
         this.preparazione = preparazione;
+        this.dataScadenza = dataScadenza;
         this.image = image;
-    }
-
- */
-
-    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, int image, ValoriNutrizionali valoriNutrizionali) {
-        this.nome = nome;
-        this.marca = marca;
-        this.ingredienti = ingredienti;
-        this.peso = peso;
-        this.giacenza = giacenza;
-        this.preparazione = preparazione;
-        this.image = image;
+        this.colore = colore;
         this.valoriNutrizionali = valoriNutrizionali;
     }
 
@@ -110,5 +102,21 @@ public class Prodotto implements Serializable {
 
     public void setValoriNutrizionali(ValoriNutrizionali valoriNutrizionali) {
         this.valoriNutrizionali = valoriNutrizionali;
+    }
+
+    public int getColore() {
+        return colore;
+    }
+
+    public void setColore(int colore) {
+        this.colore = colore;
+    }
+
+    public LocalDate getDataScadenza() {
+        return dataScadenza;
+    }
+
+    public void setDataScadenza(LocalDate dataScadenza) {
+        this.dataScadenza = dataScadenza;
     }
 }
