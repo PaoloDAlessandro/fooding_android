@@ -15,11 +15,14 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.time.format.DateTimeFormatter;
+
 public class ProductDetails extends AppCompatActivity {
 
     private TextView productName;
     private ImageView productImage;
     private TextView productBrand;
+    private TextView productExpirationDate;
     private TextView productIngredienti;
     private TextView productStock;
     private Button increaseStock;
@@ -90,6 +93,7 @@ public class ProductDetails extends AppCompatActivity {
         productName = findViewById(R.id.productName);
         productImage = findViewById(R.id.productImage);
         productBrand = findViewById(R.id.productBrand);
+        productExpirationDate = findViewById(R.id.productExpirationDate);
         productIngredienti = findViewById(R.id.productIngredienti);
         productStock = findViewById(R.id.productStock);
         increaseStock = findViewById(R.id.increaseStockButton);
@@ -116,6 +120,10 @@ public class ProductDetails extends AppCompatActivity {
     void xmlPopulation() {
         productName.setText(prodotto.getNome());
         productBrand.setText(prodotto.getMarca());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            productExpirationDate.setText(prodotto.getDataScadenza().format(dateTimeFormatter));
+        }
         productIngredienti.setText(prodotto.getIngredienti());
         productStock.setText("In stock: " + prodotto.getGiacenza());
         productImage.setImageResource(prodotto.getImage());

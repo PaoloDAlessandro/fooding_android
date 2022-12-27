@@ -2,6 +2,7 @@ package it.itsar.fooding;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -9,8 +10,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,15 +17,16 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Pantry extends Fragment {
@@ -35,6 +35,9 @@ public class Pantry extends Fragment {
 
     public MyProperties myProperties = MyProperties.getInstance();
     private Prodotto[] prodotti = myProperties.getProdotti();
+    private Spinner productFilter;
+
+    private int filterMode;
 
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -66,7 +69,32 @@ public class Pantry extends Fragment {
         productAdapter = new ProductAdapter(prodotti, getContext(), activityLauncher);
         searchProduct = view.findViewById(R.id.searchProduct);
         recyclerView = view.findViewById(R.id.productsRecyclerView);
+        productFilter = view.findViewById(R.id.productFilter);
         recyclerView.setAdapter(productAdapter);
+
+        filterByExpiration();
+
+        List<Integer> productFilterItems = new ArrayList<>();
+        productFilterItems.add(R.drawable.calendar_expiration_date);
+        productFilterItems.add(R.drawable.box_closed);
+        productFilterItems.add(R.drawable.alphabeth_a_z);
+        FilterItemAdapter adapter = new FilterItemAdapter(getContext(), R.layout.filter_spinner_item, productFilterItems);
+
+        adapter.setDropDownViewResource(R.layout.filter_spinner_item);
+        productFilter.setAdapter(adapter);
+        productFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filterMode = adapter.getItem(i);
+                filterProductsManager();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         searchProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -76,14 +104,7 @@ public class Pantry extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<Prodotto> prodottiFiltered = Arrays.asList(prodotti);
-                prodottiFiltered = prodottiFiltered.stream()
-                        .filter(prodotto -> prodotto.getNome().toLowerCase().contains(charSequence.toString().toLowerCase()))
-                        .collect(Collectors.toList());
-                Log.d("Input: ", charSequence.toString());
-                Log.d("Filtered product: ", prodottiFiltered.toString());
-                productAdapter.setProdotti(prodottiFiltered.toArray(new Prodotto[prodottiFiltered.size()]));
-                recyclerView.setAdapter(productAdapter);
+                filterInputProductManager(charSequence);
             }
 
             @Override
@@ -92,29 +113,86 @@ public class Pantry extends Fragment {
         });
     }
 
+
+    void filterInputProductManager(CharSequence charSequence) {
+        List<Prodotto> prodottiFiltered = Arrays.asList(prodotti);
+        prodottiFiltered = prodottiFiltered.stream()
+                .filter(prodotto -> prodotto.getNome().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                .collect(Collectors.toList());
+        Log.d("Input: ", charSequence.toString());
+        Log.d("Filtered product: ", prodottiFiltered.toString());
+        productAdapter.setProdotti(prodottiFiltered.toArray(new Prodotto[0]));
+        recyclerView.setAdapter(productAdapter);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if(!searchProduct.getText().toString().equals("")) {
-            List<Prodotto> prodottiFiltered = Arrays.asList(prodotti);
-            prodottiFiltered = prodottiFiltered.stream()
-                    .filter(prodotto -> prodotto.getNome().toLowerCase().contains(searchProduct.getText().toString().toLowerCase()))
-                    .collect(Collectors.toList());
-            Log.d("Input: ", searchProduct.getText().toString());
-            Log.d("Filtered product: ", prodottiFiltered.toString());
-            productAdapter.setProdotti(prodottiFiltered.toArray(new Prodotto[prodottiFiltered.size()]));
-            recyclerView.setAdapter(productAdapter);
+            filterInputProductManager(searchProduct.getText());
         }
+    }
+
+
+    void filterByExpiration() {
+        List<Prodotto> prodottiDaOrdinare = Arrays.asList(prodotti);
+
+        prodottiDaOrdinare.sort((p1, p2) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return p1.getDataScadenza().compareTo(p2.getDataScadenza());
+            }
+            return 0;
+        });
+
+        productAdapter.setProdotti(prodottiDaOrdinare.toArray(new Prodotto[0]));
+        recyclerView.setAdapter(productAdapter);
+    }
+
+    void filterByAlphabet() {
+        List<Prodotto> prodottiDaOrdinare = Arrays.asList(prodotti);
+
+        prodottiDaOrdinare.sort(Comparator.comparing(Prodotto::getNome));
+
+        productAdapter.setProdotti(prodottiDaOrdinare.toArray(new Prodotto[0]));
+        recyclerView.setAdapter(productAdapter);
+
+    }
+
+    void filterByStock() {
+        List<Prodotto> prodottiDaOrdinare = Arrays.asList(prodotti);
+
+        prodottiDaOrdinare.sort((p1, p2) -> p2.getGiacenza() - p1.getGiacenza());
+
+        productAdapter.setProdotti(prodottiDaOrdinare.toArray(new Prodotto[0]));
+        recyclerView.setAdapter(productAdapter);
+
     }
 
     void updateRecycleView(ActivityResult result) {
         Intent intent = result.getData();
+        assert intent != null;
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         int position = intent.getIntExtra("position", 0);
         prodotti[position].setGiacenza(prodotto.getGiacenza());
         productAdapter.setProdotti(prodotti);
         recyclerView.setAdapter(productAdapter);
+        filterProductsManager();
+    }
 
+    void filterProductsManager() {
+        switch (filterMode) {
+            case (R.drawable.calendar_expiration_date):
+                filterByExpiration();
+                break;
+
+            case (R.drawable.box_closed):
+                filterByStock();
+                break;
+
+            case (R.drawable.alphabeth_a_z):
+                filterByAlphabet();
+                break;
+        }
     }
 
 }
