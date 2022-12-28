@@ -53,7 +53,6 @@ public class ProductDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
-        setTitle("My pantry");
         xmlElementsInit();
         int position = getIntent().getIntExtra("position", 0);
         resultIntent.putExtra("position", position);

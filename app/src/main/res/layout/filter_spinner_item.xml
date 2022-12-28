@@ -7,8 +7,8 @@
     android:layout_height="match_parent">
 <ImageView
     android:id="@+id/spinnerItemImage"
-    android:layout_height="30dp"
-    android:layout_width="30dp"
+    android:layout_height="20dp"
+    android:layout_width="20dp"
     android:layout_margin="10dp"
     tools:src="@drawable/calendar_expiration_date_v2"
     app:layout_constraintTop_toTopOf="parent"

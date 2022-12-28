@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -34,10 +35,13 @@ public class Pantry extends Fragment {
     private RecyclerView recyclerView;
 
     public MyProperties myProperties = MyProperties.getInstance();
-    private Prodotto[] prodotti = myProperties.getProdotti();
+    private Prodotto[] prodotti = myProperties.getUserProdotti().toArray(new Prodotto[0]);
     private Spinner productFilter;
+    private Button addProductButton;
 
     private int filterMode;
+    private ProductAdapter productAdapter;
+    private EditText searchProduct;
 
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -53,8 +57,6 @@ public class Pantry extends Fragment {
             }
     );
 
-    private ProductAdapter productAdapter;
-    private EditText searchProduct;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,9 +72,11 @@ public class Pantry extends Fragment {
         searchProduct = view.findViewById(R.id.searchProduct);
         recyclerView = view.findViewById(R.id.productsRecyclerView);
         productFilter = view.findViewById(R.id.productFilter);
+        addProductButton = view.findViewById(R.id.addProductButton);
         recyclerView.setAdapter(productAdapter);
 
         filterByExpiration();
+        setAddProductButtonTouchListener();
 
         List<Integer> productFilterItems = new ArrayList<>();
         productFilterItems.add(R.drawable.calendar_expiration_date);
@@ -193,6 +197,13 @@ public class Pantry extends Fragment {
                 filterByAlphabet();
                 break;
         }
+    }
+
+    void setAddProductButtonTouchListener() {
+        addProductButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), ProductAddition.class);
+            activityLauncher.launch(intent);
+        });
     }
 
 }

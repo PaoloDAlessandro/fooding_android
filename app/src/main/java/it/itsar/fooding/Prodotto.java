@@ -78,14 +78,7 @@ public class Prodotto implements Serializable {
 
     @Override
     public String toString() {
-        return "Prodotto{" +
-                "nome='" + nome + '\'' +
-                ", marca='" + marca + '\'' +
-                ", peso=" + peso +
-                ", giacenza=" + giacenza +
-                ", preparazione=" + preparazione +
-                ", image=" + image +
-                '}';
+        return getNome();
     }
 
     public String getIngredienti() {
