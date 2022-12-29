@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Pantry">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,13 +80,13 @@
         <androidx.cardview.widget.CardView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:backgroundTint="@color/product_name"
-            android:layout_marginBottom="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/product_name"
+            app:cardCornerRadius="75dp"
             app:cardElevation="4dp"
-            app:cardCornerRadius="75dp">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <Button
                 android:id="@+id/addProductButton"
@@ -95,8 +95,7 @@
                 android:backgroundTint="@color/product_name"
                 android:text="+"
                 android:textSize="20dp"
-                android:translationY="-1dp"
-                />
+                android:translationY="-1dp" />
 
         </androidx.cardview.widget.CardView>
 

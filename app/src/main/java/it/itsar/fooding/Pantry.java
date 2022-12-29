@@ -35,7 +35,7 @@ public class Pantry extends Fragment {
     private RecyclerView recyclerView;
 
     public MyProperties myProperties = MyProperties.getInstance();
-    private Prodotto[] prodotti = myProperties.getUserProdotti().toArray(new Prodotto[0]);
+    private ArrayList<Prodotto> prodotti = myProperties.getUserProdotti();
     private Spinner productFilter;
     private Button addProductButton;
 
@@ -119,13 +119,13 @@ public class Pantry extends Fragment {
 
 
     void filterInputProductManager(CharSequence charSequence) {
-        List<Prodotto> prodottiFiltered = Arrays.asList(prodotti);
-        prodottiFiltered = prodottiFiltered.stream()
+        ArrayList<Prodotto> prodottiFiltered = prodotti;
+        prodottiFiltered = (ArrayList<Prodotto>) prodottiFiltered.stream()
                 .filter(prodotto -> prodotto.getNome().toLowerCase().contains(charSequence.toString().toLowerCase()))
                 .collect(Collectors.toList());
         Log.d("Input: ", charSequence.toString());
         Log.d("Filtered product: ", prodottiFiltered.toString());
-        productAdapter.setProdotti(prodottiFiltered.toArray(new Prodotto[0]));
+        productAdapter.setProdotti(prodottiFiltered);
         recyclerView.setAdapter(productAdapter);
     }
 
@@ -135,11 +135,14 @@ public class Pantry extends Fragment {
         if(!searchProduct.getText().toString().equals("")) {
             filterInputProductManager(searchProduct.getText());
         }
+        productAdapter.setProdotti(myProperties.getUserProdotti());
+        recyclerView.setAdapter(productAdapter);
+        filterProductsManager();
     }
 
 
     void filterByExpiration() {
-        List<Prodotto> prodottiDaOrdinare = Arrays.asList(prodotti);
+        ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
 
         prodottiDaOrdinare.sort((p1, p2) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -148,26 +151,26 @@ public class Pantry extends Fragment {
             return 0;
         });
 
-        productAdapter.setProdotti(prodottiDaOrdinare.toArray(new Prodotto[0]));
+        productAdapter.setProdotti(prodottiDaOrdinare);
         recyclerView.setAdapter(productAdapter);
     }
 
     void filterByAlphabet() {
-        List<Prodotto> prodottiDaOrdinare = Arrays.asList(prodotti);
+        ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
 
         prodottiDaOrdinare.sort(Comparator.comparing(Prodotto::getNome));
 
-        productAdapter.setProdotti(prodottiDaOrdinare.toArray(new Prodotto[0]));
+        productAdapter.setProdotti(prodottiDaOrdinare);
         recyclerView.setAdapter(productAdapter);
 
     }
 
     void filterByStock() {
-        List<Prodotto> prodottiDaOrdinare = Arrays.asList(prodotti);
+        ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
 
         prodottiDaOrdinare.sort((p1, p2) -> p2.getGiacenza() - p1.getGiacenza());
 
-        productAdapter.setProdotti(prodottiDaOrdinare.toArray(new Prodotto[0]));
+        productAdapter.setProdotti(prodottiDaOrdinare);
         recyclerView.setAdapter(productAdapter);
 
     }
@@ -177,13 +180,13 @@ public class Pantry extends Fragment {
         assert intent != null;
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         int position = intent.getIntExtra("position", 0);
-        prodotti[position].setGiacenza(prodotto.getGiacenza());
+        prodotti.get(position).setGiacenza(prodotto.getGiacenza());
         productAdapter.setProdotti(prodotti);
         recyclerView.setAdapter(productAdapter);
-        filterProductsManager();
     }
 
     void filterProductsManager() {
+        System.out.println("FILTER PRODUCT MANAGER CALLED!");
         switch (filterMode) {
             case (R.drawable.calendar_expiration_date):
                 filterByExpiration();

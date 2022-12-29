@@ -17,14 +17,15 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private Prodotto[] prodotti;
+    private ArrayList<Prodotto> prodotti;
     private Context context;
     private ActivityResultLauncher<Intent> activityResultLauncher;
 
-    public ProductAdapter(Prodotto[] prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
+    public ProductAdapter(ArrayList<Prodotto> prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
         this.prodotti = prodotti;
         this.context = context;
         this.activityResultLauncher = activityResultLauncher;
@@ -39,15 +40,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        holder.bind(prodotti[position]);
+        holder.bind(prodotti.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return prodotti.length;
+        return prodotti.size();
     }
 
-    public void setProdotti(Prodotto[] prodotti) {
+    public void setProdotti(ArrayList<Prodotto> prodotti) {
         this.prodotti = prodotti;
     }
 
@@ -90,7 +91,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         @Override
         public void onClick(View view) {
             int position = this.getAdapterPosition();
-            Prodotto prodotto = prodotti[position];
+            Prodotto prodotto = prodotti.get(position);
             Intent intent = new Intent(context, ProductDetails.class);
             intent.putExtra("prodotto", prodotto);
             intent.putExtra("position", position);

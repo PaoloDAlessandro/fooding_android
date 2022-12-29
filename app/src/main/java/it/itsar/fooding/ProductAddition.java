@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -34,8 +35,10 @@ public class ProductAddition extends AppCompatActivity {
 
     private MyProperties myProperties = MyProperties.getInstance();
     private Prodotto[] prodotti = myProperties.getProdotti();
+    private List<Prodotto> prodottiFiltrati = null;
     private Prodotto selectedProduct;
     private Button confirmButton;
+    private Button cancelButton;
     private EditText productStockInput;
     private DatePickerDialog picker;
     private TextView productExpirationDateInput;
@@ -53,6 +56,7 @@ public class ProductAddition extends AppCompatActivity {
         productExpirationDateInput.setInputType(InputType.TYPE_NULL);
         productNameAutoComplete = findViewById(R.id.productNameInput);
         confirmButton = findViewById(R.id.productAdditionConfirm);
+        cancelButton = findViewById(R.id.productAddictionCancel);
         productStockInput = findViewById(R.id.productStockInput);
 
         confirmButton.setEnabled(false);
@@ -69,12 +73,32 @@ public class ProductAddition extends AppCompatActivity {
                         day = day1;
                         month = month1;
                         productExpirationDateInput.setText(day + "/" + (month + 1) + "/" + year);
+                        checkInputsStatus();
                     }, year, month, day);
+            picker.getDatePicker().setMinDate(new Date().getTime());
             picker.show();
         });
 
         List<Prodotto> prodottiDaFiltrare = Arrays.asList(prodotti);
         ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, R.layout.autocomplete_product_name, Arrays.asList(prodotti));
+
+        productStockInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                checkInputsStatus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         productNameAutoComplete.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -83,23 +107,18 @@ public class ProductAddition extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<Prodotto> prodottiFiltrati = prodottiDaFiltrare.stream()
+                prodottiFiltrati = prodottiDaFiltrare.stream()
                         .filter(prodotto ->
                                 prodotto.getNome().contains(productNameAutoComplete.getText().toString()))
                         .collect(Collectors.toList());
 
                 if(prodottiFiltrati.size() != 0) {
-                    if(prodottiFiltrati.stream().filter(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString())).collect(Collectors.toList()).size() != 0) {
                         selectedProduct = prodottiFiltrati.get(0);
-                        confirmButton.setEnabled(true);
+                        checkInputsStatus();
+                        productNameAutoCompleteAdapter.setProdotti(prodottiFiltrati);
+                        productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
                     }
-
-                productNameAutoCompleteAdapter.setProdotti(prodottiFiltrati);
-                    productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
                 }
-
-                confirmButton.setEnabled(false);
-            }
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -110,7 +129,7 @@ public class ProductAddition extends AppCompatActivity {
         productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
         productNameAutoComplete.setOnItemClickListener((parent, arg1, position, arg3) -> {
             selectedProduct = (Prodotto) parent.getItemAtPosition(position);
-            confirmButton.setEnabled(true);
+            checkInputsStatus();
         });
 
         confirmButton.setOnClickListener(view -> {
@@ -120,7 +139,40 @@ public class ProductAddition extends AppCompatActivity {
                 selectedProduct.setDataScadenza(LocalDate.parse(productExpirationDateInput.getText(), formatter));
             }
             myProperties.addUserProduct(selectedProduct);
+            finish();
         });
 
+        cancelButton.setOnClickListener(view -> {
+            finish();
+        });
     }
+
+    boolean isNumeric(String text) {
+        if (text == null) {
+            return false;
+        }
+
+        try {
+            Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    void checkInputsStatus() {
+        if(prodottiFiltrati != null) {
+            Log.d("FILTER PRODUCTS: ", prodottiFiltrati.stream().filter(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString())).collect(Collectors.toList()).toString());
+            boolean firstCondition = prodottiFiltrati.stream().filter(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString())).collect(Collectors.toList()).size() != 0;
+            boolean secondCondition = productExpirationDateInput.getText().toString().length() > 0;
+            boolean thirdCondition = isNumeric(productStockInput.getText().toString());
+            if(firstCondition && secondCondition && thirdCondition) {
+                confirmButton.setEnabled(true);
+            }
+            else {
+                confirmButton.setEnabled(false);
+            }
+        }
+    }
+
 }
