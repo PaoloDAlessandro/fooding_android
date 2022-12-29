@@ -2,6 +2,7 @@ package it.itsar.fooding;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,8 +24,10 @@ import android.widget.EditText;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
 
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +38,7 @@ public class ProductAddition extends AppCompatActivity {
 
     private MyProperties myProperties = MyProperties.getInstance();
     private Prodotto[] prodotti = myProperties.getProdotti();
+    private ArrayList<Prodotto> userProdotti = myProperties.getUserProdotti();
     private List<Prodotto> prodottiFiltrati = null;
     private Prodotto selectedProduct;
     private Button confirmButton;
@@ -58,7 +62,8 @@ public class ProductAddition extends AppCompatActivity {
         confirmButton = findViewById(R.id.productAdditionConfirm);
         cancelButton = findViewById(R.id.productAddictionCancel);
         productStockInput = findViewById(R.id.productStockInput);
-
+        userProdotti = myProperties.getUserProdotti();
+        selectedProduct = null;
         confirmButton.setEnabled(false);
 
         productExpirationDateInput.setOnClickListener(view -> {
@@ -133,18 +138,51 @@ public class ProductAddition extends AppCompatActivity {
         });
 
         confirmButton.setOnClickListener(view -> {
-            selectedProduct.setGiacenza(Integer.parseInt(productStockInput.getText().toString()));
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-                selectedProduct.setDataScadenza(LocalDate.parse(productExpirationDateInput.getText(), formatter));
+                selectedProduct.getDateScadenza().get(0).setAmount(Integer.parseInt(productStockInput.getText().toString()));
+                selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
             }
-            myProperties.addUserProduct(selectedProduct);
+            checkProductInUserPantry();
             finish();
         });
 
-        cancelButton.setOnClickListener(view -> {
-            finish();
-        });
+        cancelButton.setOnClickListener((view) -> finish());
+    }
+
+    void checkProductInUserPantry() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
+        }
+
+        if(userProdotti.stream().anyMatch(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
+                prodotto.getMarca().equals(selectedProduct.getMarca()))) {
+
+            int productIndex = userProdotti.indexOf(userProdotti.stream().filter(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
+                    prodotto.getMarca().equals(selectedProduct.getMarca())).collect(Collectors.toList()).get(0));
+
+            if(myProperties.getUserProdotti().get(productIndex).getDateScadenza().stream().anyMatch(productExpirationDate -> productExpirationDate.getExpirationDate().equals(selectedProduct.getDateScadenza().get(0).getExpirationDate()))) {
+                ArrayList<ProductExpirationDate> productExpirationDateOfProduct = myProperties.getUserProdotti().get(productIndex).getDateScadenza();
+                int productExpirationDateIndex = productExpirationDateOfProduct.indexOf(
+                        myProperties.getUserProdotti().get(productIndex).getDateScadenza()
+                                .stream().
+                                filter(
+                                        productExpirationDate ->
+                                                productExpirationDate.getExpirationDate()
+                                                        .equals(selectedProduct.getDateScadenza().get(0).getExpirationDate())
+                                )
+                                .collect(Collectors.toList()).get(0));
+                productExpirationDateOfProduct.get(productExpirationDateIndex).setAmount(selectedProduct.getDateScadenza().get(0).getAmount() + myProperties.getUserProdotti().get(productIndex).getDateScadenza().get(productExpirationDateIndex).getAmount());
+            }
+            else {
+                myProperties.getUserProdotti().get(productIndex).addExpirationDate(new ProductExpirationDate(selectedProduct.getDateScadenza().get(0).getAmount(), selectedProduct.getDateScadenza().get(0).getExpirationDate()));
+            }
+        }
+
+        else {
+            myProperties.getUserProdotti().add(selectedProduct);
+        }
     }
 
     boolean isNumeric(String text) {
@@ -162,10 +200,17 @@ public class ProductAddition extends AppCompatActivity {
 
     void checkInputsStatus() {
         if(prodottiFiltrati != null) {
-            Log.d("FILTER PRODUCTS: ", prodottiFiltrati.stream().filter(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString())).collect(Collectors.toList()).toString());
             boolean firstCondition = prodottiFiltrati.stream().filter(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString())).collect(Collectors.toList()).size() != 0;
             boolean secondCondition = productExpirationDateInput.getText().toString().length() > 0;
             boolean thirdCondition = isNumeric(productStockInput.getText().toString());
+
+            if(!firstCondition) {
+                productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+            }
+            else {
+                productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.product_marca));
+            }
+
             if(firstCondition && secondCondition && thirdCondition) {
                 confirmButton.setEnabled(true);
             }

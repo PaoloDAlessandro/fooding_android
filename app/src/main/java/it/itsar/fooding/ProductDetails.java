@@ -121,7 +121,7 @@ public class ProductDetails extends AppCompatActivity {
         productBrand.setText(prodotto.getMarca());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            productExpirationDate.setText(prodotto.getDataScadenza().format(dateTimeFormatter));
+            productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter));
         }
         productIngredienti.setText(prodotto.getIngredienti());
         productStock.setText("In stock: " + prodotto.getGiacenza());

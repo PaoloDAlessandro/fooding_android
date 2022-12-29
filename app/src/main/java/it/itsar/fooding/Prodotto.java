@@ -1,7 +1,10 @@
 package it.itsar.fooding;
 
+import android.os.Build;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Prodotto implements Serializable {
     private String nome;
@@ -10,19 +13,19 @@ public class Prodotto implements Serializable {
     private int peso;
     private int giacenza;
     private int preparazione;
-    private LocalDate dataScadenza;
+    private ArrayList<ProductExpirationDate> dateScadenza;
     private int image;
     private int colore;
     private ValoriNutrizionali valoriNutrizionali;
 
-    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, LocalDate dataScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
+    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
         this.nome = nome;
         this.marca = marca;
         this.ingredienti = ingredienti;
         this.peso = peso;
         this.giacenza = giacenza;
         this.preparazione = preparazione;
-        this.dataScadenza = dataScadenza;
+        this.dateScadenza = dateScadenza;
         this.image = image;
         this.colore = colore;
         this.valoriNutrizionali = valoriNutrizionali;
@@ -105,11 +108,36 @@ public class Prodotto implements Serializable {
         this.colore = colore;
     }
 
-    public LocalDate getDataScadenza() {
-        return dataScadenza;
+
+    public ArrayList<ProductExpirationDate> getDateScadenza() {
+        return dateScadenza;
     }
 
-    public void setDataScadenza(LocalDate dataScadenza) {
-        this.dataScadenza = dataScadenza;
+    public void setDateScadenza(ArrayList<ProductExpirationDate> dateScadenza) {
+        this.dateScadenza = dateScadenza;
+    }
+
+    public void addExpirationDate(ProductExpirationDate productExpirationDate) {
+        dateScadenza.add(productExpirationDate);
+    }
+
+    public ProductExpirationDate getCloserExpirationdate() {
+        getDateScadenza().sort((productExpirationDate1, productExpirationDate2) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return productExpirationDate1.getExpirationDate().compareTo(productExpirationDate2.getExpirationDate());
+            }
+            return 0;
+        }
+        );
+
+        return getDateScadenza().get(0);
+    }
+
+    public int getAmountOfUnits() {
+        int total = 0;
+        for (ProductExpirationDate product:this.getDateScadenza()) {
+            total += product.getAmount();
+        }
+        return total;
     }
 }

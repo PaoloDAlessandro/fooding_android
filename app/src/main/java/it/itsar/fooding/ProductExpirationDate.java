@@ -1,8 +1,9 @@
 package it.itsar.fooding;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ProductExpirationDate {
+public class ProductExpirationDate implements Serializable {
     private int amount;
     private LocalDate expirationDate;
 
@@ -25,5 +26,13 @@ public class ProductExpirationDate {
 
     public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductExpirationDate{" +
+                "amount=" + amount +
+                ", expirationDate=" + expirationDate +
+                '}';
     }
 }

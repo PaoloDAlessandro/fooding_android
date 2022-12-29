@@ -123,8 +123,6 @@ public class Pantry extends Fragment {
         prodottiFiltered = (ArrayList<Prodotto>) prodottiFiltered.stream()
                 .filter(prodotto -> prodotto.getNome().toLowerCase().contains(charSequence.toString().toLowerCase()))
                 .collect(Collectors.toList());
-        Log.d("Input: ", charSequence.toString());
-        Log.d("Filtered product: ", prodottiFiltered.toString());
         productAdapter.setProdotti(prodottiFiltered);
         recyclerView.setAdapter(productAdapter);
     }
@@ -146,7 +144,7 @@ public class Pantry extends Fragment {
 
         prodottiDaOrdinare.sort((p1, p2) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                return p1.getDataScadenza().compareTo(p2.getDataScadenza());
+                return p1.getCloserExpirationdate().getExpirationDate().compareTo(p2.getCloserExpirationdate().getExpirationDate());
             }
             return 0;
         });
@@ -186,7 +184,7 @@ public class Pantry extends Fragment {
     }
 
     void filterProductsManager() {
-        System.out.println("FILTER PRODUCT MANAGER CALLED!");
+
         switch (filterMode) {
             case (R.drawable.calendar_expiration_date):
                 filterByExpiration();
@@ -200,6 +198,9 @@ public class Pantry extends Fragment {
                 filterByAlphabet();
                 break;
         }
+
+        filterInputProductManager(searchProduct.getText().toString());
+
     }
 
     void setAddProductButtonTouchListener() {
