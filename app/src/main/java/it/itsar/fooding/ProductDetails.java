@@ -2,20 +2,27 @@ package it.itsar.fooding;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.view.ViewCompat;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.intellij.lang.annotations.Identifier;
 import org.w3c.dom.Text;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class ProductDetails extends AppCompatActivity {
 
@@ -23,6 +30,7 @@ public class ProductDetails extends AppCompatActivity {
     private ImageView productImage;
     private TextView productBrand;
     private TextView productExpirationDate;
+    //private ConstraintLayout productExpirationDateLayout;
     private TextView productIngredienti;
     private TextView productStock;
     private Button increaseStock;
@@ -61,31 +69,33 @@ public class ProductDetails extends AppCompatActivity {
         setupResultIntent();
 
         increaseStock.setOnClickListener(view -> {
-            prodotto.setGiacenza(prodotto.getGiacenza() + 1);
+            //prodotto.setGiacenza(prodotto.getGiacenza() + 1);
             setupResultIntent();
             checkStockStatus();
         });
 
         decreaseStock.setOnClickListener(view -> {
-            prodotto.setGiacenza(prodotto.getGiacenza() - 1);
+            //prodotto.setGiacenza(prodotto.getGiacenza() - 1);
             setupResultIntent();
             checkStockStatus();
         });
     }
 
     void setupResultIntent() {
-        productStock.setText("In stock: " + prodotto.getGiacenza());
+        productStock.setText("In stock: " + prodotto.getAmountOfUnits());
         resultIntent.putExtra("prodotto", prodotto);
         setResult(Activity.RESULT_OK, resultIntent);
     }
 
     void checkStockStatus() {
-        if(prodotto.getGiacenza() <= 0) {
+        /*if(prodotto.getGiacenza() <= 0) {
             decreaseStock.setEnabled(false);
         }
         else if(!decreaseStock.isEnabled()) {
             decreaseStock.setEnabled(true);
         }
+
+         */
     }
 
     void xmlElementsInit() {
@@ -93,6 +103,7 @@ public class ProductDetails extends AppCompatActivity {
         productImage = findViewById(R.id.productImage);
         productBrand = findViewById(R.id.productBrand);
         productExpirationDate = findViewById(R.id.productExpirationDate);
+        //productExpirationDateLayout = findViewById(R.id.productExpirationDateLayout);
         productIngredienti = findViewById(R.id.productIngredienti);
         productStock = findViewById(R.id.productStock);
         increaseStock = findViewById(R.id.increaseStockButton);
@@ -124,7 +135,7 @@ public class ProductDetails extends AppCompatActivity {
             productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter));
         }
         productIngredienti.setText(prodotto.getIngredienti());
-        productStock.setText("In stock: " + prodotto.getGiacenza());
+        productStock.setText("In stock: " + prodotto.getAmountOfUnits());
         productImage.setImageResource(prodotto.getImage());
         productEnergiaValue.setText(prodotto.getValoriNutrizionali().getEnergia() + "kj");
         productEnergiaAR.setText(prodotto.getValoriNutrizionali().getEnergiaAR() + "%");
@@ -143,6 +154,30 @@ public class ProductDetails extends AppCompatActivity {
         productProteineAR.setText(prodotto.getValoriNutrizionali().getProteineAR() + "%");
         productSaleValue.setText(prodotto.getValoriNutrizionali().getSale() + "g");
         productSaleAR.setText(prodotto.getValoriNutrizionali().getSaleAR() + "%");
+            /*
+        ArrayList<Integer> expirationDatesId = new ArrayList<>();
+        int counter = 0;
+        for (ProductExpirationDate productExpirationDate:prodotto.getDateScadenza()) {
+            ConstraintSet set = new ConstraintSet();
+            set.clone(productExpirationDateLayout);
+            TextView textView = new TextView(getApplicationContext());
+            int textId = ViewCompat.generateViewId();
+            textView.setId(textId);
+            expirationDatesId.add(textView.getId());
+            textView.setText(productExpirationDate.getExpirationDate().toString());
+            productExpirationDateLayout.addView(textView);
+            if(expirationDatesId.size() > 1) {
+                set.connect(textView.getId(), ConstraintSet.TOP, productExpirationDateLayout.getId(), ConstraintSet.BOTTOM);
+            } else {
+                set.connect(textView.getId(), ConstraintSet.TOP, productExpirationDateLayout.getId(), ConstraintSet.TOP);
+            }
+
+            set.connect(productExpirationDateLayout.getId(), ConstraintSet.TOP, productExpirationDateLayout.getId(), ConstraintSet.TOP);
+            set.applyTo(productExpirationDateLayout);
+
+            counter++;
+        }
+             */
 
     }
 }

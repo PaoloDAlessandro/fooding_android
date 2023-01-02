@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -144,10 +145,15 @@ public class ProductAddition extends AppCompatActivity {
                 selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
             }
             checkProductInUserPantry();
-            finish();
+            goBack(Activity.RESULT_OK);
         });
 
-        cancelButton.setOnClickListener((view) -> finish());
+        cancelButton.setOnClickListener((view) -> goBack(Activity.RESULT_CANCELED));
+    }
+
+    void goBack(int resultCode) {
+        setResult(resultCode);
+        finish();
     }
 
     void checkProductInUserPantry() {

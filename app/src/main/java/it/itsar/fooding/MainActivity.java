@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
                             "Knorr",
                          "Farina di FRUMENTO, LATTE scremato, fecola di patate, PANNA, sale iodato, farina di mais*, aromi, carciofi 3,1%, olio di mais, estratto per brodo, zucchero, estratto di lievito, succo di limone, spinaci, sale, prezzemolo 0,2%, spezie (pepe nero*, aglio, radice di levistico). Può contenere uova, soia, sedaano e senape. *Da agricoltura sostenibile",
                              250,
-                          4,
                        3,
                                    new ArrayList<>(Arrays.asList(
                                            new ProductExpirationDate(2, LocalDate.of(2022, Month.DECEMBER, 31)),
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
                             "Barilla",
                          "Carote 4% Rosmarino Oli vegetali (oliva, girasole) Aglio Aromi Sale Zucchero Amido di mais Cipolle Vino rosso 6% Concentrato di pomodoro 16,5% Polpa di pomodoro 18% Acqua Carne suina 25%",
                              400,
-                          1,
                        0,
                             new ArrayList<>(Arrays.asList(
                                     new ProductExpirationDate(3, LocalDate.of(2023, Month.MARCH, 27))
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                             "Leerdammer",
                          "Latte, sale, fermenti lattici, caglio microbico.",
                              350,
-                          2,
                        0,
                             new ArrayList<>(Arrays.asList(
                                     new ProductExpirationDate(1, LocalDate.of(2023, Month.JANUARY, 13))
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                             "Schär",
                          "amido di mais , acqua , pasta madre (farina di riso, acqua) 14% , fibra vegetale (psillio) , farina di miglio , olio di girasole 3,8% , farina di riso , proteine di soia , amido di riso , addensante: idrossipropilmetilcellulosa ; sciroppo di riso , sale , lievito , zucchero . Può contenere tracce di nocciole, uova e di senape. SENZA FRUMENTO.",
                              500,
-                          5,
                        8,
                             new ArrayList<>(Arrays.asList(
                                     new ProductExpirationDate(2, LocalDate.of(2023, Month.DECEMBER, 2))
@@ -91,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                             "Le naturelle",
                          "uova",
                              300,
-                          1,
                        0,
                             new ArrayList<>(Arrays.asList(
                                     new ProductExpirationDate(1, LocalDate.of(2022, Month.DECEMBER, 31)),
@@ -110,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                             "Knorr",
                             "Farina di FRUMENTO, LATTE scremato, fecola di patate, PANNA, sale iodato, farina di mais*, aromi, carciofi 3,1%, olio di mais, estratto per brodo, zucchero, estratto di lievito, succo di limone, spinaci, sale, prezzemolo 0,2%, spezie (pepe nero*, aglio, radice di levistico). Può contenere uova, soia, sedaano e senape. *Da agricoltura sostenibile",
                             250,
-                            4,
                             3,
                             new ArrayList<ProductExpirationDate>(Arrays.asList(new ProductExpirationDate(0,LocalDate.of(200, Month.JANUARY, 1)))),
                             R.drawable.crema_carciofi,
@@ -122,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                             "Barilla",
                             "Carote 4% Rosmarino Oli vegetali (oliva, girasole) Aglio Aromi Sale Zucchero Amido di mais Cipolle Vino rosso 6% Concentrato di pomodoro 16,5% Polpa di pomodoro 18% Acqua Carne suina 25%",
                             400,
-                            1,
                             0,
                             new ArrayList<ProductExpirationDate>(Arrays.asList(new ProductExpirationDate(0, LocalDate.of(2000, Month.JANUARY, 1)))),
                             R.drawable.ragu_contadino,
@@ -133,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                             "Leerdammer",
                             "Latte, sale, fermenti lattici, caglio microbico.",
                             350,
-                            2,
                             0,
                             new ArrayList<ProductExpirationDate>(Arrays.asList(new ProductExpirationDate(0, LocalDate.of(2000, Month.JANUARY, 1)))),
                             R.drawable.leerdammer,
@@ -144,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                             "Schär",
                          "amido di mais , acqua , pasta madre (farina di riso, acqua) 14% , fibra vegetale (psillio) , farina di miglio , olio di girasole 3,8% , farina di riso , proteine di soia , amido di riso , addensante: idrossipropilmetilcellulosa ; sciroppo di riso , sale , lievito , zucchero . Può contenere tracce di nocciole, uova e di senape. SENZA FRUMENTO.",
                             500,
-                            5,
                             8,
                             new ArrayList<ProductExpirationDate>(Arrays.asList(new ProductExpirationDate(0, LocalDate.of(2000, Month.JANUARY, 1)))),
                             R.drawable.rosette,
@@ -155,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                             "Barilla",
                         "Semola di grano duro e acqua",
                             500,
-                         2,
                       11,
                                  new ArrayList<ProductExpirationDate>(Arrays.asList(new ProductExpirationDate(0, LocalDate.of(2000, Month.JANUARY, 1)))),
                                  R.drawable.penne_rigate_barilla,
@@ -166,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                             "Le naturelle",
                          "uova",
                              300,
-                          1,
                        0,
                                   new ArrayList<ProductExpirationDate>(Arrays.asList(new ProductExpirationDate(0, LocalDate.of(2000, Month.JANUARY, 1)))),
                                   R.drawable.uova_le_naturelle,

@@ -11,19 +11,17 @@ public class Prodotto implements Serializable {
     private String marca;
     private String ingredienti;
     private int peso;
-    private int giacenza;
     private int preparazione;
     private ArrayList<ProductExpirationDate> dateScadenza;
     private int image;
     private int colore;
     private ValoriNutrizionali valoriNutrizionali;
 
-    public Prodotto(String nome, String marca, String ingredienti, int peso, int giacenza, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
+    public Prodotto(String nome, String marca, String ingredienti, int peso, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
         this.nome = nome;
         this.marca = marca;
         this.ingredienti = ingredienti;
         this.peso = peso;
-        this.giacenza = giacenza;
         this.preparazione = preparazione;
         this.dateScadenza = dateScadenza;
         this.image = image;
@@ -53,14 +51,6 @@ public class Prodotto implements Serializable {
 
     public void setPeso(int peso) {
         this.peso = peso;
-    }
-
-    public int getGiacenza() {
-        return giacenza;
-    }
-
-    public void setGiacenza(int giacenza) {
-        this.giacenza = giacenza;
     }
 
     public int getImage() {

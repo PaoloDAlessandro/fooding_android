@@ -24,6 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -52,6 +54,19 @@ public class Pantry extends Fragment {
                         break;
                     case Activity.RESULT_CANCELED:
                         Log.d("Edit: ", "NO");
+                        break;
+                }
+            }
+    );
+
+    ActivityResultLauncher<Intent> addProductActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                switch (result.getResultCode()){
+                    case Activity.RESULT_OK:
+                        showAdditionSuccessSnackBar();
+                        break;
+                    case Activity.RESULT_CANCELED:
                         break;
                 }
             }
@@ -166,7 +181,7 @@ public class Pantry extends Fragment {
     void filterByStock() {
         ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
 
-        prodottiDaOrdinare.sort((p1, p2) -> p2.getGiacenza() - p1.getGiacenza());
+        prodottiDaOrdinare.sort((p1, p2) -> p2.getAmountOfUnits() - p1.getAmountOfUnits());
 
         productAdapter.setProdotti(prodottiDaOrdinare);
         recyclerView.setAdapter(productAdapter);
@@ -178,7 +193,6 @@ public class Pantry extends Fragment {
         assert intent != null;
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         int position = intent.getIntExtra("position", 0);
-        prodotti.get(position).setGiacenza(prodotto.getGiacenza());
         productAdapter.setProdotti(prodotti);
         recyclerView.setAdapter(productAdapter);
     }
@@ -203,10 +217,14 @@ public class Pantry extends Fragment {
 
     }
 
+    void showAdditionSuccessSnackBar() {
+        Snackbar.make(this.getView(), "Prodotto aggiunto correttamente!", Snackbar.LENGTH_SHORT).show();
+    }
+
     void setAddProductButtonTouchListener() {
         addProductButton.setOnClickListener(view -> {
             Intent intent = new Intent(getContext(), ProductAddition.class);
-            activityLauncher.launch(intent);
+            addProductActivityLauncher.launch(intent);
         });
     }
 
