@@ -24,7 +24,8 @@
                 android:layout_width="110dp"
                 android:layout_height="50dp"
                 android:layout_marginVertical="6dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/fooding_logo_alt"
                 android:src="@drawable/fooding_logo_black_ext"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +35,7 @@
                 android:id="@+id/productExpirationDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-90dp"
+                android:layout_marginStart="-90dp"
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/product_name"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +53,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="100dp">
 
             <ImageView
@@ -60,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="240dp"
                 android:layout_marginTop="20dp"
+                android:contentDescription="@string/product_image_alt"
                 android:src="@drawable/crema_carciofi"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +113,7 @@
                     android:paddingHorizontal="20dp"
                     android:paddingTop="30dp"
                     android:paddingBottom="10dp"
-                    android:text="Farina di FRUMENTO, LATTE scremato, fecola di patate, PANNA, sale iodato, farina di mais*, aromi, carciofi 3,1%, olio di mais, estratto per brodo, zucchero, estratto di lievito, succo di limone, spinaci, sale, prezzemolo 0,2%, spezie (pepe nero*, aglio, radice di levistico). Può contenere uova, soia, sedaano e senape. *Da agricoltura sostenibile"
+                    tools:text="Farina di FRUMENTO, LATTE scremato, fecola di patate, PANNA, sale iodato, farina di mais*, aromi, carciofi 3,1%, olio di mais, estratto per brodo, zucchero, estratto di lievito, succo di limone, spinaci, sale, prezzemolo 0,2%, spezie (pepe nero*, aglio, radice di levistico). Può contenere uova, soia, sedaano e senape. *Da agricoltura sostenibile"
                     android:textColor="@color/product_marca" />
 
 
@@ -121,7 +123,7 @@
                 android:id="@+id/ingredientiLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/product_name"
                 app:cardCornerRadius="20dp"
@@ -134,7 +136,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp"
-                    android:text="Ingredienti"
+                    android:text="@string/ingredienti_label"
                     android:textColor="@color/white" />
             </androidx.cardview.widget.CardView>
 
@@ -162,13 +164,13 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Porzione"
+                            android:text="@string/valori_nutrizionali_porzione_label"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:layout_span="2"
                             android:fontFamily="@font/poppins"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:text="1 porzione (250g)"
                             android:textColor="@color/product_marca" />
                     </TableRow>
@@ -183,7 +185,7 @@
                         <TextView
                             android:layout_column="1"
                             android:fontFamily="@font/poppins"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:text="Per porzione"
                             android:textColor="@color/product_marca" />
 
@@ -191,9 +193,9 @@
                             android:layout_width="wrap_content"
                             android:layout_column="2"
                             android:fontFamily="@font/poppins"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:paddingLeft="20dp"
-                            android:text="% AR*"
+                            android:text="@string/valori_nutrizionali_ar_per"
                             android:textColor="@color/product_marca" />
                     </TableRow>
 
@@ -206,20 +208,20 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Energia"
+                            android:text="@string/valori_nutrizionali_energia"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productEnergiaValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
                             android:textColor="@color/product_marca"
                             tools:text="0kj" />
 
                         <TextView
                             android:id="@+id/productEnergiaAR"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
                             android:textColor="@color/product_marca"
                             tools:text="0%" />
@@ -231,7 +233,7 @@
                             android:id="@+id/productEnergiaValue2"
                             android:layout_column="1"
                             android:fontFamily="@font/poppins"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textColor="@color/product_marca"
                             tools:text="0Kcal" />
                     </TableRow>
@@ -245,48 +247,48 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Grassi"
+                            android:text="@string/valori_nutrizionali_grassi"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productGrassiValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productGrassiAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
                     </TableRow>
 
                     <TableRow>
 
                         <TextView
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
                             android:fontFamily="@font/poppins"
-                            android:text="Grassi saturi"
+                            android:text="@string/valori_nutrizionali_grassi_saturi"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productGrassiSaturiValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productGrassiSaturiAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
                     </TableRow>
 
@@ -299,48 +301,48 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Carboidrati"
+                            android:text="@string/valori_nutrizionali_carboidrati"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productCarboidratiValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productCarboidratiAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
                     </TableRow>
 
                     <TableRow>
 
                         <TextView
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
                             android:fontFamily="@font/poppins"
-                            android:text="Zuccheri"
+                            android:text="@string/valori_nutrizionali_zuccheri"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productZuccheriValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productZuccheriAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
                     </TableRow>
 
@@ -353,23 +355,23 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Fibre"
+                            android:text="@string/valori_nutrizionali_fibre"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productFibreValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productFibreAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
 
                     </TableRow>
@@ -383,23 +385,23 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Proteine"
+                            android:text="@string/valori_nutrizionali_proteine"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productProteineValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productProteineAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
                     </TableRow>
 
@@ -412,22 +414,22 @@
 
                         <TextView
                             android:fontFamily="@font/poppins_medium"
-                            android:text="Sale"
+                            android:text="@string/valori_nutrizionali_sale"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productSaleValue"
                             android:layout_column="1"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:fontFamily="@font/poppins"
-                            android:text="0g"
+                            tools:text="0g"
                             android:textColor="@color/product_marca" />
 
                         <TextView
                             android:id="@+id/productSaleAR"
                             android:layout_column="2"
-                            android:layout_gravity="right"
-                            android:text="0%"
+                            android:layout_gravity="end"
+                            tools:text="0%"
                             android:textColor="@color/product_marca" />
                     </TableRow>
                 </TableLayout>
@@ -437,7 +439,7 @@
                 android:id="@+id/valoriNutrizionaliContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="40dp"
                 android:backgroundTint="@color/product_name"
                 app:cardCornerRadius="20dp"
@@ -450,7 +452,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp"
-                    android:text="Valori nutrizionali"
+                    android:text="@string/valori_nutrizionali_label"
                     android:textColor="@color/white" />
             </androidx.cardview.widget.CardView>
 
@@ -478,11 +480,11 @@
                 android:id="@+id/productStock"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:fontFamily="@font/poppins_medium"
                 android:paddingTop="4dp"
                 android:textColor="@color/product_name"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="In stock: 3" />
@@ -491,9 +493,9 @@
                 android:id="@+id/decreaseStockButton"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
                 android:backgroundTint="@color/product_name"
-                android:text="-"
+                android:text="@string/stock_decrease_button_text"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -506,7 +508,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/product_name"
                 android:padding="0dp"
-                android:text="+"
+                android:text="@string/stock_increase_button_text"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

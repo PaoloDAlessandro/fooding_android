@@ -2,8 +2,6 @@ package it.itsar.fooding;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.format.DateTimeFormatter;
@@ -24,7 +20,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private ArrayList<Prodotto> prodotti;
     private Context context;
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private ActivityResultLauncher activityResultLauncher;
 
     public ProductAdapter(ArrayList<Prodotto> prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
         this.prodotti = prodotti;
@@ -62,7 +58,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         private TextView productWeight;
         private TextView productExpirationDate;
         private CardView imageCardView;
-        private ConstraintLayout productExpirationDateLayout;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,7 +73,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 
         void bind(Prodotto prodotto) {
-            System.out.println(prodotto.getDateScadenza());
             productName.setText(prodotto.getNome());
             productBrand.setText(prodotto.getMarca());
             productImage.setImageResource(prodotto.getImage());

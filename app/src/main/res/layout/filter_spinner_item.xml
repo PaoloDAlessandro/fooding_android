@@ -14,7 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/product_name"
-        tools:src="@drawable/calendar_expiration_date_v2" />
+        tools:src="@drawable/calendar_expiration_date_v2"
+        android:contentDescription="@string/filter_icon_alt" />
 
     <View
         android:layout_width="match_parent"

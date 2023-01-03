@@ -27,7 +27,6 @@ import android.widget.Spinner;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -191,8 +190,6 @@ public class Pantry extends Fragment {
     void updateRecycleView(ActivityResult result) {
         Intent intent = result.getData();
         assert intent != null;
-        Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
-        int position = intent.getIntExtra("position", 0);
         productAdapter.setProdotti(prodotti);
         recyclerView.setAdapter(productAdapter);
     }
@@ -218,7 +215,7 @@ public class Pantry extends Fragment {
     }
 
     void showAdditionSuccessSnackBar() {
-        Snackbar.make(this.getView(), "Prodotto aggiunto correttamente!", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(this.requireView(), "Prodotto aggiunto correttamente!", Snackbar.LENGTH_SHORT).show();
     }
 
     void setAddProductButtonTouchListener() {

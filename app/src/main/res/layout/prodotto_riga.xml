@@ -23,7 +23,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:cardCornerRadius="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +39,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/product_image_alt" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -48,13 +49,13 @@
             android:id="@+id/productName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crema carciofi"
             android:layout_toEndOf="@id/productImageCard"
             android:fontFamily="@font/poppins_medium"
             android:textColor="@color/product_name"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="-6dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
+            tools:text="Crema carciofi"
             />
 
         <TextView
@@ -64,22 +65,22 @@
             android:layout_toEndOf="@id/productImageCard"
             android:layout_below="@id/productName"
             android:fontFamily="@font/poppins"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:layout_marginBottom="10dp"
             android:textColor="@color/product_marca"
-            android:text="Knorr"/>
+            tools:text="Knorr" />
 
         <ImageView
             android:id="@+id/productWeightImage"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="2dp"
+            android:layout_marginEnd="2dp"
             app:tint="@color/product_name"
             android:src="@drawable/product_weight"
             android:layout_toEndOf="@id/productImageCard"
             android:layout_below="@id/productBrand"
-            />
+            android:contentDescription="@string/product_weight_icon_alt" />
 
             <TextView
                 android:id="@+id/productWeight"
@@ -87,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/productBrand"
                 android:layout_toEndOf="@id/productWeightImage"
-                android:textSize="12dp"
-                android:layout_marginRight="10dp"
-                android:text="250g"/>
+                android:textSize="12sp"
+                android:layout_marginEnd="10dp"
+                tools:text="250g"/>
 
         <ImageView
             android:id="@+id/productStockImage"
@@ -98,10 +99,10 @@
             android:src="@drawable/box_closed"
             android:layout_marginTop="2dp"
             app:tint="@color/product_name"
-            android:layout_marginRight="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_toEndOf="@id/productWeight"
             android:layout_below="@id/productBrand"
-            />
+            android:contentDescription="@string/stock_icon_alt" />
 
             <TextView
                 android:id="@+id/productStock"
@@ -109,9 +110,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/productBrand"
                 android:layout_toEndOf="@id/productStockImage"
-                android:layout_marginRight="10dp"
-                android:textSize="12dp"
-                android:text="250g"/>
+                android:layout_marginEnd="10dp"
+                android:textSize="12sp"
+                tools:text="5"/>
 
         <ImageView
             android:id="@+id/productTimerImage"
@@ -120,10 +121,10 @@
             android:src="@drawable/calendar_expiration_date_v2"
             android:layout_marginTop="2dp"
             app:tint="@color/product_name"
-            android:layout_marginRight="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_toEndOf="@id/productStock"
             android:layout_below="@id/productBrand"
-            />
+            android:contentDescription="@string/expiration_date_icon_alt" />
 
         <TextView
             android:id="@+id/productExpirationDate"
@@ -131,8 +132,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/productBrand"
             android:layout_toEndOf="@id/productTimerImage"
-            android:textSize="12dp"
-            android:text="250g"/>
+            android:textSize="12sp"
+            tools:text="25-01-2023"/>
 
     </RelativeLayout>
     

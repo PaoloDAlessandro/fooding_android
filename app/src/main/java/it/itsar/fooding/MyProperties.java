@@ -1,7 +1,6 @@
 package it.itsar.fooding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyProperties {
     private static MyProperties mInstance= null;

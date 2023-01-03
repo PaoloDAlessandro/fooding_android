@@ -2,4 +2,36 @@
     <string name="app_name">Fooding</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="product_filter_placeholder">Cerca prodotti</string>
+    <string name="search_icon_alt">search_icon</string>
+    <string name="add_product_button_text">+</string>
+    <string name="product_image_alt">product_image</string>
+    <string name="product_name">Crema carciofi</string>
+    <string name="stock_icon_alt">stock_icon</string>
+    <string name="expiration_date_icon_alt">expiration_date_icon</string>
+    <string name="product_weight_icon_alt">product_weight_icon</string>
+    <string name="filter_icon_alt">filter_icon</string>
+    <string name="fooding_logo_alt">fooding_logo</string>
+    <string name="nome_productAddition">Nome</string>
+    <string name="nome_hint_productAddition">Crema carciofi</string>
+    <string name="data_di_scadenza_productAddittion">Data di scadenza</string>
+    <string name="data_di_scadenza_hint_productAddition">23-10-2022</string>
+    <string name="quantità_productAddition">Quantità</string>
+    <string name="quantità_hint_productAddition">1</string>
+    <string name="annulla_button_text">Annulla</string>
+    <string name="aggiugi_button_text">Aggiungi</string>
+    <string name="ingredienti_label">Ingredienti</string>
+    <string name="valori_nutrizionali_porzione_label">Porzione</string>
+    <string name="valori_nutrizionali_ar_per">% AR*</string>
+    <string name="valori_nutrizionali_energia">Energia</string>
+    <string name="valori_nutrizionali_grassi">Grassi</string>
+    <string name="valori_nutrizionali_grassi_saturi">Grassi saturi</string>
+    <string name="valori_nutrizionali_carboidrati">Carboidrati</string>
+    <string name="valori_nutrizionali_zuccheri">Zuccheri</string>
+    <string name="valori_nutrizionali_fibre">Fibre</string>
+    <string name="valori_nutrizionali_proteine">Proteine</string>
+    <string name="valori_nutrizionali_sale">Sale</string>
+    <string name="valori_nutrizionali_label">Valori nutrizionali</string>
+    <string name="stock_decrease_button_text">-</string>
+    <string name="stock_increase_button_text">+</string>
 </resources>

@@ -3,7 +3,6 @@ package it.itsar.fooding;
 import android.os.Build;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Prodotto implements Serializable {

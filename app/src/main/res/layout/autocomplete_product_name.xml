@@ -14,6 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/crema_carciofi"
+        android:contentDescription="@string/product_image_alt"
         />
 
     <TextView
@@ -37,7 +38,7 @@
         tools:text="Barilla"
         android:textColor="@color/product_marca"
         android:fontFamily="@font/poppins"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/productName"/>
 
 

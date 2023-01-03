@@ -1,31 +1,18 @@
 package it.itsar.fooding;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
-
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,8 +24,8 @@ import java.util.stream.Collectors;
 
 public class ProductAddition extends AppCompatActivity {
 
-    private MyProperties myProperties = MyProperties.getInstance();
-    private Prodotto[] prodotti = myProperties.getProdotti();
+    private final MyProperties myProperties = MyProperties.getInstance();
+    private final Prodotto[] prodotti = myProperties.getProdotti();
     private ArrayList<Prodotto> userProdotti = myProperties.getUserProdotti();
     private List<Prodotto> prodottiFiltrati = null;
     private Prodotto selectedProduct;
@@ -51,12 +38,15 @@ public class ProductAddition extends AppCompatActivity {
     private int year;
     private int month;
     private int day;
+    private DateTimeFormatter formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_addition);
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        }
         productExpirationDateInput = findViewById(R.id.productExpirationDateInput);
         productExpirationDateInput.setInputType(InputType.TYPE_NULL);
         productNameAutoComplete = findViewById(R.id.productNameInput);
@@ -140,9 +130,9 @@ public class ProductAddition extends AppCompatActivity {
 
         confirmButton.setOnClickListener(view -> {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+                DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("d/M/yyyy");
                 selectedProduct.getDateScadenza().get(0).setAmount(Integer.parseInt(productStockInput.getText().toString()));
-                selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
+                selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatterDate));
             }
             checkProductInUserPantry();
             goBack(Activity.RESULT_OK);
@@ -157,7 +147,7 @@ public class ProductAddition extends AppCompatActivity {
     }
 
     void checkProductInUserPantry() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
         }
@@ -185,9 +175,22 @@ public class ProductAddition extends AppCompatActivity {
                 myProperties.getUserProdotti().get(productIndex).addExpirationDate(new ProductExpirationDate(selectedProduct.getDateScadenza().get(0).getAmount(), selectedProduct.getDateScadenza().get(0).getExpirationDate()));
             }
         }
-
         else {
-            myProperties.getUserProdotti().add(selectedProduct);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                myProperties.getUserProdotti().add(new Prodotto(
+                        selectedProduct.getNome(),
+                        selectedProduct.getMarca(),
+                        selectedProduct.getIngredienti(),
+                        selectedProduct.getPeso(),
+                        selectedProduct.getPreparazione(),
+                        new ArrayList<>(Arrays.asList(
+                                new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatter))
+                        )),
+                        selectedProduct.getImage(),
+                        selectedProduct.getColore(),
+                        selectedProduct.getValoriNutrizionali()
+                ));
+            }
         }
     }
 
@@ -206,7 +209,7 @@ public class ProductAddition extends AppCompatActivity {
 
     void checkInputsStatus() {
         if(prodottiFiltrati != null) {
-            boolean firstCondition = prodottiFiltrati.stream().filter(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString())).collect(Collectors.toList()).size() != 0;
+            boolean firstCondition = prodottiFiltrati.stream().anyMatch(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString()));
             boolean secondCondition = productExpirationDateInput.getText().toString().length() > 0;
             boolean thirdCondition = isNumeric(productStockInput.getText().toString());
 

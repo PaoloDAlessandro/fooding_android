@@ -15,7 +15,7 @@
             android:id="@+id/search_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="100dp"
             app:cardElevation="4dp"
@@ -37,7 +37,7 @@
                     android:layout_marginVertical="8dp"
                     android:background="@null"
                     android:ems="10"
-                    android:hint="Cerca prodotti"
+                    android:hint="@string/product_filter_placeholder"
                     android:inputType="textPersonName"
                     android:textColor="@color/product_marca"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -53,7 +53,8 @@
                     app:layout_constraintHorizontal_bias="0.76"
                     app:layout_constraintStart_toEndOf="@id/searchProduct"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.571" />
+                    app:layout_constraintVertical_bias="0.571"
+                    android:contentDescription="@string/search_icon_alt" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
@@ -80,7 +81,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/product_name"
             app:cardCornerRadius="75dp"
@@ -93,8 +94,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/product_name"
-                android:text="+"
-                android:textSize="20dp"
+                android:text="@string/add_product_button_text"
+                android:textSize="20sp"
                 android:translationY="-1dp" />
 
         </androidx.cardview.widget.CardView>
