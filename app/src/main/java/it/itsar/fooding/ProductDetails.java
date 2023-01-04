@@ -1,28 +1,22 @@
 package it.itsar.fooding;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.ViewCompat;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.speech.tts.TextToSpeech;
-import android.view.View;
-import android.webkit.WebView;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.intellij.lang.annotations.Identifier;
-import org.w3c.dom.Text;
-
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class ProductDetails extends AppCompatActivity {
 
@@ -30,7 +24,7 @@ public class ProductDetails extends AppCompatActivity {
     private ImageView productImage;
     private TextView productBrand;
     private TextView productExpirationDate;
-    //private ConstraintLayout productExpirationDateLayout;
+    private ConstraintLayout productExpirationDateLayout;
     private TextView productIngredienti;
     private TextView productStock;
     private Button increaseStock;
@@ -53,6 +47,8 @@ public class ProductDetails extends AppCompatActivity {
     private TextView productProteineAR;
     private TextView productSaleValue;
     private TextView productSaleAR;
+    private ProductExpirationDate currentProductExpirationDate;
+    private HashMap<ProductExpirationDate, TextView> expirationDateTextViewHashMap = new HashMap<>();
 
 
     private Intent resultIntent = new Intent();
@@ -69,33 +65,33 @@ public class ProductDetails extends AppCompatActivity {
         setupResultIntent();
 
         increaseStock.setOnClickListener(view -> {
-            //prodotto.setGiacenza(prodotto.getGiacenza() + 1);
+            currentProductExpirationDate.setAmount(currentProductExpirationDate.getAmount() + 1);
+            Objects.requireNonNull(expirationDateTextViewHashMap.get(currentProductExpirationDate)).setText(String.valueOf(currentProductExpirationDate.getAmount()));
             setupResultIntent();
             checkStockStatus();
         });
 
         decreaseStock.setOnClickListener(view -> {
-            //prodotto.setGiacenza(prodotto.getGiacenza() - 1);
+            currentProductExpirationDate.setAmount(currentProductExpirationDate.getAmount() - 1);
+            Objects.requireNonNull(expirationDateTextViewHashMap.get(currentProductExpirationDate)).setText(String.valueOf(currentProductExpirationDate.getAmount()));
             setupResultIntent();
             checkStockStatus();
         });
     }
 
     void setupResultIntent() {
-        productStock.setText("In stock: " + prodotto.getAmountOfUnits());
+        productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
         resultIntent.putExtra("prodotto", prodotto);
         setResult(Activity.RESULT_OK, resultIntent);
     }
 
     void checkStockStatus() {
-        /*if(prodotto.getGiacenza() <= 0) {
+        if(currentProductExpirationDate.getAmount() <= 0) {
             decreaseStock.setEnabled(false);
         }
         else if(!decreaseStock.isEnabled()) {
             decreaseStock.setEnabled(true);
         }
-
-         */
     }
 
     void xmlElementsInit() {
@@ -103,7 +99,7 @@ public class ProductDetails extends AppCompatActivity {
         productImage = findViewById(R.id.productImage);
         productBrand = findViewById(R.id.productBrand);
         productExpirationDate = findViewById(R.id.productExpirationDate);
-        //productExpirationDateLayout = findViewById(R.id.productExpirationDateLayout);
+        productExpirationDateLayout = findViewById(R.id.productExpirationDateLayout);
         productIngredienti = findViewById(R.id.productIngredienti);
         productStock = findViewById(R.id.productStock);
         increaseStock = findViewById(R.id.increaseStockButton);
@@ -128,14 +124,18 @@ public class ProductDetails extends AppCompatActivity {
     }
 
     void xmlPopulation() {
+        DateTimeFormatter dateTimeFormatter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        }
+        currentProductExpirationDate = prodotto.getCloserExpirationdate();
         productName.setText(prodotto.getNome());
         productBrand.setText(prodotto.getMarca());
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter));
         }
         productIngredienti.setText(prodotto.getIngredienti());
-        productStock.setText("In stock: " + prodotto.getAmountOfUnits());
+        productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
         productImage.setImageResource(prodotto.getImage());
         productEnergiaValue.setText(prodotto.getValoriNutrizionali().getEnergia() + "kj");
         productEnergiaAR.setText(prodotto.getValoriNutrizionali().getEnergiaAR() + "%");
@@ -154,30 +154,51 @@ public class ProductDetails extends AppCompatActivity {
         productProteineAR.setText(prodotto.getValoriNutrizionali().getProteineAR() + "%");
         productSaleValue.setText(prodotto.getValoriNutrizionali().getSale() + "g");
         productSaleAR.setText(prodotto.getValoriNutrizionali().getSaleAR() + "%");
-            /*
-        ArrayList<Integer> expirationDatesId = new ArrayList<>();
-        int counter = 0;
+        ArrayList<TextView> expirationDates = new ArrayList<>();
+        ArrayList<TextView> amountOfProduct = new ArrayList<>();
         for (ProductExpirationDate productExpirationDate:prodotto.getDateScadenza()) {
-            ConstraintSet set = new ConstraintSet();
-            set.clone(productExpirationDateLayout);
-            TextView textView = new TextView(getApplicationContext());
+            TextView textViewExpirationDate = new TextView(getApplicationContext());
             int textId = ViewCompat.generateViewId();
-            textView.setId(textId);
-            expirationDatesId.add(textView.getId());
-            textView.setText(productExpirationDate.getExpirationDate().toString());
-            productExpirationDateLayout.addView(textView);
-            if(expirationDatesId.size() > 1) {
-                set.connect(textView.getId(), ConstraintSet.TOP, productExpirationDateLayout.getId(), ConstraintSet.BOTTOM);
-            } else {
-                set.connect(textView.getId(), ConstraintSet.TOP, productExpirationDateLayout.getId(), ConstraintSet.TOP);
+            textViewExpirationDate.setId(textId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                textViewExpirationDate.setText(productExpirationDate.getExpirationDate().format(dateTimeFormatter));
             }
+            textViewExpirationDate.setPadding(0, 0, 550, 20);
+            expirationDates.add(textViewExpirationDate);
+            productExpirationDateLayout.addView(textViewExpirationDate);
+            textViewExpirationDate.setOnClickListener(view -> {
+                currentProductExpirationDate = productExpirationDate;
+                productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
+            });
+            TextView textViewAmountOfProduct = new TextView(getApplicationContext());
+            textId = ViewCompat.generateViewId();
+            textViewAmountOfProduct.setId(textId);
+            textViewAmountOfProduct.setText(String.valueOf(productExpirationDate.getAmount()));
+            textViewAmountOfProduct.setPadding(0, 0, 0, 20);
+            amountOfProduct.add(textViewAmountOfProduct);
+            expirationDateTextViewHashMap.put(productExpirationDate, textViewAmountOfProduct);
+            productExpirationDateLayout.addView(textViewAmountOfProduct);
+        }
 
-            set.connect(productExpirationDateLayout.getId(), ConstraintSet.TOP, productExpirationDateLayout.getId(), ConstraintSet.TOP);
-            set.applyTo(productExpirationDateLayout);
-
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(productExpirationDateLayout);
+        constraintSet.connect(expirationDates.get(0).getId(), ConstraintSet.TOP, R.id.expirationDateLabel, ConstraintSet.BOTTOM);
+        int counter = 0;
+        for(TextView textView : expirationDates.subList(1, expirationDates.size())) {
+            constraintSet.connect(textView.getId(), ConstraintSet.TOP, expirationDates.get(counter).getId(), ConstraintSet.BOTTOM);
             counter++;
         }
-             */
 
+        constraintSet.connect(amountOfProduct.get(0).getId(), ConstraintSet.TOP, R.id.quantitàLabel, ConstraintSet.BOTTOM);
+        constraintSet.connect(amountOfProduct.get(0).getId(), ConstraintSet.START, expirationDates.get(0).getId(), ConstraintSet.END);
+
+        counter = 0;
+
+        for(TextView textView : amountOfProduct.subList(1, amountOfProduct.size())) {
+            constraintSet.connect(textView.getId(), ConstraintSet.TOP, amountOfProduct.get(counter).getId(), ConstraintSet.BOTTOM);
+            constraintSet.connect(textView.getId(), ConstraintSet.START, expirationDates.get(counter + 1).getId(), ConstraintSet.END);
+            counter++;
+        }
+        constraintSet.applyTo(productExpirationDateLayout);
     }
 }

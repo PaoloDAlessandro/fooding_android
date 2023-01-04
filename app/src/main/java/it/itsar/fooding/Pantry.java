@@ -190,6 +190,9 @@ public class Pantry extends Fragment {
     void updateRecycleView(ActivityResult result) {
         Intent intent = result.getData();
         assert intent != null;
+        int position = intent.getIntExtra("position", -1);
+        Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
+        prodotti.get(position).setDateScadenza(prodotto.getDateScadenza());
         productAdapter.setProdotti(prodotti);
         recyclerView.setAdapter(productAdapter);
     }
