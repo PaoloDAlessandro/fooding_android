@@ -81,6 +81,7 @@ public class ProductDetails extends AppCompatActivity {
 
     void setupResultIntent() {
         productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
+        prodotto.checkEmptyExpirationDate();
         resultIntent.putExtra("prodotto", prodotto);
         setResult(Activity.RESULT_OK, resultIntent);
     }

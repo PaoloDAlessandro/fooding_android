@@ -3,9 +3,13 @@ package it.itsar.fooding;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+
+import android.app.Activity;
 import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Month;
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private final MyProperties myProperties = MyProperties.getInstance();
+    private LocalStorageManager localStorageManager = new LocalStorageManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +198,20 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        myProperties.setUserProdotti(new ArrayList<>(Arrays.asList(prodotti)));
+        try {
+            localStorageManager.leggi(getFilesDir() + "/temp.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(myProperties.getUserProdotti().size() == 0) {
+            try {
+                localStorageManager.writeObjectFile(new File(getFilesDir() + "/temp.txt"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {

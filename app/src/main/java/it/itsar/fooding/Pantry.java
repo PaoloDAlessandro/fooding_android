@@ -26,6 +26,8 @@ import android.widget.Spinner;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -39,6 +41,7 @@ public class Pantry extends Fragment {
     private ArrayList<Prodotto> prodotti = myProperties.getUserProdotti();
     private Spinner productFilter;
     private Button addProductButton;
+    private LocalStorageManager localStorageManager = new LocalStorageManager();
 
     private int filterMode;
     private ProductAdapter productAdapter;
@@ -88,7 +91,6 @@ public class Pantry extends Fragment {
         productFilter = view.findViewById(R.id.productFilter);
         addProductButton = view.findViewById(R.id.addProductButton);
         recyclerView.setAdapter(productAdapter);
-
         filterByExpiration();
         setAddProductButtonTouchListener();
 
@@ -193,6 +195,12 @@ public class Pantry extends Fragment {
         int position = intent.getIntExtra("position", -1);
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         prodotti.get(position).setDateScadenza(prodotto.getDateScadenza());
+        myProperties.removeProduct();
+        try {
+            localStorageManager.writeObjectFile(new File(getActivity().getFilesDir() + "/temp.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         productAdapter.setProdotti(prodotti);
         recyclerView.setAdapter(productAdapter);
     }

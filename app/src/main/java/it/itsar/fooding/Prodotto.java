@@ -129,4 +129,8 @@ public class Prodotto implements Serializable {
         }
         return total;
     }
+
+    public void checkEmptyExpirationDate() {
+        this.getDateScadenza().removeIf(productExpirationDate -> productExpirationDate.getAmount() == 0);
+    }
 }

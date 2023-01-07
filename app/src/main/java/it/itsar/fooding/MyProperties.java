@@ -6,7 +6,7 @@ public class MyProperties {
     private static MyProperties mInstance= null;
 
     private Prodotto[] prodotti;
-    private ArrayList<Prodotto> userProdotti;
+    private ArrayList<Prodotto> userProdotti = new ArrayList<>();
 
     protected MyProperties(){}
 
@@ -31,6 +31,10 @@ public class MyProperties {
 
     public void setUserProdotti(ArrayList<Prodotto> userProdotti) {
         this.userProdotti = userProdotti;
+    }
+
+    public void removeProduct() {
+        this.userProdotti.removeIf(prodotto -> prodotto.getDateScadenza().stream().allMatch(productExpirationDate -> productExpirationDate.getAmount() == 0));
     }
 
     public ArrayList<Prodotto> getUserProdotti() {

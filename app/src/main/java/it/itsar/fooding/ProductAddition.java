@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class ProductAddition extends AppCompatActivity {
     private int month;
     private int day;
     private DateTimeFormatter formatter;
+    private LocalStorageManager localStorageManager = new LocalStorageManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +116,10 @@ public class ProductAddition extends AppCompatActivity {
                         selectedProduct = prodottiFiltrati.get(0);
                         checkInputsStatus();
                         productNameAutoCompleteAdapter.setProdotti(prodottiFiltrati);
-                        productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
+                        //productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
                     }
                 }
+
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -135,6 +140,13 @@ public class ProductAddition extends AppCompatActivity {
                 selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatterDate));
             }
             checkProductInUserPantry();
+            File file = new File(getFilesDir(), "temp.txt");
+            try {
+                localStorageManager.writeObjectFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             goBack(Activity.RESULT_OK);
         });
 
