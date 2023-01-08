@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +38,8 @@ public class ProductAddition extends AppCompatActivity {
     private Button confirmButton;
     private Button cancelButton;
     private EditText productStockInput;
+    private Button decreaseStockInput;
+    private Button increaseStockInput;
     private DatePickerDialog picker;
     private TextView productExpirationDateInput;
     private AutoCompleteTextView productNameAutoComplete;
@@ -57,10 +62,11 @@ public class ProductAddition extends AppCompatActivity {
         confirmButton = findViewById(R.id.productAdditionConfirm);
         cancelButton = findViewById(R.id.productAddictionCancel);
         productStockInput = findViewById(R.id.productStockInput);
+        decreaseStockInput = findViewById(R.id.decreaseStockButton);
+        increaseStockInput = findViewById(R.id.increaseStockButton);
         userProdotti = myProperties.getUserProdotti();
         selectedProduct = null;
         confirmButton.setEnabled(false);
-
         productExpirationDateInput.setOnClickListener(view -> {
             final Calendar calendar = Calendar.getInstance();
             day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -80,7 +86,7 @@ public class ProductAddition extends AppCompatActivity {
         });
 
         List<Prodotto> prodottiDaFiltrare = Arrays.asList(prodotti);
-        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, R.layout.autocomplete_product_name, Arrays.asList(prodotti));
+        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, new ArrayList<>(prodottiDaFiltrare));
 
         productStockInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -99,6 +105,20 @@ public class ProductAddition extends AppCompatActivity {
             }
         });
 
+        decreaseStockInput.setOnClickListener(view -> {
+            productStockInput.setText(String.valueOf(Integer.parseInt(productStockInput.getText().toString()) - 1));
+            if(Integer.parseInt(productStockInput.getText().toString()) == 1) {
+                decreaseStockInput.setEnabled(false);
+            }
+        });
+
+        increaseStockInput.setOnClickListener(view -> {
+            if(Integer.parseInt(productStockInput.getText().toString()) == 1) {
+                decreaseStockInput.setEnabled(true);
+            }
+            productStockInput.setText(String.valueOf(Integer.parseInt(productStockInput.getText().toString()) + 1));
+        });
+
         productNameAutoComplete.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -107,17 +127,20 @@ public class ProductAddition extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                prodottiFiltrati = prodottiDaFiltrare.stream()
-                        .filter(prodotto ->
-                                prodotto.getNome().contains(productNameAutoComplete.getText().toString()))
-                        .collect(Collectors.toList());
+                if(charSequence.length() >= 2) {
+                    prodottiFiltrati = prodottiDaFiltrare.stream()
+                            .filter(prodotto ->
+                                    prodotto.getNome().contains(productNameAutoComplete.getText().toString()))
+                            .collect(Collectors.toList());
 
-                if(prodottiFiltrati.size() != 0) {
-                        selectedProduct = prodottiFiltrati.get(0);
-                        checkInputsStatus();
-                        productNameAutoCompleteAdapter.setProdotti(prodottiFiltrati);
-                        //productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
-                    }
+                    if(prodottiFiltrati.size() != 0) {
+                            selectedProduct = prodottiFiltrati.get(0);
+                            checkInputsStatus();
+
+                            ProductNameAutoCompleteAdapter productNameAutoCompleteAdapterAfterChange = new ProductNameAutoCompleteAdapter(getApplicationContext(), new ArrayList<>(prodottiFiltrati));
+                            productNameAutoComplete.setAdapter(productNameAutoCompleteAdapterAfterChange);
+                        }
+                }
                 }
 
 

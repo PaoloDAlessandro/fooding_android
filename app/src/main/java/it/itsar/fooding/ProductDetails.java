@@ -23,7 +23,7 @@ public class ProductDetails extends AppCompatActivity {
     private TextView productName;
     private ImageView productImage;
     private TextView productBrand;
-    private TextView productExpirationDate;
+    private TextView productExpirationDateText;
     private ConstraintLayout productExpirationDateLayout;
     private TextView productIngredienti;
     private TextView productStock;
@@ -98,7 +98,7 @@ public class ProductDetails extends AppCompatActivity {
         productName = findViewById(R.id.productName);
         productImage = findViewById(R.id.productImage);
         productBrand = findViewById(R.id.productBrand);
-        productExpirationDate = findViewById(R.id.productExpirationDate);
+        productExpirationDateText = findViewById(R.id.productExpirationDate);
         productExpirationDateLayout = findViewById(R.id.productExpirationDateLayout);
         productIngredienti = findViewById(R.id.productIngredienti);
         productStock = findViewById(R.id.productStock);
@@ -132,7 +132,7 @@ public class ProductDetails extends AppCompatActivity {
         productName.setText(prodotto.getNome());
         productBrand.setText(prodotto.getMarca());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter));
+            productExpirationDateText.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter));
         }
         productIngredienti.setText(prodotto.getIngredienti());
         productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
@@ -166,8 +166,12 @@ public class ProductDetails extends AppCompatActivity {
             textViewExpirationDate.setPadding(0, 0, 550, 20);
             expirationDates.add(textViewExpirationDate);
             productExpirationDateLayout.addView(textViewExpirationDate);
+            DateTimeFormatter finalDateTimeFormatter = dateTimeFormatter;
             textViewExpirationDate.setOnClickListener(view -> {
                 currentProductExpirationDate = productExpirationDate;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    productExpirationDateText.setText(productExpirationDate.getExpirationDate().format(finalDateTimeFormatter));
+                }
                 productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
             });
             TextView textViewAmountOfProduct = new TextView(getApplicationContext());

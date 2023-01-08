@@ -98,6 +98,17 @@ public class MainActivity extends AppCompatActivity {
                         new ValoriNutrizionali(996, 12, 18, 26, 12.5, 63, 2, 1, 1, 1, 0, 0, 17, 34, 1.75, 29)
                         ),
                 new Prodotto(
+                        "Riso Venere",
+                        "Riso Scotti",
+                        "Riso medio nero venere integrale parboiled",
+                        500,
+                        12,
+                        new ArrayList<>(),
+                        R.drawable.riso_venere_scotti,
+                        ContextCompat.getColor(getApplicationContext(), R.color.riso_venere_scotti),
+                        new ValoriNutrizionali(1448, 17, 3.7, 5, 1, 5, 72, 28, 0.1, 0, 2.5, 0, 8.1, 16, 0, 0)
+                ),
+                new Prodotto(
                         "Mozzarella fior di latte",
                         "Vallelata",
                         "Latte vaccino, fermenti lattici vivi, sale",
@@ -117,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                               new ArrayList<>(),
                               R.drawable.uova_le_naturelle,
                               ContextCompat.getColor(getApplicationContext(), R.color.uova_le_naturelle),
-                              new ValoriNutrizionali(535, 6.4, 8.7, 12, 4, 20, 0.5, 0, 0.5, 0, 0, 0, 12, 24, 0.3, 5.7))
+                              new ValoriNutrizionali(535, 6.4, 8.7, 12, 4, 20, 0.5, 0, 0.5, 0, 0, 0, 12, 24, 0.3, 5.7)
+                )
         });
         setLocalStorageManager();
 
