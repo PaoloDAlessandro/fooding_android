@@ -136,13 +136,12 @@ public class ProductAddition extends AppCompatActivity {
         confirmButton.setOnClickListener(view -> {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("d/M/yyyy");
-                selectedProduct.getDateScadenza().get(0).setAmount(Integer.parseInt(productStockInput.getText().toString()));
-                selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatterDate));
+                selectedProduct.getDateScadenza().add(new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatterDate)));
             }
             checkProductInUserPantry();
             File file = new File(getFilesDir(), "temp.txt");
             try {
-                localStorageManager.writeObjectFile(file);
+                localStorageManager.backupToFile(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -232,12 +231,7 @@ public class ProductAddition extends AppCompatActivity {
                 productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.product_marca));
             }
 
-            if(firstCondition && secondCondition && thirdCondition) {
-                confirmButton.setEnabled(true);
-            }
-            else {
-                confirmButton.setEnabled(false);
-            }
+            confirmButton.setEnabled(firstCondition && secondCondition && thirdCondition);
         }
     }
 

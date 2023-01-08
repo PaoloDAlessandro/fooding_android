@@ -194,10 +194,11 @@ public class Pantry extends Fragment {
         assert intent != null;
         int position = intent.getIntExtra("position", -1);
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
+        prodotto.checkEmptyExpirationDate();
         prodotti.get(position).setDateScadenza(prodotto.getDateScadenza());
         myProperties.removeProduct();
         try {
-            localStorageManager.writeObjectFile(new File(getActivity().getFilesDir() + "/temp.txt"));
+            localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/temp.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
