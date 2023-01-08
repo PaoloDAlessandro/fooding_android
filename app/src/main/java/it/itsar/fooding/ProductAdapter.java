@@ -73,11 +73,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 
         void bind(Prodotto prodotto) {
-            productName.setText(prodotto.getNome());
+            if(prodotto.getNome().length() > 20) {
+                productName.setText(prodotto.getNome().substring(0, 20) + "...");
+            }
+            else {
+                productName.setText(prodotto.getNome());
+            }
             productBrand.setText(prodotto.getMarca());
             productImage.setImageResource(prodotto.getImage());
             productStock.setText(prodotto.getAmountOfUnits() + "");
-            productWeight.setText(prodotto.getPeso() + "g");
+            productWeight.setText(prodotto.getPeso() + prodotto.getUnità());
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter) + " (" + prodotto.getCloserExpirationdate().getAmount() + ")");

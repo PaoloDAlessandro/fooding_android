@@ -10,17 +10,19 @@ public class Prodotto implements Serializable {
     private String marca;
     private String ingredienti;
     private int peso;
+    private String unità;
     private int preparazione;
     private ArrayList<ProductExpirationDate> dateScadenza;
     private int image;
     private int colore;
     private ValoriNutrizionali valoriNutrizionali;
 
-    public Prodotto(String nome, String marca, String ingredienti, int peso, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
+    public Prodotto(String nome, String marca, String ingredienti, int peso, String unità, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
         this.nome = nome;
         this.marca = marca;
         this.ingredienti = ingredienti;
         this.peso = peso;
+        this.unità = unità;
         this.preparazione = preparazione;
         this.dateScadenza = dateScadenza;
         this.image = image;
@@ -132,5 +134,9 @@ public class Prodotto implements Serializable {
 
     public void checkEmptyExpirationDate() {
         this.getDateScadenza().removeIf(productExpirationDate -> productExpirationDate.getAmount() == 0);
+    }
+
+    public String getUnità() {
+        return unità;
     }
 }

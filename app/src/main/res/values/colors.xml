@@ -16,8 +16,11 @@
     <color name="uova_le_naturelle">#F1F0E5</color>
     <color name="riso_venere_scotti">#494D5B</color>
     <color name="penne_rigate_barilla">#002567</color>
+    <color name="mozzarella_granarolo">#38ADA1</color>
     <color name="fusilli_n98_barilla">#2378D1</color>
-    <color name="mozzarella_santa_lucia">#6C80C3</color>
+    <color name="mozzarella_santa_lucia">#E2E2E2</color>
+    <color name="olio_extra_vergine_oliva_dante">#957C27</color>
+    <color name="tagliatelle_n203_de_cecco">#00A6E4</color>
     <color name="mozzarella_fiord_di_latte_vallelata">#EEEEEE</color>
     <color name="product_name">#080C2F</color>
     <color name="product_marca">#5F627A</color>

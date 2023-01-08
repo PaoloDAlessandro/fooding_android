@@ -173,6 +173,7 @@ public class ProductDetails extends AppCompatActivity {
                     productExpirationDateText.setText(productExpirationDate.getExpirationDate().format(finalDateTimeFormatter));
                 }
                 productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
+                checkStockStatus();
             });
             TextView textViewAmountOfProduct = new TextView(getApplicationContext());
             textId = ViewCompat.generateViewId();

@@ -86,7 +86,6 @@ public class ProductAddition extends AppCompatActivity {
         });
 
         List<Prodotto> prodottiDaFiltrare = Arrays.asList(prodotti);
-        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, new ArrayList<>(prodottiDaFiltrare));
 
         productStockInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -130,19 +129,17 @@ public class ProductAddition extends AppCompatActivity {
                 if(charSequence.length() >= 2) {
                     prodottiFiltrati = prodottiDaFiltrare.stream()
                             .filter(prodotto ->
-                                    prodotto.getNome().contains(productNameAutoComplete.getText().toString()))
+                                    prodotto.getNome().toLowerCase().startsWith(productNameAutoComplete.getText().toString().toLowerCase()))
                             .collect(Collectors.toList());
 
                     if(prodottiFiltrati.size() != 0) {
                             selectedProduct = prodottiFiltrati.get(0);
                             checkInputsStatus();
-
                             ProductNameAutoCompleteAdapter productNameAutoCompleteAdapterAfterChange = new ProductNameAutoCompleteAdapter(getApplicationContext(), new ArrayList<>(prodottiFiltrati));
                             productNameAutoComplete.setAdapter(productNameAutoCompleteAdapterAfterChange);
                         }
                 }
                 }
-
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -150,16 +147,20 @@ public class ProductAddition extends AppCompatActivity {
             }
         });
 
-        productNameAutoComplete.setAdapter(productNameAutoCompleteAdapter);
         productNameAutoComplete.setOnItemClickListener((parent, arg1, position, arg3) -> {
-            selectedProduct = (Prodotto) parent.getItemAtPosition(position);
+            if (prodottiFiltrati.size() == 1) {
+                selectedProduct = (Prodotto) parent.getItemAtPosition(0); //who wrote Java is an idiot
+            }
+            else {
+                selectedProduct = (Prodotto) parent.getItemAtPosition(position);
+            }
             checkInputsStatus();
         });
 
         confirmButton.setOnClickListener(view -> {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("d/M/yyyy");
-                selectedProduct.getDateScadenza().add(new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatterDate)));
+                selectedProduct.setDateScadenza(new ArrayList<>(Arrays.asList(new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatterDate)))));
             }
             checkProductInUserPantry();
             File file = new File(getFilesDir(), "temp.txt");
@@ -216,6 +217,7 @@ public class ProductAddition extends AppCompatActivity {
                         selectedProduct.getMarca(),
                         selectedProduct.getIngredienti(),
                         selectedProduct.getPeso(),
+                        selectedProduct.getUnità(),
                         selectedProduct.getPreparazione(),
                         new ArrayList<>(Arrays.asList(
                                 new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatter))

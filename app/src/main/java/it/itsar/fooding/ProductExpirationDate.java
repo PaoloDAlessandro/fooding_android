@@ -3,7 +3,7 @@ package it.itsar.fooding;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ProductExpirationDate implements Serializable, Cloneable {
+public class ProductExpirationDate implements Serializable {
     private int amount;
     private LocalDate expirationDate;
 
@@ -34,16 +34,5 @@ public class ProductExpirationDate implements Serializable, Cloneable {
                 "amount=" + amount +
                 ", expirationDate=" + expirationDate +
                 '}';
-    }
-
-    @Override
-    public ProductExpirationDate clone() {
-        try {
-            ProductExpirationDate clone = (ProductExpirationDate) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }
