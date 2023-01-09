@@ -34,7 +34,6 @@ public class Home extends Fragment {
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
 
-
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -62,11 +61,9 @@ public class Home extends Fragment {
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);
         userProducts = myProperties.getUserProdotti();
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
         orderByAdditionDate();
-        ultimeAggiunteAdapter = new UltimeAggiunteAdapter(userProducts.toArray(new Prodotto[0]), getContext(), activityLauncher);
+        ultimeAggiunteAdapter = new UltimeAggiunteAdapter(userProducts.subList(0,4).toArray(new Prodotto[0]), getContext(), activityLauncher);
         ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
-
     }
 
     void updateUserProducts(ActivityResult result) {
@@ -82,7 +79,7 @@ public class Home extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ultimeAggiunteAdapter.setUltimeAggiunte(userProducts.toArray(new Prodotto[0]));
+        ultimeAggiunteAdapter.setUltimeAggiunte(userProducts.subList(0,4).toArray(new Prodotto[0]));
         ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
     }
 

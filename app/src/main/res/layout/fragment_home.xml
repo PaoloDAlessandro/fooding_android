@@ -47,11 +47,32 @@
             android:id="@+id/ultimeAggiunteProdotti"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="150dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@id/ultimeAggiunteLabel">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ricetteConsigliateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/product_name"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintTop_toBottomOf="@id/ultimeAggiunteProdotti"
+            app:layout_constraintStart_toStartOf="@id/welcomeMessage">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="2dp"
+                android:text="@string/ricette_consigliate_label"
+                android:textColor="@color/white" />
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
