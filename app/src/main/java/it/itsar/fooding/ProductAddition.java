@@ -66,6 +66,7 @@ public class ProductAddition extends AppCompatActivity {
         increaseStockInput = findViewById(R.id.increaseStockButton);
         userProdotti = myProperties.getUserProdotti();
         selectedProduct = null;
+        decreaseStockInput.setEnabled(false);
         confirmButton.setEnabled(false);
         productExpirationDateInput.setOnClickListener(view -> {
             final Calendar calendar = Calendar.getInstance();
@@ -137,6 +138,7 @@ public class ProductAddition extends AppCompatActivity {
                             checkInputsStatus();
                             ProductNameAutoCompleteAdapter productNameAutoCompleteAdapterAfterChange = new ProductNameAutoCompleteAdapter(getApplicationContext(), new ArrayList<>(prodottiFiltrati));
                             productNameAutoComplete.setAdapter(productNameAutoCompleteAdapterAfterChange);
+                            productNameAutoCompleteAdapterAfterChange.notifyDataSetChanged();
                         }
                 }
                 }

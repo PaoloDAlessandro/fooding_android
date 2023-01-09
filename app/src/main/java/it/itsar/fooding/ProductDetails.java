@@ -5,11 +5,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.ViewCompat;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,12 +50,15 @@ public class ProductDetails extends AppCompatActivity {
     private TextView productProteineAR;
     private TextView productSaleValue;
     private TextView productSaleAR;
+    private long startTime = 0;
+    private long endTime = 0;
     private ProductExpirationDate currentProductExpirationDate;
     private HashMap<ProductExpirationDate, TextView> expirationDateTextViewHashMap = new HashMap<>();
 
 
     private Intent resultIntent = new Intent();
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +77,43 @@ public class ProductDetails extends AppCompatActivity {
             checkStockStatus();
         });
 
-        decreaseStock.setOnClickListener(view -> {
-            currentProductExpirationDate.setAmount(currentProductExpirationDate.getAmount() - 1);
-            Objects.requireNonNull(expirationDateTextViewHashMap.get(currentProductExpirationDate)).setText(String.valueOf(currentProductExpirationDate.getAmount()));
-            setupResultIntent();
-            checkStockStatus();
+        decreaseStock.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                currentProductExpirationDate.setAmount(currentProductExpirationDate.getAmount() - 1);
+                Objects.requireNonNull(expirationDateTextViewHashMap.get(currentProductExpirationDate)).setText(String.valueOf(currentProductExpirationDate.getAmount()));
+                setupResultIntent();
+                checkStockStatus();
+            }
+
+            temp(motionEvent.getAction());
+
+            return true;
         });
+
+    }
+
+    void temp(int action) {
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                startTime = System.nanoTime();
+                break;
+
+            case MotionEvent.ACTION_UP:
+                endTime = System.nanoTime();
+                long result = (endTime - startTime) / 1000000;
+                if(result > 1000) {
+                    setStockToZero();
+            }
+                Log.d("Result: ", String.valueOf((endTime - startTime) / 1000000));
+                break;
+        }
+    }
+
+    void setStockToZero() {
+        currentProductExpirationDate.setAmount(0);
+        Objects.requireNonNull(expirationDateTextViewHashMap.get(currentProductExpirationDate)).setText(String.valueOf(currentProductExpirationDate.getAmount()));
+        setupResultIntent();
+        checkStockStatus();
     }
 
     void setupResultIntent() {
