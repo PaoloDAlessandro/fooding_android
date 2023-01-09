@@ -198,7 +198,7 @@ public class Pantry extends Fragment {
         prodotti.get(position).setDateScadenza(prodotto.getDateScadenza());
         myProperties.removeProduct();
         try {
-            localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/temp.txt"));
+            localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }

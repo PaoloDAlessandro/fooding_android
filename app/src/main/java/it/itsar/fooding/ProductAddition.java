@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +166,7 @@ public class ProductAddition extends AppCompatActivity {
                 selectedProduct.setDateScadenza(new ArrayList<>(Arrays.asList(new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatterDate)))));
             }
             checkProductInUserPantry();
-            File file = new File(getFilesDir(), "temp.txt");
+            File file = new File(getFilesDir(), "storage.txt");
             try {
                 localStorageManager.backupToFile(file);
             } catch (IOException e) {
@@ -226,7 +227,8 @@ public class ProductAddition extends AppCompatActivity {
                         )),
                         selectedProduct.getImage(),
                         selectedProduct.getColore(),
-                        selectedProduct.getValoriNutrizionali()
+                        selectedProduct.getValoriNutrizionali(),
+                        LocalDateTime.now()
                 ));
             }
         }

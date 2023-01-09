@@ -57,13 +57,15 @@
                 android:src="@drawable/calendar_expiration_date_v2"/>
 
             <TextView
+                android:id="@+id/productExpirationDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
                 android:layout_gravity="center"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="1.4dp"
                 android:textColor="@color/product_marca"
                 android:textSize="11sp"
+                android:layout_marginStart="1dp"
                 android:text=" 23-01-2002"
                 />
 

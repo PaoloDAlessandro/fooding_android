@@ -3,6 +3,7 @@ package it.itsar.fooding;
 import android.os.Build;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Prodotto implements Serializable {
@@ -16,6 +17,7 @@ public class Prodotto implements Serializable {
     private int image;
     private int colore;
     private ValoriNutrizionali valoriNutrizionali;
+    private LocalDateTime dataAggiunta;
 
     public Prodotto(String nome, String marca, String ingredienti, int peso, String unità, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
         this.nome = nome;
@@ -28,6 +30,20 @@ public class Prodotto implements Serializable {
         this.image = image;
         this.colore = colore;
         this.valoriNutrizionali = valoriNutrizionali;
+    }
+
+    public Prodotto(String nome, String marca, String ingredienti, int peso, String unità, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali, LocalDateTime dataAggiunta) {
+        this.nome = nome;
+        this.marca = marca;
+        this.ingredienti = ingredienti;
+        this.peso = peso;
+        this.unità = unità;
+        this.preparazione = preparazione;
+        this.dateScadenza = dateScadenza;
+        this.image = image;
+        this.colore = colore;
+        this.valoriNutrizionali = valoriNutrizionali;
+        this.dataAggiunta = dataAggiunta;
     }
 
     public String getNome() {
@@ -138,5 +154,9 @@ public class Prodotto implements Serializable {
 
     public String getUnità() {
         return unità;
+    }
+
+    public LocalDateTime getDataAggiunta() {
+        return dataAggiunta;
     }
 }

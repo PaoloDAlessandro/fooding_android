@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.crema_carciofi,
                         ContextCompat.getColor(getApplicationContext(), R.color.crema_carciofi),
-                        new ValoriNutrizionali(724.00, 9, 11.0, 16, 6.3, 32, 17.0, 7, 1.3, 1, 1.3, 0, 2.5, 5, 0, 0)
+                        new ValoriNutrizionali(724.00, 9, 11.0, 16, 6.3, 32, 17.0, 7, 1.3, 1, 1.3, 0, 2.5, 5, 0, 0),
+                        null
                 ),
                 new Prodotto(
                         "Ragù Contadino",
@@ -48,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.ragu_contadino,
                         ContextCompat.getColor(getApplicationContext(), R.color.ragù_contadino),
-                        new ValoriNutrizionali(385, 5, 4.5, 6, 1.2, 6, 6.8, 3, 4.0, 4, 1.8, 0, 5.1, 10, 1.0, 17)),
+                        new ValoriNutrizionali(385, 5, 4.5, 6, 1.2, 6, 6.8, 3, 4.0, 4, 1.8, 0, 5.1, 10, 1.0, 17),
+                        null
+                ),
                 new Prodotto(
                         "Leerdammer",
                         "Leerdammer",
@@ -59,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.leerdammer,
                         ContextCompat.getColor(getApplicationContext(), R.color.leerdammer),
-                        new ValoriNutrizionali(1536, 18, 28.0, 40, 0, 0, 0.1, 0, 0, 0, 0, 0, 28, 56, 0, 0)),
+                        new ValoriNutrizionali(1536, 18, 28.0, 40, 0, 0, 0.1, 0, 0, 0, 0, 0, 28, 56, 0, 0),
+                        null
+                ),
                 new Prodotto(
                         "Rosette",
                         "Schär",
@@ -70,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.rosette,
                         ContextCompat.getColor(getApplicationContext(), R.color.rosette),
-                        new ValoriNutrizionali(1025, 12.3, 3.6, 5.1, 0.5, 2.5, 47, 17.4, 0.8, 0.9, 5.5, 22, 3.5, 7, 1.3, 21.7)
+                        new ValoriNutrizionali(1025, 12.3, 3.6, 5.1, 0.5, 2.5, 47, 17.4, 0.8, 0.9, 5.5, 22, 3.5, 7, 1.3, 21.7),
+                        null
                 ),
                 new Prodotto(
                         "Penne rigate N.73",
@@ -82,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
                              new ArrayList<>(),
                              R.drawable.penne_rigate_barilla,
                              ContextCompat.getColor(getApplicationContext(), R.color.penne_rigate_barilla),
-                             new ValoriNutrizionali(1502, 18, 2, 3, 0.5, 3, 71.2, 27, 3.5, 4, 3, 0 , 12.5, 25, 0.03, 1)
+                             new ValoriNutrizionali(1502, 18, 2, 3, 0.5, 3, 71.2, 27, 3.5, 4, 3, 0 , 12.5, 25, 0.03, 1),
+                        null
                 ),
                 new Prodotto(
                         "Mozzarella",
@@ -94,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.mozzarella_granarolo,
                         ContextCompat.getColor(getApplicationContext(), R.color.mozzarella_granarolo),
-                        new ValoriNutrizionali(904, 11, 16, 23, 11, 55, 1, 0, 1, 1, 0, 0, 17, 34, 0.7, 12)
+                        new ValoriNutrizionali(904, 11, 16, 23, 11, 55, 1, 0, 1, 1, 0, 0, 17, 34, 0.7, 12),
+                        null
                 ),
                 new Prodotto(
                         "Fusilli N.98",
@@ -106,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.fusilli_n98_barilla,
                         ContextCompat.getColor(getApplicationContext(), R.color.fusilli_n98_barilla),
-                        new ValoriNutrizionali(1502, 18, 2, 3, 0.5, 3, 71.2, 27, 3.5, 4, 3, 0 , 12.5, 25, 0.03, 1)
+                        new ValoriNutrizionali(1502, 18, 2, 3, 0.5, 3, 71.2, 27, 3.5, 4, 3, 0 , 12.5, 25, 0.03, 1),
+                        null
                 ),
                 new Prodotto(
                         "Mozzarella",
@@ -118,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.mozzarella_santa_lucia,
                         ContextCompat.getColor(getApplicationContext(), R.color.mozzarella_santa_lucia),
-                        new ValoriNutrizionali(996, 12, 18, 26, 12.5, 63, 2, 1, 1, 1, 0, 0, 17, 34, 1.75, 29)
+                        new ValoriNutrizionali(996, 12, 18, 26, 12.5, 63, 2, 1, 1, 1, 0, 0, 17, 34, 1.75, 29),
+                        null
                         ),
                 new Prodotto(
                         "Olio extra vergine di oliva",
@@ -130,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.olio_extra_vergine_oliva_dante,
                         ContextCompat.getColor(getApplicationContext(), R.color.olio_extra_vergine_oliva_dante),
-                        new ValoriNutrizionali(3439, 41, 91.3, 130, 13, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                        new ValoriNutrizionali(3439, 41, 91.3, 130, 13, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                        null
                 ),
                 new Prodotto(
                         "Tagliatelle n. 203",
@@ -142,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.tagliatelle_n203_de_cecco,
                         ContextCompat.getColor(getApplicationContext(), R.color.tagliatelle_n203_de_cecco),
-                        new ValoriNutrizionali(1444.45, 17.3, 2.8, 4, 0.6, 3, 61, 22.6, 2.4, 2.7, 8, 32, 15, 30, 0.01, 0.2)
+                        new ValoriNutrizionali(1444.45, 17.3, 2.8, 4, 0.6, 3, 61, 22.6, 2.4, 2.7, 8, 32, 15, 30, 0.01, 0.2),
+                        null
                 ),
                 new Prodotto(
                         "Riso Venere",
@@ -154,7 +166,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.riso_venere_scotti,
                         ContextCompat.getColor(getApplicationContext(), R.color.riso_venere_scotti),
-                        new ValoriNutrizionali(1448, 17, 3.7, 5, 1, 5, 72, 28, 0.1, 0, 2.5, 0, 8.1, 16, 0, 0)
+                        new ValoriNutrizionali(1448, 17, 3.7, 5, 1, 5, 72, 28, 0.1, 0, 2.5, 0, 8.1, 16, 0, 0),
+                        null
                 ),
                 new Prodotto(
                         "Mozzarella fior di latte",
@@ -166,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
                         new ArrayList<>(),
                         R.drawable.mozzarella_fior_di_latte_vallelata,
                         ContextCompat.getColor(getApplicationContext(), R.color.mozzarella_fiord_di_latte_vallelata),
-                        new ValoriNutrizionali(904, 11, 16, 23, 11, 55, 1, 0, 0.1, 0, 0, 0, 17, 34, 0.8, 13)
+                        new ValoriNutrizionali(904, 11, 16, 23, 11, 55, 1, 0, 0.1, 0, 0, 0, 17, 34, 0.8, 13),
+                        null
                 ),
                 new Prodotto(
                         "Uova guscio bianco",
@@ -178,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
                               new ArrayList<>(),
                               R.drawable.uova_le_naturelle,
                               ContextCompat.getColor(getApplicationContext(), R.color.uova_le_naturelle),
-                              new ValoriNutrizionali(535, 6.4, 8.7, 12, 4, 20, 0.5, 0, 0.5, 0, 0, 0, 12, 24, 0.3, 5.7)
+                              new ValoriNutrizionali(535, 6.4, 8.7, 12, 4, 20, 0.5, 0, 0.5, 0, 0, 0, 12, 24, 0.3, 5.7),
+                        null
                 )
         });
         setLocalStorageManager();
@@ -200,14 +215,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void setLocalStorageManager() {
         try {
-            localStorageManager.backupFromFile(getFilesDir() + "/temp.txt");
+            localStorageManager.backupFromFile(getFilesDir() + "/storage.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         if(myProperties.getUserProdotti().size() == 0) {
             try {
-                localStorageManager.backupToFile(new File(getFilesDir() + "/temp.txt"));
+                localStorageManager.backupToFile(new File(getFilesDir() + "/storage.txt"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
