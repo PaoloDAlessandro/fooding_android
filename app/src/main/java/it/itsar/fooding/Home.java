@@ -29,15 +29,17 @@ import java.util.ArrayList;
 public class Home extends Fragment {
 
     private RecyclerView ultimeAggiunteProdotti;
+    private RecyclerView ricetteConsigliate;
     private final MyProperties myProperties = MyProperties.getInstance();
     private ArrayList<Prodotto> userProducts;
+    private ArrayList<Ricetta> ricette = new ArrayList<>();
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
 
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                switch (result.getResultCode()){
+                switch (result.getResultCode()) {
                     case Activity.RESULT_OK:
                         updateUserProducts(result);
                         break;
@@ -61,7 +63,16 @@ public class Home extends Fragment {
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);
         userProducts = myProperties.getUserProdotti();
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
+        ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         orderByAdditionDate();
+
+        ricette.add(new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", 11, 324, Ricetta.Difficolta.FACILE));
+        ricette.add(new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", 8, 154, Ricetta.Difficolta.FACILE));
+        ricette.add(new Ricetta("Pane tostato con uovo", R.drawable.pane_tostato_con_uovo, "BurroFuso", 6, 280, Ricetta.Difficolta.FACILE));
+        RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette);
+        ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
+
         ultimeAggiunteAdapter = new UltimeAggiunteAdapter(userProducts.subList(0,4).toArray(new Prodotto[0]), getContext(), activityLauncher);
         ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
     }
