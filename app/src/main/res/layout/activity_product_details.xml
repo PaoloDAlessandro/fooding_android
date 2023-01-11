@@ -569,6 +569,7 @@
                 android:layout_marginStart="30dp"
                 android:backgroundTint="@color/product_name"
                 android:text="@string/stock_decrease_button_text"
+                android:textColor="@color/button_color_selector"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

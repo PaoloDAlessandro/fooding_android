@@ -1,17 +1,22 @@
 package it.itsar.fooding;
 
-public class Ricetta {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Ricetta implements Serializable {
     private String nome;
     private int image;
     private String autore;
+    private ArrayList<Ingrediente> ingredienti;
     private int tempoPreparazione;
     private int kcal;
     private Difficolta difficolta;
 
-    public Ricetta(String nome, int image, String autore, int tempoPreparazione, int kcal, Difficolta difficolta) {
+    public Ricetta(String nome, int image, String autore, ArrayList<Ingrediente> ingredienti, int tempoPreparazione, int kcal, Difficolta difficolta) {
         this.nome = nome;
         this.image = image;
         this.autore = autore;
+        this.ingredienti = ingredienti;
         this.tempoPreparazione = tempoPreparazione;
         this.kcal = kcal;
         this.difficolta = difficolta;
@@ -63,6 +68,14 @@ public class Ricetta {
 
     public void setDifficolta(Difficolta difficolta) {
         this.difficolta = difficolta;
+    }
+
+    public ArrayList<Ingrediente> getIngredienti() {
+        return ingredienti;
+    }
+
+    public void setIngredienti(ArrayList<Ingrediente> ingredienti) {
+        this.ingredienti = ingredienti;
     }
 
     enum Difficolta {

@@ -40,6 +40,19 @@ public class MainActivity extends AppCompatActivity {
                         null
                 ),
                 new Prodotto(
+                        "Sale grosso",
+                        "Carrefour",
+                        "Sale grosso",
+                        1,
+                        "kg",
+                        0,
+                        new ArrayList<>(),
+                        R.drawable.sale_grosso_carrefour,
+                        ContextCompat.getColor(getApplicationContext(), R.color.sale_grosso_carrefour),
+                        new ValoriNutrizionali(0, 0,0, 0,0,0,0,0,0,0, 0,0, 0, 0, 96.9, 1615),
+                        null
+                ),
+                new Prodotto(
                         "Ragù Contadino",
                         "Barilla",
                         "Carote 4% Rosmarino Oli vegetali (oliva, girasole) Aglio Aromi Sale Zucchero Amido di mais Cipolle Vino rosso 6% Concentrato di pomodoro 16,5% Polpa di pomodoro 18% Acqua Carne suina 25%",
@@ -77,6 +90,18 @@ public class MainActivity extends AppCompatActivity {
                         ContextCompat.getColor(getApplicationContext(), R.color.rosette),
                         new ValoriNutrizionali(1025, 12.3, 3.6, 5.1, 0.5, 2.5, 47, 17.4, 0.8, 0.9, 5.5, 22, 3.5, 7, 1.3, 21.7),
                         null
+                ),
+                new Prodotto(
+                        "Pepe nero",
+                        "Cannamela",
+                        "Pepe nero",
+                        50,
+                        "g",
+                        0,
+                        new ArrayList<>(),
+                        R.drawable.pepe_nero_cannamela,
+                        ContextCompat.getColor(getApplicationContext(), R.color.pepe_nero_cannamela),
+                        new ValoriNutrizionali(11, 0, 0.03, 0, 0.01, 0, 0.65, 0, 0.01, 0, 0.03, 0.0, 0.11, 0, 0, 0)
                 ),
                 new Prodotto(
                         "Penne rigate N.73",

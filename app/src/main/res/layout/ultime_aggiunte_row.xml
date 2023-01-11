@@ -65,7 +65,7 @@
                 android:layout_marginTop="1.4dp"
                 android:textColor="@color/product_marca"
                 android:textSize="11sp"
-                android:layout_marginStart="1dp"
+                android:layout_marginStart="1.4dp"
                 android:text=" 23-01-2002"
                 />
 

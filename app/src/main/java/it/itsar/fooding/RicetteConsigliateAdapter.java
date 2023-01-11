@@ -1,5 +1,7 @@
 package it.itsar.fooding;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,10 +18,15 @@ import java.util.ArrayList;
 public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsigliateAdapter.RicetteConsigliateViewHolder> {
 
     private ArrayList<Ricetta> ricette;
+    private Context context;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
-    public RicetteConsigliateAdapter(ArrayList<Ricetta> ricette) {
+    public RicetteConsigliateAdapter(ArrayList<Ricetta> ricette, Context context, ActivityResultLauncher<Intent> activityResultLauncher) {
         this.ricette = ricette;
+        this.context = context;
+        this.activityResultLauncher = activityResultLauncher;
     }
+
 
     @NonNull
     @Override
@@ -37,13 +45,14 @@ public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsi
         return ricette.size() ;
     }
 
-     static class RicetteConsigliateViewHolder extends RecyclerView.ViewHolder {
+    class RicetteConsigliateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView ricettaImage;
         private TextView ricettaName;
 
         public RicetteConsigliateViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             ricettaImage = itemView.findViewById(R.id.ricettaImage);
             ricettaName = itemView.findViewById(R.id.ricettaName);
         }
@@ -57,5 +66,14 @@ public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsi
                 ricettaName.setText(ricetta.getNome());
             }
         }
-    }
+
+         @Override
+         public void onClick(View view) {
+             int position = this.getAdapterPosition();
+             Ricetta ricetta = ricette.get(position);
+             Intent intent = new Intent(context, RicettaDetails.class);
+             intent.putExtra("ricetta", ricetta);
+             activityResultLauncher.launch(intent);
+         }
+     }
 }

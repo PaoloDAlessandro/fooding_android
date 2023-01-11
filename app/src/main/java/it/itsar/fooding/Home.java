@@ -25,6 +25,7 @@ import android.widget.HorizontalScrollView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Home extends Fragment {
 
@@ -35,6 +36,13 @@ public class Home extends Fragment {
     private ArrayList<Ricetta> ricette = new ArrayList<>();
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
+
+    private ActivityResultLauncher<Intent> ricettaDetailsActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+
+            }
+    );
 
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -67,14 +75,12 @@ public class Home extends Fragment {
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         orderByAdditionDate();
 
-        ricette.add(new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", 11, 324, Ricetta.Difficolta.FACILE));
-        ricette.add(new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", 8, 154, Ricetta.Difficolta.FACILE));
-        ricette.add(new Ricetta("Pane tostato con uovo", R.drawable.pane_tostato_con_uovo, "BurroFuso", 6, 280, Ricetta.Difficolta.FACILE));
-        RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette);
-        ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
+        ricette.add(new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", new ArrayList<>(Arrays.asList(new Ingrediente(80, myProperties.getProdotti()[11]), new Ingrediente(60, myProperties.getProdotti()[2]), new Ingrediente(10, myProperties.getProdotti()[10]), new Ingrediente(5, myProperties.getProdotti()[5]))), 11, 324, Ricetta.Difficolta.FACILE));
 
-        ultimeAggiunteAdapter = new UltimeAggiunteAdapter(userProducts.subList(0,4).toArray(new Prodotto[0]), getContext(), activityLauncher);
-        ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
+        RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
+        ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
+        setUltimeAggiunteProdotti();
+
     }
 
     void updateUserProducts(ActivityResult result) {
@@ -90,8 +96,7 @@ public class Home extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ultimeAggiunteAdapter.setUltimeAggiunte(userProducts.subList(0,4).toArray(new Prodotto[0]));
-        ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
+        setUltimeAggiunteProdotti();
     }
 
     void orderByAdditionDate() {
@@ -101,5 +106,18 @@ public class Home extends Fragment {
             }
             return 0;
         });
+    }
+
+
+    void setUltimeAggiunteProdotti() {
+        if(userProducts.size() != 0) {
+            if(userProducts.size() > 4) {
+                ultimeAggiunteAdapter = new UltimeAggiunteAdapter(userProducts.subList(0,4).toArray(new Prodotto[0]), getContext(), activityLauncher);
+            }
+            else {
+                ultimeAggiunteAdapter = new UltimeAggiunteAdapter(userProducts.subList(0,userProducts.size()).toArray(new Prodotto[0]), getContext(), activityLauncher);
+            }
+            ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
+        }
     }
 }

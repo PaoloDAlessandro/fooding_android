@@ -21,9 +21,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     private ArrayList<Prodotto> prodotti;
     private Context context;
-    private ActivityResultLauncher activityResultLauncher;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
-    public ProductAdapter(ArrayList<Prodotto> prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
+    public ProductAdapter(ArrayList<Prodotto> prodotti, Context context, ActivityResultLauncher<Intent> activityResultLauncher) {
         this.prodotti = prodotti;
         this.context = context;
         this.activityResultLauncher = activityResultLauncher;
