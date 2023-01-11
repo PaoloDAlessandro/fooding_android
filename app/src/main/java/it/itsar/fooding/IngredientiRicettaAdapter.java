@@ -53,8 +53,8 @@ public class IngredientiRicettaAdapter extends RecyclerView.Adapter<IngredientiR
         public void bind(Ingrediente ingrediente) {
             String ingredienteText = ingrediente.getQuantità() + ingrediente.getProdotto().getUnità() + " ";
 
-            if (ingrediente.getProdotto().getNome().length() > 18) {
-                ingredienteText += ingrediente.getProdotto().getNome().substring(0, 16) + "...";
+            if (ingrediente.getProdotto().getNome().length() > 16) {
+                ingredienteText += ingrediente.getProdotto().getNome().substring(0, 15) + "...";
             }
             else {
                 ingredienteText += ingrediente.getProdotto().getNome();

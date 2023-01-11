@@ -33,7 +33,7 @@ public class Home extends Fragment {
     private RecyclerView ricetteConsigliate;
     private final MyProperties myProperties = MyProperties.getInstance();
     private ArrayList<Prodotto> userProducts;
-    private ArrayList<Ricetta> ricette = new ArrayList<>();
+    private ArrayList<Ricetta> ricette;
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
 
@@ -75,7 +75,11 @@ public class Home extends Fragment {
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         orderByAdditionDate();
 
-        ricette.add(new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", new ArrayList<>(Arrays.asList(new Ingrediente(80, myProperties.getProdotti()[11]), new Ingrediente(60, myProperties.getProdotti()[2]), new Ingrediente(10, myProperties.getProdotti()[10]), new Ingrediente(5, myProperties.getProdotti()[5]))), 11, 324, Ricetta.Difficolta.FACILE));
+        ricette = new ArrayList<>(Arrays.asList(
+                new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", new ArrayList<>(Arrays.asList(new Ingrediente(80, myProperties.getProdotti()[11]), new Ingrediente(60, myProperties.getProdotti()[2]), new Ingrediente(10, myProperties.getProdotti()[10]), new Ingrediente(5, myProperties.getProdotti()[5]))), 11, 324, Ricetta.Difficolta.FACILE),
+                new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", new ArrayList<>(Arrays.asList(new Ingrediente(88, myProperties.getProdotti()[0]))), 8, 154, Ricetta.Difficolta.FACILE),
+                new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", new ArrayList<>(Arrays.asList(new Ingrediente(120, myProperties.getProdotti()[14]), new Ingrediente(15, myProperties.getProdotti()[10]), new Ingrediente(30, myProperties.getProdotti()[15]))), 5, 287, Ricetta.Difficolta.FACILE)
+        ));
 
         RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
         ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);

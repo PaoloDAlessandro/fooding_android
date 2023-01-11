@@ -219,6 +219,19 @@ public class MainActivity extends AppCompatActivity {
                               ContextCompat.getColor(getApplicationContext(), R.color.uova_le_naturelle),
                               new ValoriNutrizionali(535, 6.4, 8.7, 12, 4, 20, 0.5, 0, 0.5, 0, 0, 0, 12, 24, 0.3, 5.7),
                         null
+                ),
+                new Prodotto(
+                        "Latte fieno",
+                        "Mila",
+                        "Latte fieno biologico dell'Alto Adige ",
+                        1,
+                        "L",
+                        0,
+                        new ArrayList<>(),
+                        R.drawable.latte_fieno_mila,
+                        ContextCompat.getColor(getApplicationContext(), R.color.latte_fieno_mila),
+                        new ValoriNutrizionali(280, 3, 3.6, 5, 2.5, 13, 5.1, 2, 4.9, 5, 0, 0, 4.5, 7, 0.1, 2),
+                        null
                 )
         });
         setLocalStorageManager();

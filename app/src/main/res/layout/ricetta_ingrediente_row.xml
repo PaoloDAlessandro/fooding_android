@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/ingredienteStatus"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         app:tint="#14870c"
         android:src="@drawable/ingredient_present"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="100g Crema carciofi"
+        android:textSize="13sp"
         android:fontFamily="@font/poppins_medium"
         android:textColor="@color/product_name"
         app:layout_constraintTop_toTopOf="parent"
