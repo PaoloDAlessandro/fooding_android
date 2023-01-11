@@ -245,6 +245,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.pantryButton:
                     configFragmentManager(Pantry.class);
                     break;
+
+                case R.id.userButton:
+                    configFragmentManager(Login.class);
+                    break;
             }
 
             return true;
