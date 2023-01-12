@@ -33,13 +33,17 @@ public class Login extends Fragment {
     private TextView registratiButton;
     private EditText usernameInput;
     private EditText passwordInput;
-    FragmentManager fragmentManager;
-    FragmentTransaction transaction;
     private MaterialCardView usernameInputCard;
     private MaterialCardView passwordInputCard;
     private Button accediButton;
+
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
+
+    private final AuthStorageManager authStorageManager = new AuthStorageManager();
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference user = db.collection("user");
+    private CollectionReference userCollection = db.collection("user");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,10 +64,12 @@ public class Login extends Fragment {
         fragmentManager = getParentFragmentManager();
         transaction = fragmentManager.beginTransaction();
 
+        checkUserAlreadyLogged();
+
         accediButton.setOnClickListener(view1 -> {
             usernameInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
             passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
-            user.whereEqualTo("username", usernameInput.getText().toString())
+            userCollection.whereEqualTo("username", usernameInput.getText().toString())
                     .whereEqualTo("password", passwordInput.getText().toString())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -71,14 +77,17 @@ public class Login extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()) {
                                 if(task.getResult().size() == 0) {
-                                    Log.d("ERROR:", "Utente non trovato!");
                                     Snackbar.make(view, "Utente non trovato!", Snackbar.LENGTH_SHORT).show();
                                     usernameInputCard.setStrokeColor(Color.parseColor("#ff0303"));
                                     passwordInputCard.setStrokeColor(Color.parseColor("#ff0303"));
                                 }
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("Result: ", document.getId() + " ==> " + document.getData());
-                                    Snackbar.make(view, "Loggato!", Snackbar.LENGTH_SHORT).show();
+                                else {
+                                    usernameInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+                                    passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                                        Snackbar.make(view, "Loggato!", Snackbar.LENGTH_SHORT).show();
+                                    }
                                 }
                             } else {
                                 Log.d("Error:", "Error getting documents: " + task.getException());
@@ -98,5 +107,35 @@ public class Login extends Fragment {
                 return true;
             }
         });
+    }
+
+    void checkUserAlreadyLogged() {
+        User user = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+
+        userCollection.whereEqualTo("username", user.getUsername())
+                .whereEqualTo("password", user.getPassword())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("STATUS: ", "USER ALREADY LOGGED");
+                                goToHome();
+                                Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                            }
+                        } else {
+                            Log.d("Error:", "Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+    }
+
+    void goToHome() {
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, Home.class, null)
+                .setReorderingAllowed(true)
+                .addToBackStack("name")
+                .commit();
     }
 }
