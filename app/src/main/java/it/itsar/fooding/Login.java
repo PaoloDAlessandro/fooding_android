@@ -6,13 +6,17 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,8 +30,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class Login extends Fragment {
 
+    private TextView registratiButton;
     private EditText usernameInput;
     private EditText passwordInput;
+    FragmentManager fragmentManager;
+    FragmentTransaction transaction;
     private MaterialCardView usernameInputCard;
     private MaterialCardView passwordInputCard;
     private Button accediButton;
@@ -48,7 +55,10 @@ public class Login extends Fragment {
         accediButton = view.findViewById(R.id.accediButton);
         usernameInputCard = view.findViewById(R.id.usernameInputCard);
         passwordInputCard = view.findViewById(R.id.passwordInputCard);
+        registratiButton = view.findViewById(R.id.registratiTextClickable);
 
+        fragmentManager = getParentFragmentManager();
+        transaction = fragmentManager.beginTransaction();
 
         accediButton.setOnClickListener(view1 -> {
             usernameInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
@@ -76,7 +86,17 @@ public class Login extends Fragment {
                         }
                     });
         });
+
+        registratiButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, Signin.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("name")
+                        .commit();
+                return true;
+            }
+        });
     }
-
-
 }
