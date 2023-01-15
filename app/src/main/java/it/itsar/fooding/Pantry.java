@@ -24,12 +24,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,14 +51,22 @@ public class Pantry extends Fragment {
     private RecyclerView recyclerView;
 
     public MyProperties myProperties = MyProperties.getInstance();
-    private ArrayList<Prodotto> prodotti = myProperties.getUserProdotti();
     private Spinner productFilter;
     private Button addProductButton;
+    private ArrayList<Prodotto> userProducts = new ArrayList<>();
+
     private LocalStorageManager localStorageManager = new LocalStorageManager();
+    private AuthStorageManager authStorageManager = new AuthStorageManager();
 
     private int filterMode;
     private ProductAdapter productAdapter;
     private EditText searchProduct;
+
+    private User userFromFile;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference userCollection = db.collection("user");
+    private final CollectionReference productCollection = db.collection("product");
 
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -66,6 +87,7 @@ public class Pantry extends Fragment {
             result -> {
                 switch (result.getResultCode()){
                     case Activity.RESULT_OK:
+                        updateFromCollection("dateScadenza");
                         showAdditionSuccessSnackBar();
                         break;
                     case Activity.RESULT_CANCELED:
@@ -84,21 +106,21 @@ public class Pantry extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        productAdapter = new ProductAdapter(prodotti, getContext(), activityLauncher);
+        userFromFile = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        updateFromCollection("dateScadenza");
+        productAdapter = new ProductAdapter(userProducts, getContext(), activityLauncher);
         searchProduct = view.findViewById(R.id.searchProduct);
         recyclerView = view.findViewById(R.id.productsRecyclerView);
         productFilter = view.findViewById(R.id.productFilter);
         addProductButton = view.findViewById(R.id.addProductButton);
         recyclerView.setAdapter(productAdapter);
-        filterByExpiration();
         setAddProductButtonTouchListener();
-
         List<Integer> productFilterItems = new ArrayList<>();
         productFilterItems.add(R.drawable.calendar_expiration_date);
         productFilterItems.add(R.drawable.box_closed);
         productFilterItems.add(R.drawable.alphabeth_a_z);
         FilterItemAdapter adapter = new FilterItemAdapter(getContext(), R.layout.filter_spinner_item, productFilterItems);
+
 
         adapter.setDropDownViewResource(R.layout.filter_spinner_item);
         productFilter.setAdapter(adapter);
@@ -135,7 +157,7 @@ public class Pantry extends Fragment {
 
 
     void filterInputProductManager(CharSequence charSequence) {
-        ArrayList<Prodotto> prodottiFiltered = prodotti;
+        ArrayList<Prodotto> prodottiFiltered = userProducts;
         prodottiFiltered = (ArrayList<Prodotto>) prodottiFiltered.stream()
                 .filter(prodotto -> prodotto.getNome().toLowerCase().contains(charSequence.toString().toLowerCase()))
                 .collect(Collectors.toList());
@@ -149,14 +171,13 @@ public class Pantry extends Fragment {
         if(!searchProduct.getText().toString().equals("")) {
             filterInputProductManager(searchProduct.getText());
         }
-        productAdapter.setProdotti(myProperties.getUserProdotti());
-        recyclerView.setAdapter(productAdapter);
+        updateFromCollection("dateScadenza");
         filterProductsManager();
     }
 
 
     void filterByExpiration() {
-        ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
+        ArrayList<Prodotto> prodottiDaOrdinare = userProducts;
 
         prodottiDaOrdinare.sort((p1, p2) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -166,11 +187,11 @@ public class Pantry extends Fragment {
         });
 
         productAdapter.setProdotti(prodottiDaOrdinare);
-        recyclerView.setAdapter(productAdapter);
+        productAdapter.notifyDataSetChanged();
     }
 
     void filterByAlphabet() {
-        ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
+        ArrayList<Prodotto> prodottiDaOrdinare = userProducts;
 
         prodottiDaOrdinare.sort(Comparator.comparing(Prodotto::getNome));
 
@@ -180,7 +201,7 @@ public class Pantry extends Fragment {
     }
 
     void filterByStock() {
-        ArrayList<Prodotto> prodottiDaOrdinare = prodotti;
+        ArrayList<Prodotto> prodottiDaOrdinare = userProducts;
 
         prodottiDaOrdinare.sort((p1, p2) -> p2.getAmountOfUnits() - p1.getAmountOfUnits());
 
@@ -195,14 +216,14 @@ public class Pantry extends Fragment {
         int position = intent.getIntExtra("position", -1);
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         prodotto.checkEmptyExpirationDate();
-        prodotti.get(position).setDateScadenza(prodotto.getDateScadenza());
+        userProducts.get(position).setDateScadenza(prodotto.getDateScadenza());
         myProperties.removeProduct();
         try {
             localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        productAdapter.setProdotti(prodotti);
+        productAdapter.setProdotti(userProducts);
         recyclerView.setAdapter(productAdapter);
     }
 
@@ -237,4 +258,96 @@ public class Pantry extends Fragment {
         });
     }
 
+    void updateFromCollection(String orderByField) {
+            userCollection.whereEqualTo("username", userFromFile.getUsername())
+                    .whereEqualTo("password", userFromFile.getPassword())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
+                                    userProducts.orderBy(orderByField, Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                if (task.getResult().size() == 0) {
+                                                    Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
+                                                }
+                                                ArrayList<Prodotto> userProductFromDb = new ArrayList<>();
+                                                for (QueryDocumentSnapshot productDocument : task.getResult()) {
+                                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                        HashMap<String, Long> valoriNutrizionaliValues = (HashMap<String, java.lang.Long>) productDocument.getData().get("valoriNutrizionali");
+
+                                                        Long peso = (Long) productDocument.getData().get("peso");
+                                                        Long preparazione = (Long) productDocument.getData().get("preparazione");
+
+                                                        ArrayList dateScadenza = (ArrayList) productDocument.getData().get("dateScadenza");
+
+                                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                                        ArrayList<ProductExpirationDate> productExpirationDates = new ArrayList<>();
+
+                                                        for (Object temp: dateScadenza) {
+                                                            HashMap<String, String> currentData = (HashMap<String, String>) temp;
+                                                            LocalDate date = LocalDate.parse(currentData.get("dataScadenza"), formatter);
+                                                            productExpirationDates.add(new ProductExpirationDate(Integer.valueOf(currentData.get("amount")), date));
+                                                        }
+
+
+                                                        Prodotto tempProduct = null;
+                                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                            tempProduct = new Prodotto(
+                                                                    (String) productDocument.getData().get("nome"),
+                                                                    (String) productDocument.getData().get("marca"),
+                                                                    (String) productDocument.getData().get("ingredienti"),
+                                                                    Integer.valueOf(peso.toString()),
+                                                                    (String) productDocument.getData().get("unità"),
+                                                                    Integer.valueOf(preparazione.toString()),
+                                                                    productExpirationDates,
+                                                                    (String) productDocument.getData().get("image"),
+                                                                    (String) productDocument.getData().get("colore"),
+                                                                    new ValoriNutrizionali(
+                                                                            ((Number) valoriNutrizionaliValues.get("energia")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("energiaAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("grassi")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("grassiAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("grassiSaturi")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("grassiSaturiAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("carboidrati")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("carboidratiAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("zuccheri")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("zuccheriAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("fibre")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("fibreAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("proteine")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("proteineAR")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("sale")).doubleValue(),
+                                                                            ((Number) valoriNutrizionaliValues.get("saleAR")).doubleValue()),
+                                                                    LocalDateTime.now()
+                                                            );
+                                                        }
+
+                                                        userProductFromDb.add(tempProduct);
+                                                        Log.d("Product: ", productDocument.getId() + " ==> " + productDocument.getData());
+                                                        Log.d("Product cloned: ", tempProduct.toString());
+                                                    }
+                                                }
+                                                setUserProductToUserCollection(userProductFromDb);
+                                                filterByExpiration();
+                                            }
+                                        }
+                                    });
+                                    Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                                }
+                            }
+                        }
+                    });
+        }
+
+        void setUserProductToUserCollection(ArrayList<Prodotto> userProductsFromCollection) {
+            userProducts = userProductsFromCollection;
+            productAdapter.setProdotti(userProducts);
+            recyclerView.setAdapter(productAdapter);
+        }
 }

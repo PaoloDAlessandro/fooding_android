@@ -14,25 +14,12 @@ public class Prodotto implements Serializable {
     private String unità;
     private int preparazione;
     private ArrayList<ProductExpirationDate> dateScadenza;
-    private int image;
-    private int colore;
+    private String image;
+    private String colore;
     private ValoriNutrizionali valoriNutrizionali;
     private LocalDateTime dataAggiunta;
 
-    public Prodotto(String nome, String marca, String ingredienti, int peso, String unità, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali) {
-        this.nome = nome;
-        this.marca = marca;
-        this.ingredienti = ingredienti;
-        this.peso = peso;
-        this.unità = unità;
-        this.preparazione = preparazione;
-        this.dateScadenza = dateScadenza;
-        this.image = image;
-        this.colore = colore;
-        this.valoriNutrizionali = valoriNutrizionali;
-    }
-
-    public Prodotto(String nome, String marca, String ingredienti, int peso, String unità, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, int image, int colore, ValoriNutrizionali valoriNutrizionali, LocalDateTime dataAggiunta) {
+    public Prodotto(String nome, String marca, String ingredienti, int peso, String unità, int preparazione, ArrayList<ProductExpirationDate> dateScadenza, String image, String colore, ValoriNutrizionali valoriNutrizionali, LocalDateTime dataAggiunta) {
         this.nome = nome;
         this.marca = marca;
         this.ingredienti = ingredienti;
@@ -70,14 +57,6 @@ public class Prodotto implements Serializable {
         this.peso = peso;
     }
 
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
-    }
-
     public int getPreparazione() {
         return preparazione;
     }
@@ -101,15 +80,6 @@ public class Prodotto implements Serializable {
     public void setValoriNutrizionali(ValoriNutrizionali valoriNutrizionali) {
         this.valoriNutrizionali = valoriNutrizionali;
     }
-
-    public int getColore() {
-        return colore;
-    }
-
-    public void setColore(int colore) {
-        this.colore = colore;
-    }
-
 
     public ArrayList<ProductExpirationDate> getDateScadenza() {
         return dateScadenza;
@@ -158,5 +128,29 @@ public class Prodotto implements Serializable {
     @Override
     public String toString() {
         return this.getNome();
+    }
+
+    public void setUnità(String unità) {
+        this.unità = unità;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getColore() {
+        return colore;
+    }
+
+    public void setColore(String colore) {
+        this.colore = colore;
+    }
+
+    public void setDataAggiunta(LocalDateTime dataAggiunta) {
+        this.dataAggiunta = dataAggiunta;
     }
 }

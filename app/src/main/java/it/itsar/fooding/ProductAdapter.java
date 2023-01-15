@@ -2,6 +2,7 @@ package it.itsar.fooding;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -81,14 +84,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 productName.setText(prodotto.getNome());
             }
             productBrand.setText(prodotto.getMarca());
-            productImage.setImageResource(prodotto.getImage());
+            downloadImage(prodotto.getImage());
             productStock.setText(prodotto.getAmountOfUnits() + "");
             productWeight.setText(prodotto.getPeso() + prodotto.getUnità());
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter) + " (" + prodotto.getCloserExpirationdate().getAmount() + ")");
             }
-            imageCardView.setBackgroundColor(prodotto.getColore());
+            imageCardView.setBackgroundColor(Color.parseColor("#" + prodotto.getColore()));
         }
 
         @Override
@@ -100,5 +103,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             intent.putExtra("position", position);
             activityResultLauncher.launch(intent);
         }
+
+         private void downloadImage(String imageUri) {
+             Picasso.get()
+                     .load(imageUri)
+                     .into(productImage, new com.squareup.picasso.Callback() {
+                         @Override
+                         public void onSuccess(){
+                         }
+
+                         @Override
+                         public void onError(Exception e) {
+                         }
+                     });
+         }
+
     }
 }

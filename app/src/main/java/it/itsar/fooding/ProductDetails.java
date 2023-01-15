@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,7 +176,7 @@ public class ProductDetails extends AppCompatActivity {
         }
         productIngredienti.setText(prodotto.getIngredienti());
         productStock.setText("In stock: " + currentProductExpirationDate.getAmount());
-        productImage.setImageResource(prodotto.getImage());
+        downloadImage(prodotto.getImage());
         productEnergiaValue.setText(prodotto.getValoriNutrizionali().getEnergia() + "kj");
         productEnergiaAR.setText(prodotto.getValoriNutrizionali().getEnergiaAR() + "%");
         productEnergiaValue2.setText(prodotto.getValoriNutrizionali().convertToKcal() + "kcal");
@@ -242,5 +245,19 @@ public class ProductDetails extends AppCompatActivity {
             counter++;
         }
         constraintSet.applyTo(productExpirationDateLayout);
+    }
+
+    private void downloadImage(String imageUri) {
+        Picasso.get()
+                .load(imageUri)
+                .into(productImage, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess(){
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
     }
 }

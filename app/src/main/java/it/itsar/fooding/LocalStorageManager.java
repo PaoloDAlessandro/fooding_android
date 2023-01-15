@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 public class LocalStorageManager {
 
+    public static String LOCAL_FILE_NAME = "/storage.txt";
     private final MyProperties myProperties = MyProperties.getInstance();
 
     public LocalStorageManager() {
@@ -35,4 +36,9 @@ public class LocalStorageManager {
             ex.printStackTrace();
         }
     }
+
+    public boolean deleteFile(File file) {
+        return file.delete();
+    }
+
 }

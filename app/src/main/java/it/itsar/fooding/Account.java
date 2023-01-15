@@ -42,6 +42,7 @@ public class Account extends Fragment {
             public void onClick(View view) {
                 authStorageManager.deleteFile(new File(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME));
                 MainActivity.isLogged = false;
+                localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.LOCAL_FILE_NAME));
                 configFragmentManager(Login.class);
             }
         });

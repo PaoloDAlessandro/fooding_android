@@ -3,6 +3,7 @@ package it.itsar.fooding;
 import android.content.Context;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.text.TextRunShaper;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,10 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +26,7 @@ public class ProductNameAutoCompleteAdapter extends ArrayAdapter<Prodotto> {
 
     private Context context;
     private List<Prodotto> prodotti = new ArrayList<>();
+    private ImageView productImage;
 
     public ProductNameAutoCompleteAdapter (@NonNull Context context, ArrayList<Prodotto> prodotti) {
         super(context, R.layout.autocomplete_product_name, prodotti);
@@ -37,8 +43,8 @@ public class ProductNameAutoCompleteAdapter extends ArrayAdapter<Prodotto> {
         }
 
         Prodotto prodotto = prodotti.get(position);
-        ImageView productImage = listItem.findViewById(R.id.productImage);
-        productImage.setImageResource(prodotto.getImage());
+        productImage = listItem.findViewById(R.id.productImage);
+        downloadImage(prodotto.getImage());
 
         TextView productName = listItem.findViewById(R.id.productName);
         productName.setText(prodotto.getNome());
@@ -52,4 +58,19 @@ public class ProductNameAutoCompleteAdapter extends ArrayAdapter<Prodotto> {
     public void setProdotti(List<Prodotto> prodotti) {
         this.prodotti = prodotti;
     }
+
+    private void downloadImage(String imageUri) {
+        Picasso.get()
+                .load(imageUri)
+                .into(productImage, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess(){
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
+    }
+
 }

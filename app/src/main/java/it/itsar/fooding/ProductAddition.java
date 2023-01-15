@@ -1,5 +1,6 @@
 package it.itsar.fooding;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.app.Activity;
@@ -15,8 +16,20 @@ import android.widget.EditText;
 import android.app.DatePickerDialog;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,13 +39,16 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProductAddition extends AppCompatActivity {
 
     private final MyProperties myProperties = MyProperties.getInstance();
-    private final Prodotto[] prodotti = myProperties.getProdotti();
+    private ArrayList<Prodotto> prodotti;
     private ArrayList<Prodotto> userProdotti = myProperties.getUserProdotti();
     private List<Prodotto> prodottiFiltrati = null;
     private Prodotto selectedProduct;
@@ -44,16 +60,24 @@ public class ProductAddition extends AppCompatActivity {
     private DatePickerDialog picker;
     private TextView productExpirationDateInput;
     private AutoCompleteTextView productNameAutoComplete;
+    private User userFromFile;
+    private final AuthStorageManager authStorageManager = new AuthStorageManager();
     private int year;
     private int month;
     private int day;
     private DateTimeFormatter formatter;
     private LocalStorageManager localStorageManager = new LocalStorageManager();
 
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference userCollection = db.collection("user");
+    private final CollectionReference productCollection = db.collection("product");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_addition);
+        userFromFile = authStorageManager.backupFromFile(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        getProdotti();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         }
@@ -88,8 +112,7 @@ public class ProductAddition extends AppCompatActivity {
             picker.show();
         });
 
-        List<Prodotto> prodottiDaFiltrare = Arrays.asList(prodotti);
-        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, new ArrayList<>(prodottiDaFiltrare));
+        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, prodotti);
 
         productStockInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -131,7 +154,7 @@ public class ProductAddition extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.length() >= 2) {
-                    prodottiFiltrati = prodottiDaFiltrare.stream()
+                    prodottiFiltrati = prodotti.stream()
                             .filter(prodotto ->
                                     prodotto.getNome().toLowerCase().contains(productNameAutoComplete.getText().toString().substring(0, charSequence.length()).toLowerCase()))
                             .collect(Collectors.toList());
@@ -192,7 +215,8 @@ public class ProductAddition extends AppCompatActivity {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
         }
-
+        addProductToUserCollection();
+        /*
         if(userProdotti.stream().anyMatch(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
                 prodotto.getMarca().equals(selectedProduct.getMarca()))) {
 
@@ -235,6 +259,7 @@ public class ProductAddition extends AppCompatActivity {
                 ));
             }
         }
+        */
     }
 
     boolean isNumeric(String text) {
@@ -267,5 +292,137 @@ public class ProductAddition extends AppCompatActivity {
             confirmButton.setEnabled(firstCondition && secondCondition && thirdCondition);
         }
     }
+
+    void addProductToUserCollection() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ArrayList<HashMap<String, String>> dateScadenza = new ArrayList<>();
+            HashMap<String, String> dataScadenza = new HashMap<>();
+            dataScadenza.put("amount", String.valueOf(selectedProduct.getDateScadenza().get(0).getAmount()));
+            dataScadenza.put("dataScadenza", selectedProduct.getDateScadenza().get(0).getExpirationDate().toString());
+            dateScadenza.add(dataScadenza);
+            Map<String, Object> data = new HashMap<>();
+            data.put("nome", selectedProduct.getNome());
+            data.put("marca", selectedProduct.getMarca());
+            data.put("ingredienti", selectedProduct.getIngredienti());
+            data.put("preparazione", selectedProduct.getPreparazione());
+            data.put("unità", selectedProduct.getUnità());
+            data.put("colore", selectedProduct.getColore());
+            data.put("image", selectedProduct.getImage());
+            data.put("peso", selectedProduct.getPeso());
+            data.put("dataAggiunta", Timestamp.now());
+            data.put("dateScadenza", dateScadenza);
+            data.put("valoriNutrizionali", selectedProduct.getValoriNutrizionali());
+
+            userCollection
+                    .whereEqualTo("username", userFromFile.getUsername())
+                    .whereEqualTo("password", userFromFile.getPassword())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
+                                    userProducts.add(data)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.d("Result: ", "ma pe davvero?");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("Result: ", "te pareva");
+
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+
+    void getProdotti() {
+        productCollection
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() == 0) {
+                                Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
+                            }
+                            ArrayList<Prodotto> productFromDb = new ArrayList<>();
+                            for (QueryDocumentSnapshot productDocument : task.getResult()) {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    HashMap<String, Long> valoriNutrizionaliValues = (HashMap<String, java.lang.Long>) productDocument.getData().get("valoriNutrizionali");
+
+                                    Long peso = (Long) productDocument.getData().get("peso");
+                                    Long preparazione = (Long) productDocument.getData().get("preparazione");
+
+                                    ArrayList dateScadenza = (ArrayList) productDocument.getData().get("dateScadenza");
+
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                    ArrayList<ProductExpirationDate> productExpirationDates = new ArrayList<>();
+
+                                    for (Object temp: dateScadenza) {
+                                        HashMap<String, String> currentData = (HashMap<String, String>) temp;
+                                        LocalDate date = LocalDate.parse(currentData.get("dataScadenza"), formatter);
+                                        productExpirationDates.add(new ProductExpirationDate(Integer.valueOf(currentData.get("amount")), date));
+                                    }
+
+
+                                    Prodotto tempProduct = null;
+                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                        tempProduct = new Prodotto(
+                                                (String) productDocument.getData().get("nome"),
+                                                (String) productDocument.getData().get("marca"),
+                                                (String) productDocument.getData().get("ingredienti"),
+                                                Integer.valueOf(peso.toString()),
+                                                (String) productDocument.getData().get("unità"),
+                                                Integer.valueOf(preparazione.toString()),
+                                                productExpirationDates,
+                                                (String) productDocument.getData().get("image"),
+                                                (String) productDocument.getData().get("colore"),
+                                                new ValoriNutrizionali(
+                                                        ((Number) valoriNutrizionaliValues.get("energia")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("energiaAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("grassi")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("grassiAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("grassiSaturi")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("grassiSaturiAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("carboidrati")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("carboidratiAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("zuccheri")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("zuccheriAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("fibre")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("fibreAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("proteine")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("proteineAR")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("sale")).doubleValue(),
+                                                        ((Number) valoriNutrizionaliValues.get("saleAR")).doubleValue()),
+                                                LocalDateTime.now()
+                                        );
+                                    }
+
+                                    productFromDb.add(tempProduct);
+                                    Log.d("Product: ", productDocument.getId() + " ==> " + productDocument.getData());
+                                    Log.d("Product cloned: ", tempProduct.toString());
+                                }
+                            }
+                            myProperties.setProdotti(productFromDb.toArray(new Prodotto[0]));
+                            setProdottiToProdottiFromCollection(productFromDb);
+                        }
+                    }
+                });
+    }
+
+
+    void setProdottiToProdottiFromCollection(ArrayList<Prodotto> prodottiFromCollection) {
+        prodotti = prodottiFromCollection;
+    }
+
 
 }

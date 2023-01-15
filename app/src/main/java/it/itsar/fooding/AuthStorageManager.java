@@ -40,7 +40,7 @@ public class AuthStorageManager {
         return user;
     }
 
-    public boolean deleteFile(File file) {
-        return file.delete();
-    }
+        public boolean deleteFile(File file) {
+            return file.delete();
+        }
 }

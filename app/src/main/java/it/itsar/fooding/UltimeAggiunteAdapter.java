@@ -14,6 +14,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.w3c.dom.Text;
 
 import java.time.DateTimeException;
@@ -79,7 +81,21 @@ public class UltimeAggiunteAdapter extends RecyclerView.Adapter<UltimeAggiunteAd
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
             productExpirationDate.setText(prodotto.getCloserExpirationdate().getExpirationDate().format(dateTimeFormatter));
             }
-            productImage.setImageResource(prodotto.getImage());
+            downloadImage(prodotto.getImage());
+        }
+
+        private void downloadImage(String imageUri) {
+            Picasso.get()
+                    .load(imageUri)
+                    .into(productImage, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess(){
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                        }
+                    });
         }
 
         @Override
