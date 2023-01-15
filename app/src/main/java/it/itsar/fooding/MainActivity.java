@@ -1,14 +1,30 @@
 package it.itsar.fooding;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.FragmentManager;
+
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private final MyProperties myProperties = MyProperties.getInstance();
     private LocalStorageManager localStorageManager = new LocalStorageManager();
+    private final AuthStorageManager authStorageManager = new AuthStorageManager();
+
+    public static boolean isLogged;
+
+    User userFromFile;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference userCollection = db.collection("user");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottomMenu);
+        userFromFile = authStorageManager.backupFromFile(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        checkUserIsLogged();
+        getUserProduct();
 
         myProperties.setProdotti(new Prodotto[]{
                 new Prodotto(
@@ -239,15 +266,28 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homeButton:
-                    configFragmentManager(Home.class);
+                    if (isLogged) {
+                        configFragmentManager(Home.class);
+                    } else {
+                        configFragmentManager(Login.class);
+                    }
                     break;
 
                 case R.id.pantryButton:
-                    configFragmentManager(Pantry.class);
+                    if (isLogged) {
+                        configFragmentManager(Pantry.class);
+                    } else {
+                        configFragmentManager(Login.class);
+                        Toast.makeText(this, "wow", Toast.LENGTH_SHORT);
+                    }
                     break;
 
                 case R.id.userButton:
-                    configFragmentManager(Login.class);
+                    if (isLogged) {
+                        configFragmentManager(Account.class);
+                    } else {
+                        configFragmentManager(Login.class);
+                    }
                     break;
             }
 
@@ -272,10 +312,117 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configFragmentManager(Class fragmentClass) {
+        if (fragmentClass == Account.class) {
+            findViewById(R.id.logoutIcon).setVisibility(View.VISIBLE);
+        }
+        else {
+            findViewById(R.id.logoutIcon).setVisibility(View.INVISIBLE);
+        }
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, fragmentClass, null)
                 .setReorderingAllowed(true)
                 .addToBackStack("name")
                 .commit();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserIsLogged();
+    }
+
+    void checkUserIsLogged() {
+        String usernameFromFile = userFromFile.getUsername();
+        String passwordFromFile = userFromFile.getPassword();
+            userCollection.whereEqualTo("username", usernameFromFile)
+                    .whereEqualTo("password", passwordFromFile)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            if (task.getResult().size() == 0) {
+                                isLogged = false;
+                                configFragmentManager(Login.class);
+                            }
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                isLogged = true;
+                                Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                            }
+                        } else {
+                            Log.d("Error:", "Error getting documents: " + task.getException());
+                        }
+                    }
+                });
+    }
+
+    void getUserProduct() {
+        userCollection.whereEqualTo("username", userFromFile.getUsername())
+                .whereEqualTo("password", userFromFile.getPassword())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                CollectionReference userProducts = db.collection("user").document(document.getId()).collection("products");
+                                userProducts.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            if (task.getResult().size() == 0) {
+                                                Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
+                                            }
+                                            for (QueryDocumentSnapshot productDocument : task.getResult()) {
+                                                ArrayList<Long> valoriNutrizionaliValues = (ArrayList<Long>) productDocument.getData().get("valoriNutrizionali");
+                                                Log.d("valori nutrizionali: ", productDocument.getData().get("valoriNutrizionali").toString());
+
+                                                Long peso = (Long) productDocument.getData().get("peso");
+                                                Long preparazione = (Long) productDocument.getData().get("preparazione");
+//                                              Long colore = (Long) productDocument.getData().get("colore");
+
+
+                                                Prodotto tempProduct = new Prodotto(
+                                                        (String) productDocument.getData().get("nome"),
+                                                        (String) productDocument.getData().get("marca"),
+                                                        (String) productDocument.getData().get("ingredienti"),
+                                                        Integer.valueOf(peso.toString()),
+                                                        (String) productDocument.getData().get("unità"),
+                                                        Integer.valueOf(preparazione.toString()),
+                                                        new ArrayList<>(),
+                                                        1332,
+                                                        4342,
+                                                        new ValoriNutrizionali(
+                                                            ((Number) valoriNutrizionaliValues.get(0)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(1)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(2)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(3)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(4)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(5)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(6)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(7)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(8)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(9)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(10)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(11)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(12)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(13)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(14)).doubleValue(),
+                                                            ((Number) valoriNutrizionaliValues.get(15)).doubleValue()),
+                                                        null
+                                                );
+
+                                                Log.d("Product: ", productDocument.getId() + " ==> " + productDocument.getData());
+                                                Log.d("Product cloned: ", tempProduct.toString());
+                                            }
+                                        }
+                                    }
+                                });
+                                Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                            }
+                        }
+                    }
+                });
+    }
+
 }

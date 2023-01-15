@@ -28,6 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Login extends Fragment {
 
     private TextView registratiButton;
@@ -52,6 +55,11 @@ public class Login extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         usernameInput = view.findViewById(R.id.usernameInput);
@@ -67,10 +75,13 @@ public class Login extends Fragment {
         checkUserAlreadyLogged();
 
         accediButton.setOnClickListener(view1 -> {
+            String usernameFromInput = usernameInput.getText().toString();
+            String passwordFromInput = passwordInput.getText().toString();
+
             usernameInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
             passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
-            userCollection.whereEqualTo("username", usernameInput.getText().toString())
-                    .whereEqualTo("password", passwordInput.getText().toString())
+            userCollection.whereEqualTo("username", usernameFromInput)
+                    .whereEqualTo("password", passwordFromInput)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -87,6 +98,14 @@ public class Login extends Fragment {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         Log.d("Result: ", document.getId() + " ==> " + document.getData());
                                         Snackbar.make(view, "Loggato!", Snackbar.LENGTH_SHORT).show();
+                                        User loggedUser = new User(usernameFromInput, passwordFromInput);
+                                        try {
+                                            authStorageManager.backupToFile(new File(getActivity().getFilesDir(), AuthStorageManager.AUTH_FILE_NAME), loggedUser);
+                                            MainActivity.isLogged = true;
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        goToHome();
                                     }
                                 }
                             } else {

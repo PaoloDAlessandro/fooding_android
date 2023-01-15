@@ -21,11 +21,20 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Home extends Fragment {
 
@@ -36,6 +45,15 @@ public class Home extends Fragment {
     private ArrayList<Ricetta> ricette;
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference userCollection = db.collection("user");
+
+    private User userFromFile;
+
+    private TextView welcomeMessage;
+
+    private final AuthStorageManager authStorageManager = new AuthStorageManager();
+
 
     private ActivityResultLauncher<Intent> ricettaDetailsActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -73,6 +91,9 @@ public class Home extends Fragment {
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        userFromFile = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        configUsernameText(userFromFile.getUsername());
+
         orderByAdditionDate();
 
         ricette = new ArrayList<>(Arrays.asList(
@@ -123,5 +144,10 @@ public class Home extends Fragment {
             }
             ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
         }
+    }
+
+    void configUsernameText(String username) {
+        welcomeMessage = getView().findViewById(R.id.welcomeMessage);
+        welcomeMessage.setText("Bentornato " + username);
     }
 }

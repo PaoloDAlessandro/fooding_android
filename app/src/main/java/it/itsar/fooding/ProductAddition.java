@@ -69,6 +69,7 @@ public class ProductAddition extends AppCompatActivity {
         selectedProduct = null;
         decreaseStockInput.setEnabled(false);
         confirmButton.setEnabled(false);
+
         productExpirationDateInput.setOnClickListener(view -> {
             final Calendar calendar = Calendar.getInstance();
             day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -88,6 +89,7 @@ public class ProductAddition extends AppCompatActivity {
         });
 
         List<Prodotto> prodottiDaFiltrare = Arrays.asList(prodotti);
+        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapter = new ProductNameAutoCompleteAdapter(this, new ArrayList<>(prodottiDaFiltrare));
 
         productStockInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -131,12 +133,13 @@ public class ProductAddition extends AppCompatActivity {
                 if(charSequence.length() >= 2) {
                     prodottiFiltrati = prodottiDaFiltrare.stream()
                             .filter(prodotto ->
-                                    prodotto.getNome().toLowerCase().startsWith(productNameAutoComplete.getText().toString().toLowerCase()))
+                                    prodotto.getNome().toLowerCase().contains(productNameAutoComplete.getText().toString().substring(0, charSequence.length()).toLowerCase()))
                             .collect(Collectors.toList());
 
                     if(prodottiFiltrati.size() != 0) {
                             selectedProduct = prodottiFiltrati.get(0);
                             checkInputsStatus();
+
                             ProductNameAutoCompleteAdapter productNameAutoCompleteAdapterAfterChange = new ProductNameAutoCompleteAdapter(getApplicationContext(), new ArrayList<>(prodottiFiltrati));
                             productNameAutoComplete.setAdapter(productNameAutoCompleteAdapterAfterChange);
                             productNameAutoCompleteAdapterAfterChange.notifyDataSetChanged();
@@ -254,6 +257,7 @@ public class ProductAddition extends AppCompatActivity {
             boolean thirdCondition = isNumeric(productStockInput.getText().toString());
 
             if(!firstCondition) {
+                productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
                 productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
             }
             else {

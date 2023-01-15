@@ -1,5 +1,7 @@
 package it.itsar.fooding;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -36,5 +38,9 @@ public class AuthStorageManager {
             ex.printStackTrace();
         }
         return user;
+    }
+
+    public boolean deleteFile(File file) {
+        return file.delete();
     }
 }

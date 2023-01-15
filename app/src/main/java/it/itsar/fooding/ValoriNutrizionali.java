@@ -173,3 +173,6 @@ public class ValoriNutrizionali implements Serializable {
         this.saleAR = saleAR;
     }
 }
+
+
+

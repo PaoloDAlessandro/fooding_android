@@ -86,11 +86,6 @@ public class Prodotto implements Serializable {
         this.preparazione = preparazione;
     }
 
-    @Override
-    public String toString() {
-        return getNome();
-    }
-
     public String getIngredienti() {
         return ingredienti;
     }
@@ -158,5 +153,10 @@ public class Prodotto implements Serializable {
 
     public LocalDateTime getDataAggiunta() {
         return dataAggiunta;
+    }
+
+    @Override
+    public String toString() {
+        return this.getNome();
     }
 }
