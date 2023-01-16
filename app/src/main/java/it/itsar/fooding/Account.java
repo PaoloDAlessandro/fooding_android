@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Account extends Fragment {
 
@@ -25,6 +26,7 @@ public class Account extends Fragment {
     private final AuthStorageManager authStorageManager = new AuthStorageManager();
 
     public FragmentManager fragmentManager;
+    private MyProperties myProperties = MyProperties.getInstance();
 
 
     private ImageButton logoutButton;
@@ -42,7 +44,9 @@ public class Account extends Fragment {
             public void onClick(View view) {
                 authStorageManager.deleteFile(new File(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME));
                 MainActivity.isLogged = false;
-                localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.LOCAL_FILE_NAME));
+                localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME));
+                myProperties.setUserProdotti(new ArrayList<>());
+                myProperties.setUltimeAggiunte(new ArrayList<>());
                 configFragmentManager(Login.class);
             }
         });

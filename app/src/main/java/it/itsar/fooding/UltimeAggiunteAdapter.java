@@ -21,15 +21,16 @@ import org.w3c.dom.Text;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class UltimeAggiunteAdapter extends RecyclerView.Adapter<UltimeAggiunteAdapter.ultimeAggiunteViewHolder>{
 
-    private Prodotto[] ultimeAggiunte;
+    private ArrayList<Prodotto> ultimeAggiunte;
     private Context context;
     private ActivityResultLauncher activityResultLauncher;
 
-    public UltimeAggiunteAdapter(Prodotto[] prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
+    public UltimeAggiunteAdapter(ArrayList<Prodotto> prodotti, Context context, ActivityResultLauncher activityResultLauncher) {
         this.ultimeAggiunte = prodotti;
         this.context = context;
         this.activityResultLauncher = activityResultLauncher;
@@ -44,15 +45,15 @@ public class UltimeAggiunteAdapter extends RecyclerView.Adapter<UltimeAggiunteAd
 
     @Override
     public void onBindViewHolder(@NonNull ultimeAggiunteViewHolder holder, int position) {
-        holder.bind(ultimeAggiunte[position]);
+        holder.bind(ultimeAggiunte.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return ultimeAggiunte.length;
+        return ultimeAggiunte.size();
     }
 
-    public void setUltimeAggiunte(Prodotto[] ultimeAggiunte) {
+    public void setUltimeAggiunte(ArrayList<Prodotto> ultimeAggiunte) {
         this.ultimeAggiunte = ultimeAggiunte;
     }
 
@@ -101,7 +102,7 @@ public class UltimeAggiunteAdapter extends RecyclerView.Adapter<UltimeAggiunteAd
         @Override
         public void onClick(View view) {
             int position = this.getAdapterPosition();
-            Prodotto prodotto = ultimeAggiunte[position];
+            Prodotto prodotto = ultimeAggiunte.get(position);
             Intent intent = new Intent(context, ProductDetails.class);
             intent.putExtra("prodotto", prodotto);
             intent.putExtra("position", position);

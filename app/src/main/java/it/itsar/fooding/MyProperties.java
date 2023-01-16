@@ -7,6 +7,7 @@ public class MyProperties {
 
     private Prodotto[] prodotti;
     private ArrayList<Prodotto> userProdotti = new ArrayList<>();
+    private ArrayList<Prodotto> ultimeAggiunte = new ArrayList<>();
 
     protected MyProperties(){}
 
@@ -39,5 +40,13 @@ public class MyProperties {
 
     public ArrayList<Prodotto> getUserProdotti() {
         return userProdotti;
+    }
+
+    public ArrayList<Prodotto> getUltimeAggiunte() {
+        return ultimeAggiunte;
+    }
+
+    public void setUltimeAggiunte(ArrayList<Prodotto> ultimeAggiunte) {
+        this.ultimeAggiunte = ultimeAggiunte;
     }
 }

@@ -121,13 +121,13 @@ public class Prodotto implements Serializable {
         return unità;
     }
 
-    public LocalDateTime getDataAggiunta() {
-        return dataAggiunta;
-    }
-
     @Override
     public String toString() {
         return this.getNome();
+    }
+
+    public LocalDateTime getDataAggiunta() {
+        return dataAggiunta;
     }
 
     public void setUnità(String unità) {
@@ -152,5 +152,29 @@ public class Prodotto implements Serializable {
 
     public void setDataAggiunta(LocalDateTime dataAggiunta) {
         this.dataAggiunta = dataAggiunta;
+    }
+
+    public String toStringSecondary() {
+        return "Prodotto{" +
+                "nome='" + nome + '\'' +
+                ", marca='" + marca + '\'' +
+                ", ingredienti='" + ingredienti + '\'' +
+                ", peso=" + peso +
+                ", unità='" + unità + '\'' +
+                ", preparazione=" + preparazione +
+                ", dateScadenza=" + dateScadenza +
+                ", image='" + image + '\'' +
+                ", colore='" + colore + '\'' +
+                ", valoriNutrizionali=" + valoriNutrizionali +
+                ", dataAggiunta=" + dataAggiunta +
+                '}';
+    }
+
+    public static String makeComparable(ArrayList<Prodotto> prodotti) {
+        String result = "";
+        for (Prodotto prodotto:prodotti) {
+            result += prodotto.toStringSecondary();
+        }
+        return result;
     }
 }

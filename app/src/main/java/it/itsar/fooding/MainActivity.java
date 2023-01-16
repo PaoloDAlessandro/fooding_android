@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         userFromFile = authStorageManager.backupFromFile(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
         checkUserIsLogged();
 
-        setLocalStorageManager();
+        //setLocalStorageManager();
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -93,11 +93,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(myProperties.getUserProdotti().size() == 0) {
+            /*
             try {
-                localStorageManager.backupToFile(new File(getFilesDir() + "/storage.txt"));
+                localStorageManager.backupToFile(new File(getFilesDir() + "/storage.txt"), prod);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+             */
         }
     }
 
