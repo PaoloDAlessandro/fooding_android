@@ -250,6 +250,8 @@ public class ProductDetails extends AppCompatActivity {
     private void downloadImage(String imageUri) {
         Picasso.get()
                 .load(imageUri)
+                .resize(600, 800)
+                .centerInside()
                 .into(productImage, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess(){

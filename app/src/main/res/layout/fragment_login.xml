@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/usernameInputCard"
+            android:id="@+id/emailInputCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -34,12 +34,12 @@
             app:strokeWidth="0.6dp">
 
             <EditText
-                android:id="@+id/usernameInput"
+                android:id="@+id/emailInput"
                 android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:fontFamily="@font/poppins"
-                android:hint="Username"
+                android:hint="Email"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="10dp"
                 android:textColor="@color/product_name"
@@ -55,7 +55,7 @@
             android:backgroundTint="@color/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/usernameInputCard"
+            app:layout_constraintTop_toBottomOf="@id/emailInputCard"
             app:strokeColor="#d4d4d4"
             app:strokeWidth="0.6dp">
 

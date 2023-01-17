@@ -109,7 +109,19 @@ public class Pantry extends Fragment {
         recyclerView = view.findViewById(R.id.productsRecyclerView);
         productFilter = view.findViewById(R.id.productFilter);
         addProductButton = view.findViewById(R.id.addProductButton);
-        userProducts = myProperties.getUserProdotti();
+        if (myProperties.getUserProdotti().size() == 0) {
+            try {
+                if (localStorageManager.backupFromFile(getActivity().getFilesDir() + localStorageManager.USER_PRODUCT_FILE_NAME) != null) {
+                    userProducts = localStorageManager.backupFromFile(getActivity().getFilesDir() + localStorageManager.USER_PRODUCT_FILE_NAME);
+                } else {
+                    userProducts = new ArrayList<>();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            userProducts = myProperties.getUserProdotti();
+        }
         productAdapter = new ProductAdapter(userProducts, getContext(), activityLauncher);
 
         if (userProducts.size() != 0) {
@@ -178,7 +190,7 @@ public class Pantry extends Fragment {
         if(!searchProduct.getText().toString().equals("")) {
             filterInputProductManager(searchProduct.getText());
         }
-        getUserProductsFromCollection();
+        //getUserProductsFromCollection();
         filterProductsManager();
     }
 

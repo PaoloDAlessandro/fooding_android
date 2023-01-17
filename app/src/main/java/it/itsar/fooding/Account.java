@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
@@ -28,6 +31,8 @@ public class Account extends Fragment {
     public FragmentManager fragmentManager;
     private MyProperties myProperties = MyProperties.getInstance();
 
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
     private ImageButton logoutButton;
 
@@ -42,9 +47,10 @@ public class Account extends Fragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                firebaseAuth.signOut();
                 authStorageManager.deleteFile(new File(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME));
-                MainActivity.isLogged = false;
                 localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME));
+                localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.ULTIME_AGGIUNTE_FILE_NAME));
                 myProperties.setUserProdotti(new ArrayList<>());
                 myProperties.setUltimeAggiunte(new ArrayList<>());
                 configFragmentManager(Login.class);

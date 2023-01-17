@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,6 +19,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,85 +34,95 @@ public class FirestoreManager {
     private AuthStorageManager authStorageManager = new AuthStorageManager();
     private User userFromFile;
 
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
     public FirestoreManager(String authFilePath) {
         userFromFile = authStorageManager.backupFromFile(authFilePath);
     }
 
     public void getUltimeAggiunte(FirestoreManagerCallback firestoreManagerCallback) {
-        userCollection
-                .whereEqualTo("username", userFromFile.getUsername())
-                .whereEqualTo("password", userFromFile.getPassword())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() != 0) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    CollectionReference userProductsCollection = db.collection("user").document(document.getId()).collection("product");
-                                    userProductsCollection
-                                            .orderBy("dataAggiunta", Query.Direction.DESCENDING)
-                                            .limit(4)
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        if (task.getResult().size() == 0) {
-                                                            Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
-                                                        }
-                                                        ArrayList<Prodotto> productsFromCollection = new ArrayList<>();
-                                                        for (QueryDocumentSnapshot productDocument : task.getResult()) {
-                                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                                Prodotto tempProduct = trasformCollectionProduct(productDocument);
-                                                                productsFromCollection.add(tempProduct);
+        if (firebaseUser != null) {
+            String userEmail = firebaseUser.getEmail();
+            userCollection
+                    .whereEqualTo("email", userEmail)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().size() != 0) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        CollectionReference userProductsCollection = db.collection("user").document(document.getId()).collection("product");
+                                        userProductsCollection
+                                                .orderBy("dataAggiunta", Query.Direction.DESCENDING)
+                                                .limit(4)
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            if (task.getResult().size() == 0) {
+                                                                Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
                                                             }
+                                                            ArrayList<Prodotto> productsFromCollection = new ArrayList<>();
+                                                            for (QueryDocumentSnapshot productDocument : task.getResult()) {
+                                                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                                    Prodotto tempProduct = trasformCollectionProduct(productDocument);
+                                                                    productsFromCollection.add(tempProduct);
+                                                                }
+                                                            }
+                                                            firestoreManagerCallback.onFinish(productsFromCollection);
                                                         }
-                                                        firestoreManagerCallback.onFinish(productsFromCollection);
                                                     }
-                                                }
-                                            });
+                                                });
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+        }
     }
 
+
     public void getUserProducts(FirestoreManagerCallback firestoreManagerCallback) {
-        userCollection.whereEqualTo("username", userFromFile.getUsername())
-                .whereEqualTo("password", userFromFile.getPassword())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
-                                userProducts.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            if (task.getResult().size() == 0) {
-                                                Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
-                                            }
-                                            ArrayList<Prodotto> userProductsFromCollection = new ArrayList<>();
-                                            for (QueryDocumentSnapshot productDocument : task.getResult()) {
-                                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                    Prodotto tempProduct = trasformCollectionProduct(productDocument);
-                                                    userProductsFromCollection.add(tempProduct);
+        if (firebaseUser != null) {
+            String userEmail = firebaseUser.getEmail();
+            userCollection
+                    .whereEqualTo("email", userEmail)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
+                                    userProducts.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                if (task.getResult().size() == 0) {
+                                                    Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
                                                 }
+                                                ArrayList<Prodotto> userProductsFromCollection = new ArrayList<>();
+                                                for (QueryDocumentSnapshot productDocument : task.getResult()) {
+                                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                                        Prodotto tempProduct = trasformCollectionProduct(productDocument);
+                                                        userProductsFromCollection.add(tempProduct);
+                                                    }
+                                                }
+                                                firestoreManagerCallback.onFinish(userProductsFromCollection);
                                             }
-                                            firestoreManagerCallback.onFinish(userProductsFromCollection);
                                         }
-                                    }
-                                });
-                                Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                                    });
+                                    Log.d("Result: ", document.getId() + " ==> " + document.getData());
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }
     }
+
 
     public void getProdotti(FirestoreManagerCallback firestoreManagerCallback) {
         productCollection
@@ -133,7 +146,7 @@ public class FirestoreManager {
                     }
                 });
     }
-
+/*
     public void addProductToUserCollection(Prodotto userProduct, OnProductAddition onProductAddition) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ArrayList<HashMap<String, String>> dateScadenza = new ArrayList<>();
@@ -168,7 +181,11 @@ public class FirestoreManager {
                                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                 @Override
                                                 public void onSuccess(DocumentReference documentReference) {
-                                                    onProductAddition.onSuccess();
+                                                    try {
+                                                        onProductAddition.onSuccess();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                     Log.d("Result: ", "ma pe davvero?");
                                                 }
                                             })
@@ -185,6 +202,8 @@ public class FirestoreManager {
         }
     }
 
+ */
+/*
     void editProductInUserCollection(Prodotto userProduct) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -245,6 +264,8 @@ public class FirestoreManager {
         }
     }
 
+ */
+
 
 
     private Prodotto trasformCollectionProduct(QueryDocumentSnapshot productDocument) {
@@ -299,7 +320,7 @@ public class FirestoreManager {
     }
 
     interface OnProductAddition {
-        void onSuccess();
+        void onSuccess() throws IOException;
     }
 
 }

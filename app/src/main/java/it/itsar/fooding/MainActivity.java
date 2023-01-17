@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,9 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private final AuthStorageManager authStorageManager = new AuthStorageManager();
 
-    public static boolean isLogged;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-    User userFromFile;
+    private User userFromFile;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userCollection = db.collection("user");
@@ -49,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottomMenu);
         userFromFile = authStorageManager.backupFromFile(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
-        checkUserIsLogged();
-
-        //setLocalStorageManager();
+        if (firebaseUser == null) {
+            configFragmentManager(Login.class);
+        }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homeButton:
-                    if (isLogged) {
+                    if (firebaseUser != null) {
                         configFragmentManager(Home.class);
                     } else {
                         configFragmentManager(Login.class);
@@ -64,16 +67,15 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.pantryButton:
-                    if (isLogged) {
+                    if (firebaseUser != null) {
                         configFragmentManager(Pantry.class);
                     } else {
                         configFragmentManager(Login.class);
-                        Toast.makeText(this, "wow", Toast.LENGTH_SHORT);
                     }
                     break;
 
                 case R.id.userButton:
-                    if (isLogged) {
+                    if (firebaseUser != null) {
                         configFragmentManager(Account.class);
                     } else {
                         configFragmentManager(Login.class);
@@ -83,25 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
-    }
-
-    private void setLocalStorageManager() {
-        try {
-            localStorageManager.backupFromFile(getFilesDir() + "/storage.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if(myProperties.getUserProdotti().size() == 0) {
-            /*
-            try {
-                localStorageManager.backupToFile(new File(getFilesDir() + "/storage.txt"), prod);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-             */
-        }
     }
 
     private void configFragmentManager(Class fragmentClass) {
@@ -121,9 +104,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkUserIsLogged();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
     }
-
+/*
     void checkUserIsLogged() {
         String usernameFromFile = userFromFile.getUsername();
         String passwordFromFile = userFromFile.getPassword();
@@ -148,4 +132,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+ */
 }

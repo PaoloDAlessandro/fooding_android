@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private String username;
-    private String password;
+    private String email;
 
-    public User(String username, String password) {
+    public User(String username, String email) {
         this.username = username;
-        this.password = password;
+        this.email = email;
     }
 
     public User() {
@@ -22,19 +22,19 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getemail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setemail(String email) {
+        this.email = email;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

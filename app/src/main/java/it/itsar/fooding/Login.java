@@ -17,12 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -34,11 +37,13 @@ import java.io.IOException;
 public class Login extends Fragment {
 
     private TextView registratiButton;
-    private EditText usernameInput;
+    private EditText emailInput;
     private EditText passwordInput;
-    private MaterialCardView usernameInputCard;
+    private MaterialCardView emailInputCard;
     private MaterialCardView passwordInputCard;
     private Button accediButton;
+
+    FirebaseAuth auth = FirebaseAuth.getInstance();
 
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -62,24 +67,44 @@ public class Login extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        usernameInput = view.findViewById(R.id.usernameInput);
+        emailInput = view.findViewById(R.id.emailInput);
         passwordInput = view.findViewById(R.id.passwordInput);
         accediButton = view.findViewById(R.id.accediButton);
-        usernameInputCard = view.findViewById(R.id.usernameInputCard);
+        emailInputCard = view.findViewById(R.id.emailInputCard);
         passwordInputCard = view.findViewById(R.id.passwordInputCard);
         registratiButton = view.findViewById(R.id.registratiTextClickable);
 
         fragmentManager = getParentFragmentManager();
         transaction = fragmentManager.beginTransaction();
 
-        checkUserAlreadyLogged();
+        //checkUserAlreadyLogged();
 
         accediButton.setOnClickListener(view1 -> {
-            String usernameFromInput = usernameInput.getText().toString();
+            String emailFromInput = emailInput.getText().toString();
             String passwordFromInput = passwordInput.getText().toString();
 
-            usernameInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+            emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
             passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+
+
+            auth.signInWithEmailAndPassword(emailFromInput, passwordFromInput)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        if (auth.getCurrentUser().isEmailVerified()) {
+                                            Log.d("EMAIL: ", auth.getCurrentUser().getEmail());
+                                            goToHome();
+                                        } else {
+                                            Toast.makeText(getActivity(), "Please verify your email address", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+            /*
             userCollection.whereEqualTo("username", usernameFromInput)
                     .whereEqualTo("password", passwordFromInput)
                     .get()
@@ -89,11 +114,11 @@ public class Login extends Fragment {
                             if(task.isSuccessful()) {
                                 if(task.getResult().size() == 0) {
                                     Snackbar.make(view, "Utente non trovato!", Snackbar.LENGTH_SHORT).show();
-                                    usernameInputCard.setStrokeColor(Color.parseColor("#ff0303"));
+                                    emailInputCard.setStrokeColor(Color.parseColor("#ff0303"));
                                     passwordInputCard.setStrokeColor(Color.parseColor("#ff0303"));
                                 }
                                 else {
-                                    usernameInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+                                    emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
                                     passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         Log.d("Result: ", document.getId() + " ==> " + document.getData());
@@ -113,6 +138,8 @@ public class Login extends Fragment {
                             }
                         }
                     });
+
+             */
         });
 
         registratiButton.setOnTouchListener(new View.OnTouchListener() {
@@ -127,7 +154,7 @@ public class Login extends Fragment {
             }
         });
     }
-
+    /*
     void checkUserAlreadyLogged() {
         User user = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
 
@@ -149,6 +176,8 @@ public class Login extends Fragment {
                     }
                 });
     }
+
+     */
 
     void goToHome() {
         fragmentManager.beginTransaction()

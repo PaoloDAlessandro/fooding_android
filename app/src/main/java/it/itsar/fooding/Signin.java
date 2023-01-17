@@ -1,5 +1,7 @@
 package it.itsar.fooding;
 
+import static android.content.ContentValues.TAG;
+
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -21,16 +23,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +46,7 @@ public class Signin extends Fragment {
     private TextView accediButton;
     private Button registratiButton;
     private EditText usernameInput;
+    private EditText emailInput;
     private EditText passwordInput;
     private EditText confirmPasswordInput;
     private TextView usernameError;
@@ -48,8 +56,9 @@ public class Signin extends Fragment {
     private MaterialCardView passwordInputCard;
     private MaterialCardView confirmPasswordInputCard;
 
-    private final AuthStorageManager authStorageManager = new AuthStorageManager();
-    private User user;
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    private MyProperties myProperties = MyProperties.getInstance();
 
     FragmentManager fragmentManager;
     FragmentTransaction transaction;
@@ -70,6 +79,7 @@ public class Signin extends Fragment {
         accediButton = view.findViewById(R.id.accediTextClickable);
         registratiButton = view.findViewById(R.id.registratiButton);
         usernameInput = view.findViewById(R.id.usernameInput);
+        emailInput = view.findViewById(R.id.emailInput);
         passwordInput = view.findViewById(R.id.passwordInput);
         confirmPasswordInput = view.findViewById(R.id.confirmPasswordInput);
         usernameError = view.findViewById(R.id.usernameError);
@@ -97,13 +107,27 @@ public class Signin extends Fragment {
             }
 
             if (usernameInput.getText().length() >= 5 && passwordInput.getText().length() >= 8 && passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
-                addUserToDb();
-                user = new User(usernameInput.getText().toString(), passwordInput.getText().toString());
-                try {
-                    writeOnAuthStorage();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                auth.createUserWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            auth.getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
+                                        addUserToUsersCollection();
+                                        //emailInput.setText("");
+                                        //passwordInput.setText("");
+                                    } else {
+                                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
 
@@ -121,11 +145,24 @@ public class Signin extends Fragment {
 
     }
 
-    void writeOnAuthStorage() throws IOException {
-        File file = new File(getActivity().getFilesDir(), AuthStorageManager.AUTH_FILE_NAME);
-        authStorageManager.backupToFile(file, user);
-        User user1 = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
-        Log.d("USER FROM FILE: ", user1.toString());
+    void addUserToUsersCollection() {
+        Map<String , Object> data = new HashMap<>();
+        data.put("username", usernameInput.getText().toString());
+        data.put("email", emailInput.getText().toString());
+
+        userCollection.add(data)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        Log.d("Result: ", "SUCCESS");
+                        myProperties.setUltimeAggiunte(new ArrayList<>());
+                        myProperties.setUserProdotti(new ArrayList<>());
+
+                        returnToLogin();
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.d("Result: ", e.toString());
+                });
     }
 
     void setTextChangeListenerForInput(EditText input, MaterialCardView inputCard, TextView inputError) {
@@ -156,25 +193,6 @@ public class Signin extends Fragment {
         inputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
         inputError.setVisibility(View.GONE);
     }
-
-    void addUserToDb() {
-        Map<String , Object> data = new HashMap<>();
-        data.put("username", usernameInput.getText().toString());
-        data.put("password", passwordInput.getText().toString());
-
-        userCollection.add(data)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        Log.d("Result: ", "SUCCESS");
-                        returnToLogin();
-                    }
-                }).addOnFailureListener(e -> {
-                    Log.d("Result: ", e.toString());
-                });
-    }
-
-
 
     void returnToLogin() {
         fragmentManager.beginTransaction()

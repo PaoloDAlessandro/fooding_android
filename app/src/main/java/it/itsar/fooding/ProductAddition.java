@@ -216,11 +216,13 @@ public class ProductAddition extends AppCompatActivity {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
         }
-
+/*
         firestoreManager.getUserProducts((userProductsFromCollection) -> {
             userProdotti = userProductsFromCollection;
             verifyProductStatusInUserPantry();
         });
+
+ */
     }
 
     boolean isNumeric(String text) {
@@ -253,7 +255,7 @@ public class ProductAddition extends AppCompatActivity {
             confirmButton.setEnabled(firstCondition && secondCondition && thirdCondition);
         }
     }
-
+/*
     void verifyProductStatusInUserPantry() {
         if(userProdotti.stream().anyMatch(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
                 prodotto.getMarca().equals(selectedProduct.getMarca()))) {
@@ -298,10 +300,13 @@ public class ProductAddition extends AppCompatActivity {
                         LocalDateTime.now()
                 ));
                 firestoreManager.addProductToUserCollection(userProdotti.get(userProdotti.size() - 1), () -> {
+                    localStorageManager.backupToFile(new File(getFilesDir() + localStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
                     goBack(RESULT_OK);
                 });
             }
         }
     }
 
+
+ */
 }
