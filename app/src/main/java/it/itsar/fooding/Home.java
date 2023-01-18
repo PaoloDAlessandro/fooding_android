@@ -86,7 +86,7 @@ public class Home extends Fragment {
             result -> {
                 switch (result.getResultCode()) {
                     case Activity.RESULT_OK:
-                        //updateUserProducts(result);
+                        updateUserProducts(result);
                         break;
                     case Activity.RESULT_CANCELED:
                         Log.d("Edit: ", "NO");
@@ -179,13 +179,26 @@ public class Home extends Fragment {
         int position = intent.getIntExtra("position", -1);
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         prodotto.checkEmptyExpirationDate();
-        userProducts.get(position).setDateScadenza(prodotto.getDateScadenza());
-        myProperties.removeProduct();
-        try {
-            localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"), userProducts);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ultimeAggiunte.get(position).setDateScadenza(prodotto.getDateScadenza());
+        firestoreManager.editProductInUserCollection(ultimeAggiunte.get(position), () -> {
+            getUserProductsFromCollection();
+        });
+    }
+
+    void getUserProductsFromCollection() {
+        firestoreManager.getUltimeAggiunte((userProductsFromCollection)->{
+            ultimeAggiunte = userProductsFromCollection;
+            if (!Prodotto.makeComparable(myProperties.getUserProdotti()).equals(Prodotto.makeComparable(ultimeAggiunte))) {
+                myProperties.setUserProdotti(ultimeAggiunte);
+                ultimeAggiunteAdapter.setUltimeAggiunte(ultimeAggiunte);
+                ultimeAggiunteProdotti.setAdapter(ultimeAggiunteAdapter);
+                try {
+                    localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"), ultimeAggiunte);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     void configUsernameText() {
@@ -198,5 +211,6 @@ public class Home extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        configUsernameText();
     }
 }
