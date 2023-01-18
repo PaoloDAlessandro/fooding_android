@@ -84,6 +84,25 @@ public class FirestoreManager {
         }
     }
 
+    public void getUsername(GetUsername getUsername) {
+        if (firebaseUser != null) {
+            String userEmail = firebaseUser.getEmail();
+            userCollection
+                    .whereEqualTo("email", userEmail)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    getUsername.onSuccess(document.getData().get("username").toString());
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+
 
     public void getUserProducts(FirestoreManagerCallback firestoreManagerCallback) {
         if (firebaseUser != null) {
@@ -146,126 +165,146 @@ public class FirestoreManager {
                     }
                 });
     }
-/*
-    public void addProductToUserCollection(Prodotto userProduct, OnProductAddition onProductAddition) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ArrayList<HashMap<String, String>> dateScadenza = new ArrayList<>();
-            HashMap<String, String> dataScadenza = new HashMap<>();
-            dataScadenza.put("amount", String.valueOf(userProduct.getDateScadenza().get(0).getAmount()));
-            dataScadenza.put("dataScadenza",userProduct.getDateScadenza().get(0).getExpirationDate().toString());
-            dateScadenza.add(dataScadenza);
-            Map<String, Object> data = new HashMap<>();
-            data.put("nome", userProduct.getNome());
-            data.put("marca", userProduct.getMarca());
-            data.put("ingredienti", userProduct.getIngredienti());
-            data.put("preparazione", userProduct.getPreparazione());
-            data.put("unità", userProduct.getUnità());
-            data.put("colore", userProduct.getColore());
-            data.put("image", userProduct.getImage());
-            data.put("peso", userProduct.getPeso());
-            data.put("dataAggiunta", Timestamp.now());
-            data.put("dateScadenza", dateScadenza);
-            data.put("valoriNutrizionali", userProduct.getValoriNutrizionali());
 
-            userCollection
-                    .whereEqualTo("username", userFromFile.getUsername())
-                    .whereEqualTo("password", userFromFile.getPassword())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
-                                    userProducts.add(data)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    try {
-                                                        onProductAddition.onSuccess();
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
+    public void addProductToUserCollection(Prodotto userProduct, OnProductAddition onProductAddition) {
+        if (firebaseUser != null) {
+            String userEmail = firebaseUser.getEmail();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ArrayList<HashMap<String, String>> dateScadenza = new ArrayList<>();
+                HashMap<String, String> dataScadenza = new HashMap<>();
+                dataScadenza.put("amount", String.valueOf(userProduct.getDateScadenza().get(0).getAmount()));
+                dataScadenza.put("dataScadenza", userProduct.getDateScadenza().get(0).getExpirationDate().toString());
+                dateScadenza.add(dataScadenza);
+                Map<String, Object> data = new HashMap<>();
+                data.put("nome", userProduct.getNome());
+                data.put("marca", userProduct.getMarca());
+                data.put("ingredienti", userProduct.getIngredienti());
+                data.put("preparazione", userProduct.getPreparazione());
+                data.put("unità", userProduct.getUnità());
+                data.put("colore", userProduct.getColore());
+                data.put("image", userProduct.getImage());
+                data.put("peso", userProduct.getPeso());
+                data.put("dataAggiunta", Timestamp.now());
+                data.put("dateScadenza", dateScadenza);
+                data.put("valoriNutrizionali", userProduct.getValoriNutrizionali());
+
+                userCollection
+                        .whereEqualTo("email", userEmail)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
+                                        userProducts.add(data)
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
+                                                        try {
+                                                            onProductAddition.onSuccess();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        Log.d("Result: ", "ma pe davvero?");
                                                     }
-                                                    Log.d("Result: ", "ma pe davvero?");
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d("Result: ", "te pareva");
-                                                }
-                                            });
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("Result: ", "te pareva");
+                                                    }
+                                                });
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+            }
         }
     }
 
- */
-/*
-    void editProductInUserCollection(Prodotto userProduct) {
+    boolean emptyExpirationDates(Prodotto userProduct) {
+        return userProduct.getDateScadenza().stream().allMatch(productExpirationDate -> productExpirationDate.getAmount() == 0);
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ArrayList<HashMap<String, String>> dateScadenza = new ArrayList<>();
-            for (ProductExpirationDate productExpirationDate:userProduct.getDateScadenza()) {
-                HashMap<String, String> dataScadenza = new HashMap<>();
-                dataScadenza.put("amount", String.valueOf(productExpirationDate.getAmount()));
-                dataScadenza.put("dataScadenza", String.valueOf(productExpirationDate.getExpirationDate()));
-                dateScadenza.add(dataScadenza);
-            }
+    void editProductInUserCollection(Prodotto userProduct, OnProductAddition onProductAddition) {
+        if (firebaseUser != null) {
+            String userEmail = firebaseUser.getEmail();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ArrayList<HashMap<String, String>> dateScadenza = new ArrayList<>();
+                for (ProductExpirationDate productExpirationDate : userProduct.getDateScadenza()) {
+                    HashMap<String, String> dataScadenza = new HashMap<>();
+                    dataScadenza.put("amount", String.valueOf(productExpirationDate.getAmount()));
+                    dataScadenza.put("dataScadenza", String.valueOf(productExpirationDate.getExpirationDate()));
+                    dateScadenza.add(dataScadenza);
+                }
 
-            Map<String, Object> data = new HashMap<>();
-            data.put("nome", userProduct.getNome());
-            data.put("marca", userProduct.getMarca());
-            data.put("ingredienti", userProduct.getIngredienti());
-            data.put("preparazione", userProduct.getPreparazione());
-            data.put("unità", userProduct.getUnità());
-            data.put("colore", userProduct.getColore());
-            data.put("image", userProduct.getImage());
-            data.put("peso", userProduct.getPeso());
-            data.put("dataAggiunta", Timestamp.now());
-            data.put("dateScadenza", dateScadenza);
-            data.put("valoriNutrizionali", userProduct.getValoriNutrizionali());
+                Map<String, Object> data = new HashMap<>();
+                data.put("nome", userProduct.getNome());
+                data.put("marca", userProduct.getMarca());
+                data.put("ingredienti", userProduct.getIngredienti());
+                data.put("preparazione", userProduct.getPreparazione());
+                data.put("unità", userProduct.getUnità());
+                data.put("colore", userProduct.getColore());
+                data.put("image", userProduct.getImage());
+                data.put("peso", userProduct.getPeso());
+                data.put("dataAggiunta", Timestamp.now());
+                data.put("dateScadenza", dateScadenza);
+                data.put("valoriNutrizionali", userProduct.getValoriNutrizionali());
 
-            userCollection
-                    .whereEqualTo("username", userFromFile.getUsername())
-                    .whereEqualTo("password", userFromFile.getPassword())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
-                                    userProducts.
-                                            whereEqualTo("nome", userProduct.getNome())
-                                            .whereEqualTo("marca", userProduct.getMarca())
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                                            userProducts.document(document.getId()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void unused) {
-                                                                    Log.d("ACTION: ", "DONE");
+                userCollection
+                        .whereEqualTo("email", userEmail)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        CollectionReference userProducts = db.collection("user").document(document.getId()).collection("product");
+                                        userProducts.
+                                                whereEqualTo("nome", userProduct.getNome())
+                                                .whereEqualTo("marca", userProduct.getMarca())
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                if (emptyExpirationDates(userProduct)) {
+                                                                    userProducts.document(document.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void unused) {
+                                                                            try {
+                                                                                onProductAddition.onSuccess();
+                                                                            } catch (IOException e) {
+                                                                                e.printStackTrace();
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                userProducts.document(document.getId()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void unused) {
+                                                                        try {
+                                                                            onProductAddition.onSuccess();
+                                                                        } catch (IOException e) {
+                                                                            e.printStackTrace();
+                                                                        }
+                                                                        Log.d("ACTION: ", "DONE");
+                                                                    }
+                                                                });
                                                                 }
-                                                            });
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            });
+                                                });
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+            }
         }
     }
-
- */
-
 
 
     private Prodotto trasformCollectionProduct(QueryDocumentSnapshot productDocument) {
@@ -276,7 +315,7 @@ public class FirestoreManager {
             Long peso = (Long) productDocument.getData().get("peso");
             Long preparazione = (Long) productDocument.getData().get("preparazione");
 
-            ArrayList dateScadenza = (ArrayList) productDocument.getData().get("dateScadenza");
+            ArrayList<Map<String, String>> dateScadenza = (ArrayList<Map<String, String>>) productDocument.getData().get("dateScadenza");
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             ArrayList<ProductExpirationDate> productExpirationDates = new ArrayList<>();
@@ -321,6 +360,10 @@ public class FirestoreManager {
 
     interface OnProductAddition {
         void onSuccess() throws IOException;
+    }
+
+    interface GetUsername {
+        void onSuccess(String username);
     }
 
 }

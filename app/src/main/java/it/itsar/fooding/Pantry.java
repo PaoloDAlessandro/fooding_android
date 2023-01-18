@@ -132,7 +132,6 @@ public class Pantry extends Fragment {
 
         firestoreManager = new FirestoreManager(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
         getUserProductsFromCollection();
-        recyclerView.setAdapter(productAdapter);
         setAddProductButtonTouchListener();
         List<Integer> productFilterItems = new ArrayList<>();
         productFilterItems.add(R.drawable.calendar_expiration_date);
@@ -190,10 +189,8 @@ public class Pantry extends Fragment {
         if(!searchProduct.getText().toString().equals("")) {
             filterInputProductManager(searchProduct.getText());
         }
-        //getUserProductsFromCollection();
-        filterProductsManager();
+        getUserProductsFromCollection();
     }
-
 
     void filterByExpiration() {
         ArrayList<Prodotto> prodottiDaOrdinare = userProducts;
@@ -234,15 +231,12 @@ public class Pantry extends Fragment {
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
         prodotto.checkEmptyExpirationDate();
         userProducts.get(position).setDateScadenza(prodotto.getDateScadenza());
-        myProperties.removeProduct();
-        try {
-            localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"), userProducts);
-        } catch (IOException e) {
-            e.printStackTrace();
+        firestoreManager.editProductInUserCollection(userProducts.get(position), () -> {
+            getUserProductsFromCollection();
+        });
+
+
         }
-        productAdapter.setProdotti(userProducts);
-        recyclerView.setAdapter(productAdapter);
-    }
 
     void filterProductsManager() {
 
@@ -269,9 +263,14 @@ public class Pantry extends Fragment {
             userProducts = userProductsFromCollection;
             if (!Prodotto.makeComparable(myProperties.getUserProdotti()).equals(Prodotto.makeComparable(userProducts))) {
                 myProperties.setUserProdotti(userProducts);
-                filterByExpiration();
+                filterProductsManager();
                 productAdapter.setProdotti(userProducts);
                 recyclerView.setAdapter(productAdapter);
+                try {
+                    localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"), userProducts);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

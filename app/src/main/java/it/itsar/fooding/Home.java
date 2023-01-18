@@ -107,6 +107,7 @@ public class Home extends Fragment {
         if (firebaseUser != null) {
             userEmail = firebaseUser.getEmail();
         }
+
         ultimeAggiunte = new ArrayList<>();
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -148,11 +149,10 @@ public class Home extends Fragment {
             });
         }
 
-        Log.d("RESULT:", "FATTO MANNAGGIA");
         ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         userFromFile = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
-        configUsernameText(userFromFile.getUsername());
+        configUsernameText();
 
         /*
         ricette = new ArrayList<>(Arrays.asList(
@@ -188,9 +188,11 @@ public class Home extends Fragment {
         }
     }
 
-    void configUsernameText(String username) {
-        welcomeMessage = getView().findViewById(R.id.welcomeMessage);
-        welcomeMessage.setText("Bentornato " + username);
+    void configUsernameText() {
+        firestoreManager.getUsername((String usernameFromCollection) -> {
+            welcomeMessage = getView().findViewById(R.id.welcomeMessage);
+            welcomeMessage.setText("Bentornato " + usernameFromCollection);
+        });
     }
 
     @Override

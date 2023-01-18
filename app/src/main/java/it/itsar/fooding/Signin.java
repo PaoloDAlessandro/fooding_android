@@ -157,7 +157,6 @@ public class Signin extends Fragment {
                         Log.d("Result: ", "SUCCESS");
                         myProperties.setUltimeAggiunte(new ArrayList<>());
                         myProperties.setUserProdotti(new ArrayList<>());
-
                         returnToLogin();
                     }
                 }).addOnFailureListener(e -> {
