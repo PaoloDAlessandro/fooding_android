@@ -56,6 +56,7 @@ public class Signin extends Fragment {
     private MaterialCardView passwordInputCard;
     private MaterialCardView confirmPasswordInputCard;
 
+
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
     private MyProperties myProperties = MyProperties.getInstance();
@@ -157,7 +158,7 @@ public class Signin extends Fragment {
                         Log.d("Result: ", "SUCCESS");
                         myProperties.setUltimeAggiunte(new ArrayList<>());
                         myProperties.setUserProdotti(new ArrayList<>());
-                        returnToLogin();
+                        successfullySignin();
                     }
                 }).addOnFailureListener(e -> {
                     Log.d("Result: ", e.toString());
@@ -191,6 +192,14 @@ public class Signin extends Fragment {
     void hideInputError(MaterialCardView inputCard, TextView inputError) {
         inputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
         inputError.setVisibility(View.GONE);
+    }
+
+    void successfullySignin() {
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, SigninSuccess.class, null)
+                .setReorderingAllowed(true)
+                .addToBackStack("name")
+                .commit();
     }
 
     void returnToLogin() {

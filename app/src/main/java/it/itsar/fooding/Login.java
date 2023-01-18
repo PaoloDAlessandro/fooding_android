@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -42,6 +44,7 @@ public class Login extends Fragment {
     private MaterialCardView emailInputCard;
     private MaterialCardView passwordInputCard;
     private Button accediButton;
+    private TextView loginError;
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -74,9 +77,12 @@ public class Login extends Fragment {
         passwordInputCard = view.findViewById(R.id.passwordInputCard);
         registratiButton = view.findViewById(R.id.registratiTextClickable);
 
+        loginError = view.findViewById(R.id.loginError);
+
         fragmentManager = getParentFragmentManager();
         transaction = fragmentManager.beginTransaction();
-
+        setTextChangeListenerForInput(emailInput);
+        setTextChangeListenerForInput(passwordInput);
         //checkUserAlreadyLogged();
 
         accediButton.setOnClickListener(view1 -> {
@@ -96,10 +102,10 @@ public class Login extends Fragment {
                                             Log.d("EMAIL: ", auth.getCurrentUser().getEmail());
                                             goToHome();
                                         } else {
-                                            Toast.makeText(getActivity(), "Please verify your email address", Toast.LENGTH_SHORT).show();
+                                            displayLoginError("Per favore verifica il tuo indirizzo email");
                                         }
                                     } else {
-                                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        displayLoginError("Email o password non corretti");
                                     }
                                 }
                             });
@@ -154,30 +160,38 @@ public class Login extends Fragment {
             }
         });
     }
-    /*
-    void checkUserAlreadyLogged() {
-        User user = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
 
-        userCollection.whereEqualTo("username", user.getUsername())
-                .whereEqualTo("password", user.getPassword())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("STATUS: ", "USER ALREADY LOGGED");
-                                goToHome();
-                                Log.d("Result: ", document.getId() + " ==> " + document.getData());
-                            }
-                        } else {
-                            Log.d("Error:", "Error getting documents: " + task.getException());
-                        }
-                    }
-                });
+    void setTextChangeListenerForInput(EditText input) {
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                hideInputError();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
-     */
+    void hideInputError() {
+        emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+        passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
+        loginError.setVisibility(View.GONE);
+    }
+
+    void displayLoginError(String erroreText) {
+        loginError.setText(erroreText);
+        loginError.setVisibility(View.VISIBLE);
+        emailInputCard.setStrokeColor(Color.RED);
+        passwordInputCard.setStrokeColor(Color.RED);
+    }
 
     void goToHome() {
         fragmentManager.beginTransaction()

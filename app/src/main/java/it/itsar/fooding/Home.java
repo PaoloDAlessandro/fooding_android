@@ -109,6 +109,7 @@ public class Home extends Fragment {
         }
 
         ultimeAggiunte = new ArrayList<>();
+        firestoreManager = new FirestoreManager(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         ultimeAggiunteAdapter = new UltimeAggiunteAdapter(ultimeAggiunte, getContext(), activityLauncher);
@@ -133,7 +134,6 @@ public class Home extends Fragment {
         }
 
         if (firebaseUser != null) {
-            firestoreManager = new FirestoreManager(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
             firestoreManager.getUltimeAggiunte((productsFromCollection) -> {
                 ultimeAggiunte = productsFromCollection;
                 if (!Prodotto.makeComparable(myProperties.getUltimeAggiunte()).equals(Prodotto.makeComparable(ultimeAggiunte))) {
