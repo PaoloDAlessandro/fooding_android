@@ -60,8 +60,6 @@ public class ProductAddition extends AppCompatActivity {
     private DatePickerDialog picker;
     private TextView productExpirationDateInput;
     private AutoCompleteTextView productNameAutoComplete;
-    private User userFromFile;
-    private final AuthStorageManager authStorageManager = new AuthStorageManager();
     private int year;
     private int month;
     private int day;
@@ -74,8 +72,7 @@ public class ProductAddition extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_addition);
-        userFromFile = authStorageManager.backupFromFile(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
-        firestoreManager = new FirestoreManager(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        firestoreManager = new FirestoreManager();
         firestoreManager.getProdotti((productFromCollection) -> {
             prodotti = productFromCollection;
         });

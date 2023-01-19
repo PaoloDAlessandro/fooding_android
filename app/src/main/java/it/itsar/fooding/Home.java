@@ -63,16 +63,15 @@ public class Home extends Fragment {
 
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
     private String userEmail;
+    private String userUsername = "";
 
     private FirestoreManager firestoreManager;
 
     private User userFromFile;
 
     private TextView welcomeMessage;
-
-    private final AuthStorageManager authStorageManager = new AuthStorageManager();
-
 
     private ActivityResultLauncher<Intent> ricettaDetailsActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -107,9 +106,14 @@ public class Home extends Fragment {
         if (firebaseUser != null) {
             userEmail = firebaseUser.getEmail();
         }
+        welcomeMessage = getView().findViewById(R.id.welcomeMessage);
+        if (myProperties.getUserUsername() != null) {
+            userUsername = myProperties.getUserUsername();
+            welcomeMessage.setText("Bentornato " + userUsername);
 
+        }
         ultimeAggiunte = new ArrayList<>();
-        firestoreManager = new FirestoreManager(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        firestoreManager = new FirestoreManager();
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         ultimeAggiunteAdapter = new UltimeAggiunteAdapter(ultimeAggiunte, getContext(), activityLauncher);
@@ -151,9 +155,6 @@ public class Home extends Fragment {
 
         ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        userFromFile = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
-        configUsernameText();
-
         /*
         ricette = new ArrayList<>(Arrays.asList(
                 new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", new ArrayList<>(Arrays.asList(new Ingrediente(80, myProperties.getProdotti()[11]), new Ingrediente(60, myProperties.getProdotti()[2]), new Ingrediente(10, myProperties.getProdotti()[10]), new Ingrediente(5, myProperties.getProdotti()[5]))), 11, 324, Ricetta.Difficolta.FACILE),
@@ -162,10 +163,43 @@ public class Home extends Fragment {
         ));
          */
 
+        HashMap<String, String> ingredienti1Ricetta1 = new HashMap<>();
+        HashMap<String, String> ingredienti2Ricetta1 = new HashMap<>();
+        HashMap<String, String> ingredienti3Ricetta1 = new HashMap<>();
+
+        HashMap<String, String> ingredienti1Ricetta2 = new HashMap<>();
+
+        HashMap<String, String> ingredienti1Ricetta3 = new HashMap<>();
+        HashMap<String, String> ingredienti2Ricetta3 = new HashMap<>();
+        HashMap<String, String> ingredienti3Ricetta3 = new HashMap<>();
+
+        ingredienti1Ricetta1.put("nome", "Tagliatelle n. 203");
+        ingredienti1Ricetta1.put("marca", "De Cecco");
+        ingredienti1Ricetta1.put("peso", "100");
+        ingredienti2Ricetta1.put("nome", "Ragù Contadino");
+        ingredienti2Ricetta1.put("marca", "Barilla");
+        ingredienti2Ricetta1.put("peso", "60");
+        ingredienti3Ricetta1.put("nome", "Pepe nero");
+        ingredienti3Ricetta1.put("marca", "Cannamela");
+        ingredienti3Ricetta1.put("peso", "5");
+
+        ingredienti1Ricetta2.put("nome", "Crema carciofi");
+        ingredienti1Ricetta2.put("marca", "Knorr");
+        ingredienti1Ricetta2.put("peso", "140");
+
+        ingredienti1Ricetta3.put("nome", "Uova guscio bianco");
+        ingredienti1Ricetta3.put("marca", "Le naturelle");
+        ingredienti1Ricetta3.put("peso", "160");
+        ingredienti2Ricetta3.put("nome", "Olio extra vergine di oliva");
+        ingredienti2Ricetta3.put("marca", "Dante");
+        ingredienti2Ricetta3.put("peso", "15");
+
+
+
         ricette = new ArrayList<>(Arrays.asList(
-                new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", null, 11, 324, Ricetta.Difficolta.FACILE),
-                new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", null, 8, 154, Ricetta.Difficolta.FACILE),
-                new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", null, 5, 287, Ricetta.Difficolta.FACILE)
+                new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta1, ingredienti2Ricetta1, ingredienti3Ricetta1}), 11, 324, Ricetta.Difficolta.FACILE),
+                new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta2}), 8, 154, Ricetta.Difficolta.FACILE),
+                new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta3, ingredienti2Ricetta3}), 5, 287, Ricetta.Difficolta.FACILE)
         ));
 
         RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
@@ -203,8 +237,11 @@ public class Home extends Fragment {
 
     void configUsernameText() {
         firestoreManager.getUsername((String usernameFromCollection) -> {
-            welcomeMessage = getView().findViewById(R.id.welcomeMessage);
-            welcomeMessage.setText("Bentornato " + usernameFromCollection);
+            if (!userUsername.equals(usernameFromCollection)) {
+                userUsername = usernameFromCollection;
+                myProperties.setUserUsername(userUsername);
+                welcomeMessage.setText("Bentornato " + userUsername);
+            }
         });
     }
 

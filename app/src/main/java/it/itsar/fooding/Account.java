@@ -26,7 +26,6 @@ public class Account extends Fragment {
 
     private LocalStorageManager localStorageManager = new LocalStorageManager();
 
-    private final AuthStorageManager authStorageManager = new AuthStorageManager();
 
     public FragmentManager fragmentManager;
     private MyProperties myProperties = MyProperties.getInstance();
@@ -35,6 +34,12 @@ public class Account extends Fragment {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
     private ImageButton logoutButton;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_account, container, false);
+    }
 
 
     @Override
@@ -48,21 +53,15 @@ public class Account extends Fragment {
             @Override
             public void onClick(View view) {
                 firebaseAuth.signOut();
-                authStorageManager.deleteFile(new File(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME));
                 localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME));
                 localStorageManager.deleteFile(new File(getActivity().getFilesDir() + LocalStorageManager.ULTIME_AGGIUNTE_FILE_NAME));
+                myProperties.setUserUsername(null);
                 myProperties.setUserProdotti(new ArrayList<>());
                 myProperties.setUltimeAggiunte(new ArrayList<>());
                 configFragmentManager(Login.class);
             }
         });
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     private void configFragmentManager(Class fragmentClass) {

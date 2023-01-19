@@ -56,7 +56,6 @@ public class Pantry extends Fragment {
     private ArrayList<Prodotto> userProducts = new ArrayList<>();
 
     private LocalStorageManager localStorageManager = new LocalStorageManager();
-    private AuthStorageManager authStorageManager = new AuthStorageManager();
 
     private FirestoreManager firestoreManager;
 
@@ -104,7 +103,6 @@ public class Pantry extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userFromFile = authStorageManager.backupFromFile(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
         searchProduct = view.findViewById(R.id.searchProduct);
         recyclerView = view.findViewById(R.id.productsRecyclerView);
         productFilter = view.findViewById(R.id.productFilter);
@@ -130,7 +128,7 @@ public class Pantry extends Fragment {
             recyclerView.setAdapter(productAdapter);
         }
 
-        firestoreManager = new FirestoreManager(getActivity().getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
+        firestoreManager = new FirestoreManager();
         getUserProductsFromCollection();
         setAddProductButtonTouchListener();
         List<Integer> productFilterItems = new ArrayList<>();
@@ -229,13 +227,13 @@ public class Pantry extends Fragment {
         assert intent != null;
         int position = intent.getIntExtra("position", -1);
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
-        prodotto.checkEmptyExpirationDate();
-        userProducts.get(position).setDateScadenza(prodotto.getDateScadenza());
-        firestoreManager.editProductInUserCollection(userProducts.get(position), () -> {
-            getUserProductsFromCollection();
-        });
-
-
+        if (!prodotto.getDateScadenza().toString().equals(userProducts.get(position).getDateScadenza().toString())) {
+            prodotto.checkEmptyExpirationDate();
+            userProducts.get(position).setDateScadenza(prodotto.getDateScadenza());
+            firestoreManager.editProductInUserCollection(userProducts.get(position), () -> {
+                getUserProductsFromCollection();
+            });
+            }
         }
 
     void filterProductsManager() {
@@ -264,8 +262,7 @@ public class Pantry extends Fragment {
             if (!Prodotto.makeComparable(myProperties.getUserProdotti()).equals(Prodotto.makeComparable(userProducts))) {
                 myProperties.setUserProdotti(userProducts);
                 filterProductsManager();
-                productAdapter.setProdotti(userProducts);
-                recyclerView.setAdapter(productAdapter);
+                filterInputProductManager(searchProduct.getText().toString());
                 try {
                     localStorageManager.backupToFile(new File(getActivity().getFilesDir() + "/storage.txt"), userProducts);
                 } catch (IOException e) {

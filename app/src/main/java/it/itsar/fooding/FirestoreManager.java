@@ -31,14 +31,11 @@ public class FirestoreManager {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = db.collection("user");
     private final CollectionReference productCollection = db.collection("product");
-    private AuthStorageManager authStorageManager = new AuthStorageManager();
-    private User userFromFile;
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-    public FirestoreManager(String authFilePath) {
-        userFromFile = authStorageManager.backupFromFile(authFilePath);
+    public FirestoreManager() {
     }
 
     public void getUltimeAggiunte(FirestoreManagerCallback firestoreManagerCallback) {
@@ -63,7 +60,7 @@ public class FirestoreManager {
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                         if (task.isSuccessful()) {
                                                             if (task.getResult().size() == 0) {
-                                                                Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
+                                                                Log.d("RESULT: ", "Ultime aggiunte is empty");
                                                             }
                                                             ArrayList<Prodotto> productsFromCollection = new ArrayList<>();
                                                             for (QueryDocumentSnapshot productDocument : task.getResult()) {
@@ -121,7 +118,7 @@ public class FirestoreManager {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 if (task.getResult().size() == 0) {
-                                                    Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
+                                                    Log.d("RESULT: ", "User's pantry is empty");
                                                 }
                                                 ArrayList<Prodotto> userProductsFromCollection = new ArrayList<>();
                                                 for (QueryDocumentSnapshot productDocument : task.getResult()) {
@@ -151,7 +148,7 @@ public class FirestoreManager {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0) {
-                                Log.d("RESULT: ", "User's pantry of: " + userFromFile.getUsername() + " is empty");
+                                Log.d("ERROR: ", "No products found on Firestore");
                             }
                             ArrayList<Prodotto> productFromCollection = new ArrayList<>();
                             for (QueryDocumentSnapshot productDocument : task.getResult()) {
@@ -223,6 +220,32 @@ public class FirestoreManager {
         }
     }
 
+    ArrayList<Ingrediente> getProductsOfRecipes(HashMap<String, String>[] ingredienti) {
+        ArrayList<Ingrediente> ingredientiRicetta = new ArrayList<>();
+        for (int i = 0; i < ingredienti.length; i++) {
+            int finalI = i;
+            productCollection
+                    .whereEqualTo("nome", ingredienti[i].get("nome"))
+                    .whereEqualTo("marca", ingredienti[i].get("marca"))
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Prodotto tempProdotto = null;
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                    tempProdotto = trasformCollectionProduct(documentSnapshot);
+                                    tempProdotto.setPeso(Integer.parseInt(ingredienti[finalI].get("peso")));
+                                }
+                                ingredientiRicetta.add(new Ingrediente(Integer.parseInt(ingredienti[finalI].get("peso")), tempProdotto));
+                            }
+                        }
+                    });
+        }
+        Log.d("INGREDIENTI: ", ingredientiRicetta.toString());
+        return ingredientiRicetta;
+    }
+
     boolean emptyExpirationDates(Prodotto userProduct) {
         return userProduct.getDateScadenza().stream().allMatch(productExpirationDate -> productExpirationDate.getAmount() == 0);
     }
@@ -240,17 +263,8 @@ public class FirestoreManager {
                 }
 
                 Map<String, Object> data = new HashMap<>();
-                data.put("nome", userProduct.getNome());
-                data.put("marca", userProduct.getMarca());
-                data.put("ingredienti", userProduct.getIngredienti());
-                data.put("preparazione", userProduct.getPreparazione());
-                data.put("unità", userProduct.getUnità());
-                data.put("colore", userProduct.getColore());
-                data.put("image", userProduct.getImage());
-                data.put("peso", userProduct.getPeso());
-                data.put("dataAggiunta", Timestamp.now());
                 data.put("dateScadenza", dateScadenza);
-                data.put("valoriNutrizionali", userProduct.getValoriNutrizionali());
+                data.put("dataAggiunta", Timestamp.now());
 
                 userCollection
                         .whereEqualTo("email", userEmail)
@@ -282,7 +296,7 @@ public class FirestoreManager {
                                                                         }
                                                                     });
                                                                 } else {
-                                                                userProducts.document(document.getId()).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                userProducts.document(document.getId()).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void unused) {
                                                                         try {

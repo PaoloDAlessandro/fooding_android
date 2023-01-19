@@ -51,8 +51,6 @@ public class Login extends Fragment {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
 
-    private final AuthStorageManager authStorageManager = new AuthStorageManager();
-
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userCollection = db.collection("user");
 
@@ -92,23 +90,26 @@ public class Login extends Fragment {
             emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
             passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
 
-
-            auth.signInWithEmailAndPassword(emailFromInput, passwordFromInput)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        if (auth.getCurrentUser().isEmailVerified()) {
-                                            Log.d("EMAIL: ", auth.getCurrentUser().getEmail());
-                                            goToHome();
-                                        } else {
-                                            displayLoginError("Per favore verifica il tuo indirizzo email");
-                                        }
+            if (emailFromInput.length() > 5 && passwordFromInput.length() > 5) {
+                auth.signInWithEmailAndPassword(emailFromInput, passwordFromInput)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    if (auth.getCurrentUser().isEmailVerified()) {
+                                        Log.d("EMAIL: ", auth.getCurrentUser().getEmail());
+                                        goToHome();
                                     } else {
-                                        displayLoginError("Email o password non corretti");
+                                        displayLoginError("Per favore verifica il tuo indirizzo email");
                                     }
+                                } else {
+                                    displayLoginError("Email o password non corretti");
                                 }
-                            });
+                            }
+                        });
+            } else {
+                displayLoginError("Inserisci email e password");
+            }
 
             /*
             userCollection.whereEqualTo("username", usernameFromInput)

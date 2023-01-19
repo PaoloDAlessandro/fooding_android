@@ -9,6 +9,8 @@ public class MyProperties {
     private ArrayList<Prodotto> userProdotti = new ArrayList<>();
     private ArrayList<Prodotto> ultimeAggiunte = new ArrayList<>();
 
+    private String userUsername;
+
     protected MyProperties(){}
 
     public static synchronized MyProperties getInstance() {
@@ -48,5 +50,13 @@ public class MyProperties {
 
     public void setUltimeAggiunte(ArrayList<Prodotto> ultimeAggiunte) {
         this.ultimeAggiunte = ultimeAggiunte;
+    }
+
+    public String getUserUsername() {
+        return userUsername;
+    }
+
+    public void setUserUsername(String userUsername) {
+        this.userUsername = userUsername;
     }
 }

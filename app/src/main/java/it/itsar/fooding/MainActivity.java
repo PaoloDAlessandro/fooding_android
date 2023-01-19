@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homeButton:
-                    if (firebaseUser != null) {
+                    if (firebaseAuth.getCurrentUser() != null) {
                         configFragmentManager(Home.class);
                     } else {
                         configFragmentManager(Login.class);
@@ -69,15 +69,23 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.pantryButton:
-                    if (firebaseUser != null) {
+                    if (firebaseAuth.getCurrentUser() != null) {
                         configFragmentManager(Pantry.class);
                     } else {
                         configFragmentManager(Login.class);
                     }
                     break;
 
+                case R.id.reciptsButton:
+                    if (firebaseAuth.getCurrentUser() != null) {
+                        configFragmentManager(Recipes.class);
+                    } else {
+                        configFragmentManager(Login.class);
+                    }
+                    break;
+
                 case R.id.userButton:
-                    if (firebaseUser != null) {
+                    if (firebaseAuth.getCurrentUser() != null) {
                         configFragmentManager(Account.class);
                     } else {
                         configFragmentManager(Login.class);
