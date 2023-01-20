@@ -212,11 +212,13 @@ public class Home extends Fragment {
         assert intent != null;
         int position = intent.getIntExtra("position", -1);
         Prodotto prodotto = (Prodotto) intent.getSerializableExtra("prodotto");
-        prodotto.checkEmptyExpirationDate();
-        ultimeAggiunte.get(position).setDateScadenza(prodotto.getDateScadenza());
-        firestoreManager.editProductInUserCollection(ultimeAggiunte.get(position), () -> {
-            getUserProductsFromCollection();
-        });
+        if (!prodotto.getDateScadenza().toString().equals(ultimeAggiunte.get(position).getDateScadenza().toString())) {
+            prodotto.checkEmptyExpirationDate();
+            ultimeAggiunte.get(position).setDateScadenza(prodotto.getDateScadenza());
+            firestoreManager.editProductInUserCollection(ultimeAggiunte.get(position), () -> {
+                getUserProductsFromCollection();
+            });
+        }
     }
 
     void getUserProductsFromCollection() {
