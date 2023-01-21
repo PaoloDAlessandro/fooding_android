@@ -19,22 +19,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Login extends Fragment {
 
@@ -91,7 +84,7 @@ public class Login extends Fragment {
             passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
 
             if (emailFromInput.length() > 5 && passwordFromInput.length() > 5) {
-                auth.signInWithEmailAndPassword(emailFromInput, passwordFromInput)
+                auth.signInWithEmailAndPassword(emailFromInput.toLowerCase(), passwordFromInput)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -111,42 +104,6 @@ public class Login extends Fragment {
                 displayLoginError("Inserisci email e password");
             }
 
-            /*
-            userCollection.whereEqualTo("username", usernameFromInput)
-                    .whereEqualTo("password", passwordFromInput)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
-                                if(task.getResult().size() == 0) {
-                                    Snackbar.make(view, "Utente non trovato!", Snackbar.LENGTH_SHORT).show();
-                                    emailInputCard.setStrokeColor(Color.parseColor("#ff0303"));
-                                    passwordInputCard.setStrokeColor(Color.parseColor("#ff0303"));
-                                }
-                                else {
-                                    emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
-                                    passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d("Result: ", document.getId() + " ==> " + document.getData());
-                                        Snackbar.make(view, "Loggato!", Snackbar.LENGTH_SHORT).show();
-                                        User loggedUser = new User(usernameFromInput, passwordFromInput);
-                                        try {
-                                            authStorageManager.backupToFile(new File(getActivity().getFilesDir(), AuthStorageManager.AUTH_FILE_NAME), loggedUser);
-                                            MainActivity.isLogged = true;
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                        goToHome();
-                                    }
-                                }
-                            } else {
-                                Log.d("Error:", "Error getting documents: " + task.getException());
-                            }
-                        }
-                    });
-
-             */
         });
 
         registratiButton.setOnTouchListener(new View.OnTouchListener() {

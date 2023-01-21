@@ -17,23 +17,22 @@
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/productImageCard"
+            android:id="@+id/ricettaImageCard"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="14dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/productImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_margin="6dp"
+                    android:id="@+id/ricettaImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:contentDescription="@string/product_image_alt"
-                    android:src="@drawable/crema_carciofi"
+                    tools:src="@drawable/risotto"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -43,97 +42,96 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/productName"
+            android:id="@+id/ricettaName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="-6dp"
-            android:layout_toEndOf="@id/productImageCard"
+            android:layout_toEndOf="@id/ricettaImageCard"
             android:fontFamily="@font/poppins_medium"
             android:textColor="@color/product_name"
             android:textSize="20sp"
-            tools:text="Crema carciofi" />
+            tools:text="Tagliatelle al ragù" />
 
         <TextView
-            android:id="@+id/productBrand"
+            android:id="@+id/ricettaAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/productName"
+            android:layout_below="@id/ricettaName"
             android:layout_marginBottom="10dp"
-            android:layout_toEndOf="@id/productImageCard"
+            android:layout_toEndOf="@id/ricettaImageCard"
             android:fontFamily="@font/poppins"
             android:textColor="@color/product_marca"
             android:textSize="14sp"
-            tools:text="Knorr" />
+            tools:text="By GialloZafferano" />
 
         <ImageView
-            android:id="@+id/productWeightImage"
+            android:id="@+id/ricettaDifficoltaImage"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_below="@id/productBrand"
+            android:layout_below="@id/ricettaAuthor"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
-            android:layout_toEndOf="@id/productImageCard"
+            android:layout_toEndOf="@id/ricettaImageCard"
             android:contentDescription="@string/product_weight_icon_alt"
-            android:src="@drawable/product_weight"
+            android:src="@drawable/chef_icon"
             app:tint="@color/product_name" />
 
         <TextView
-            android:id="@+id/productWeight"
+            android:id="@+id/ricettaDifficolta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/productBrand"
+            android:layout_below="@id/ricettaAuthor"
             android:layout_marginEnd="10dp"
-
-            android:layout_toEndOf="@id/productWeightImage"
+            android:layout_toEndOf="@id/ricettaDifficoltaImage"
             android:fontFamily="@font/poppins"
             android:textSize="12sp"
-            tools:text="250g" />
+            tools:text="facile" />
 
         <ImageView
-            android:id="@+id/productStockImage"
+            android:id="@+id/ricettaDurataImage"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_below="@id/productBrand"
+            android:layout_below="@id/ricettaAuthor"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
-            android:layout_toEndOf="@id/productWeight"
+            android:layout_toEndOf="@id/ricettaDifficolta"
             android:contentDescription="@string/stock_icon_alt"
-            android:src="@drawable/box_closed"
+            android:src="@drawable/product_timer"
             app:tint="@color/product_name" />
 
         <TextView
-            android:id="@+id/productStock"
+            android:id="@+id/ricettaDurata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/productBrand"
+            android:layout_below="@id/ricettaAuthor"
             android:layout_marginEnd="10dp"
-            android:layout_toEndOf="@id/productStockImage"
+            android:layout_toEndOf="@id/ricettaDurataImage"
             android:fontFamily="@font/poppins"
             android:textSize="12sp"
-            tools:text="5" />
+            tools:text="11min." />
 
         <ImageView
-            android:id="@+id/productTimerImage"
+            android:id="@+id/ricettaKcalImge"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_below="@id/productBrand"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/ricettaAuthor"
             android:layout_marginEnd="2dp"
-            android:layout_toEndOf="@id/productStock"
+            android:layout_toEndOf="@id/ricettaDurata"
             android:contentDescription="@string/expiration_date_icon_alt"
-            android:src="@drawable/calendar_expiration_date_v2"
+            android:src="@drawable/bolt_icon"
             app:tint="@color/product_name" />
 
         <TextView
-            android:id="@+id/productExpirationDate"
+            android:id="@+id/ricettaKcal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/productBrand"
-            android:layout_toEndOf="@id/productTimerImage"
+            android:layout_below="@id/ricettaAuthor"
+            android:layout_toEndOf="@id/ricettaKcalImge"
             android:fontFamily="@font/poppins"
             android:textSize="12sp"
-            tools:text="25-01-2023" />
+            tools:text="324Kcal" />
 
     </RelativeLayout>
 

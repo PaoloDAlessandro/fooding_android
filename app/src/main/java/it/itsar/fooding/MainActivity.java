@@ -1,40 +1,23 @@
 package it.itsar.fooding;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.FragmentManager;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import android.view.View;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     public FragmentManager fragmentManager = getSupportFragmentManager();
-    private final MyProperties myProperties = MyProperties.getInstance();
-    private LocalStorageManager localStorageManager = new LocalStorageManager();
     private final AuthStorageManager authStorageManager = new AuthStorageManager();
 
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -117,31 +100,4 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
     }
-/*
-    void checkUserIsLogged() {
-        String usernameFromFile = userFromFile.getUsername();
-        String passwordFromFile = userFromFile.getPassword();
-            userCollection.whereEqualTo("username", usernameFromFile)
-                    .whereEqualTo("password", passwordFromFile)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            if (task.getResult().size() == 0) {
-                                isLogged = false;
-                                configFragmentManager(Login.class);
-                            }
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                isLogged = true;
-                                Log.d("Result: ", document.getId() + " ==> " + document.getData());
-                            }
-                        } else {
-                            Log.d("Error:", "Error getting documents: " + task.getException());
-                        }
-                    }
-                });
-    }
-
- */
 }

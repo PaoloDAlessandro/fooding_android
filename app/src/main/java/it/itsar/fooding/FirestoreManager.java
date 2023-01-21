@@ -59,9 +59,6 @@ public class FirestoreManager {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                         if (task.isSuccessful()) {
-                                                            if (task.getResult().size() == 0) {
-                                                                Log.d("RESULT: ", "Ultime aggiunte is empty");
-                                                            }
                                                             ArrayList<Prodotto> productsFromCollection = new ArrayList<>();
                                                             for (QueryDocumentSnapshot productDocument : task.getResult()) {
                                                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -117,9 +114,6 @@ public class FirestoreManager {
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
-                                                if (task.getResult().size() == 0) {
-                                                    Log.d("RESULT: ", "User's pantry is empty");
-                                                }
                                                 ArrayList<Prodotto> userProductsFromCollection = new ArrayList<>();
                                                 for (QueryDocumentSnapshot productDocument : task.getResult()) {
                                                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -131,7 +125,6 @@ public class FirestoreManager {
                                             }
                                         }
                                     });
-                                    Log.d("Result: ", document.getId() + " ==> " + document.getData());
                                 }
                             }
                         }
@@ -147,9 +140,6 @@ public class FirestoreManager {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            if (task.getResult().size() == 0) {
-                                Log.d("ERROR: ", "No products found on Firestore");
-                            }
                             ArrayList<Prodotto> productFromCollection = new ArrayList<>();
                             for (QueryDocumentSnapshot productDocument : task.getResult()) {
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -203,13 +193,6 @@ public class FirestoreManager {
                                                         } catch (IOException e) {
                                                             e.printStackTrace();
                                                         }
-                                                        Log.d("Result: ", "ma pe davvero?");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.d("Result: ", "te pareva");
                                                     }
                                                 });
                                     }
@@ -242,7 +225,6 @@ public class FirestoreManager {
                         }
                     });
         }
-        Log.d("INGREDIENTI: ", ingredientiRicetta.toString());
         return ingredientiRicetta;
     }
 
@@ -304,7 +286,6 @@ public class FirestoreManager {
                                                                         } catch (IOException e) {
                                                                             e.printStackTrace();
                                                                         }
-                                                                        Log.d("ACTION: ", "DONE");
                                                                     }
                                                                 });
                                                                 }

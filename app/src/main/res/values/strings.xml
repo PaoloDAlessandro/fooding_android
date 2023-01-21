@@ -38,4 +38,5 @@
     <string name="ultime_aggiunte_label">Ultime aggiunte</string>
     <string name="ricette_consigliate_label">Ricette consigliate</string>
     <string name="logout_icon">logout_icon</string>
+    <string name="ricette_filter_placeholder">Cerca ricette</string>
 </resources>

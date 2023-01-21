@@ -2,7 +2,6 @@ package it.itsar.fooding;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -18,41 +17,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.DateTime;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Home extends Fragment {
 
     private RecyclerView ultimeAggiunteProdotti;
     private RecyclerView ricetteConsigliate;
     private final MyProperties myProperties = MyProperties.getInstance();
-    private ArrayList<Prodotto> userProducts;
     private ArrayList<Prodotto> ultimeAggiunte;
     private ArrayList<Ricetta> ricette;
     private LocalStorageManager localStorageManager = new LocalStorageManager();
@@ -155,13 +138,6 @@ public class Home extends Fragment {
 
         ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        /*
-        ricette = new ArrayList<>(Arrays.asList(
-                new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", new ArrayList<>(Arrays.asList(new Ingrediente(80, myProperties.getProdotti()[11]), new Ingrediente(60, myProperties.getProdotti()[2]), new Ingrediente(10, myProperties.getProdotti()[10]), new Ingrediente(5, myProperties.getProdotti()[5]))), 11, 324, Ricetta.Difficolta.FACILE),
-                new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", new ArrayList<>(Arrays.asList(new Ingrediente(88, myProperties.getProdotti()[0]))), 8, 154, Ricetta.Difficolta.FACILE),
-                new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", new ArrayList<>(Arrays.asList(new Ingrediente(120, myProperties.getProdotti()[14]), new Ingrediente(15, myProperties.getProdotti()[10]), new Ingrediente(30, myProperties.getProdotti()[15]))), 5, 287, Ricetta.Difficolta.FACILE)
-        ));
-         */
 
         HashMap<String, String> ingredienti1Ricetta1 = new HashMap<>();
         HashMap<String, String> ingredienti2Ricetta1 = new HashMap<>();

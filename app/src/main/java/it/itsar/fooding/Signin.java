@@ -1,13 +1,11 @@
 package it.itsar.fooding;
 
-import static android.content.ContentValues.TAG;
 
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,7 +13,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,18 +25,16 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Signin extends Fragment {
 
@@ -48,10 +43,12 @@ public class Signin extends Fragment {
     private EditText usernameInput;
     private EditText emailInput;
     private EditText passwordInput;
+    private TextView emailError;
     private EditText confirmPasswordInput;
     private TextView usernameError;
     private TextView passwordError;
     private TextView confirmPasswordError;
+    private MaterialCardView emailInputCard;
     private MaterialCardView usernameInputCard;
     private MaterialCardView passwordInputCard;
     private MaterialCardView confirmPasswordInputCard;
@@ -77,6 +74,8 @@ public class Signin extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        emailInputCard = view.findViewById(R.id.emailInputCard);
+        emailError = view.findViewById(R.id.emailError);
         accediButton = view.findViewById(R.id.accediTextClickable);
         registratiButton = view.findViewById(R.id.registratiButton);
         usernameInput = view.findViewById(R.id.usernameInput);
@@ -107,8 +106,12 @@ public class Signin extends Fragment {
                 displayInputError(confirmPasswordInputCard, confirmPasswordError);
             }
 
-            if (usernameInput.getText().length() >= 5 && passwordInput.getText().length() >= 8 && passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString())) {
-                auth.createUserWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            if (!isEmailValid(emailInput.getText().toString())) {
+                displayInputError(emailInputCard, emailError);
+            }
+
+            if (usernameInput.getText().length() >= 5 && passwordInput.getText().length() >= 8 && passwordInput.getText().toString().equals(confirmPasswordInput.getText().toString()) && isEmailValid(emailInput.getText().toString())) {
+                auth.createUserWithEmailAndPassword(emailInput.getText().toString().toLowerCase()   , passwordInput.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -119,8 +122,6 @@ public class Signin extends Fragment {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(getActivity(), "Registered successfully", Toast.LENGTH_SHORT).show();
                                         addUserToUsersCollection();
-                                        //emailInput.setText("");
-                                        //passwordInput.setText("");
                                     } else {
                                         Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
@@ -182,6 +183,14 @@ public class Signin extends Fragment {
 
             }
         });
+    }
+
+    boolean isEmailValid(String email) {
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.compile(regexPattern)
+                .matcher(email)
+                .matches();
     }
 
     void displayInputError(MaterialCardView inputCard, TextView inputError) {

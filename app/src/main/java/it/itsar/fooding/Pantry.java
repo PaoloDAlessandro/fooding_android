@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,25 +23,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,8 +49,6 @@ public class Pantry extends Fragment {
     private ProductAdapter productAdapter;
     private EditText searchProduct;
 
-    private User userFromFile;
-
     ActivityResultLauncher<Intent> activityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -73,7 +57,6 @@ public class Pantry extends Fragment {
                         updateRecycleView(result);
                         break;
                     case Activity.RESULT_CANCELED:
-                        Log.d("Edit: ", "NO");
                         break;
                 }
             }
@@ -107,6 +90,7 @@ public class Pantry extends Fragment {
         recyclerView = view.findViewById(R.id.productsRecyclerView);
         productFilter = view.findViewById(R.id.productFilter);
         addProductButton = view.findViewById(R.id.addProductButton);
+
         if (myProperties.getUserProdotti().size() == 0) {
             try {
                 if (localStorageManager.backupFromFile(getActivity().getFilesDir() + localStorageManager.USER_PRODUCT_FILE_NAME) != null) {

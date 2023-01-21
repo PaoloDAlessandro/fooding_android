@@ -212,7 +212,7 @@
                 android:id="@+id/ingredientiList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="30dp"
                 android:paddingBottom="4dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
