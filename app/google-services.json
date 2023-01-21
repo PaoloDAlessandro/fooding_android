@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "40080208768",
+    "project_id": "fooding-bba60",
+    "storage_bucket": "fooding-bba60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40080208768:android:3fa46b852fd3e5db950765",
+        "android_client_info": {
+          "package_name": "it.itsar.fooding"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40080208768-pbir1au7spr3blsj5rlr8gmp1f2k18u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCCYvmHOBbsCGkfoaj3kx4QDrG6ZPQGk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "40080208768-pbir1au7spr3blsj5rlr8gmp1f2k18u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

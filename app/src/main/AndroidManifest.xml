@@ -6,9 +6,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/fooding_icon"
+        android:icon="@mipmap/fooding_icon"
         android:label="Fooding"
-        android:roundIcon="@drawable/fooding_icon"
+        android:roundIcon="@mipmap/fooding_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fooding"
         tools:targetApi="31" >
