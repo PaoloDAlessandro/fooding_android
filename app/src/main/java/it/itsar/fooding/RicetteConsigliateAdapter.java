@@ -13,6 +13,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsigliateAdapter.RicetteConsigliateViewHolder> {
@@ -58,7 +60,7 @@ public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsi
         }
 
         void bind(Ricetta ricetta) {
-            ricettaImage.setImageResource(ricetta.getImage());
+            downloadImage(ricetta.getImage());
             if(ricetta.getNome().length() > 20) {
                 ricettaName.setText(ricetta.getNome().substring(0, 17) + "..");
             }
@@ -75,5 +77,19 @@ public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsi
              intent.putExtra("ricetta", ricetta);
              activityResultLauncher.launch(intent);
          }
+        private void downloadImage(String imageUri) {
+            Picasso.get()
+                    .load(imageUri)
+                    .into(ricettaImage, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess(){
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                        }
+                    });
+        }
      }
+
 }

@@ -1,12 +1,10 @@
 package it.itsar.fooding;
 
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -31,6 +29,7 @@ public class FirestoreManager {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = db.collection("user");
     private final CollectionReference productCollection = db.collection("product");
+    private final CollectionReference recipeCollection = db.collection("recipe");
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -95,6 +94,41 @@ public class FirestoreManager {
                         }
                     });
         }
+    }
+
+
+    public ArrayList<Ricetta> getRecipes(GetRecipes getRecipesInterface){
+        ArrayList<Ricetta> recipesFromCollection = new ArrayList<>();
+        recipeCollection
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                recipesFromCollection.add(transformCollectionRecipe(documentSnapshot));
+                            }
+                        }
+                    }
+                });
+        return recipesFromCollection;
+    }
+
+    Ricetta transformCollectionRecipe(QueryDocumentSnapshot recipeDocument) {
+
+        ArrayList<Map<String, String>> ingredientiRicetta = (ArrayList<Map<String, String>>) recipeDocument.get("ingredienti");
+
+        Ricetta ricetta = new Ricetta(
+                (String) recipeDocument.get("nome"),
+                (String) recipeDocument.get("image"),
+                (String) recipeDocument.get("autore"),
+                getProductsOfRecipes(ingredientiRicetta),
+                ((Number) recipeDocument.get("tempoPreparazione")).intValue(),
+                ((Number) recipeDocument.get("kcal")).intValue(),
+                Ricetta.Difficolta.MEDIA
+        );
+
+        return ricetta;
     }
 
 
@@ -203,6 +237,7 @@ public class FirestoreManager {
         }
     }
 
+    /*
     ArrayList<Ingrediente> getProductsOfRecipes(HashMap<String, String>[] ingredienti) {
         ArrayList<Ingrediente> ingredientiRicetta = new ArrayList<>();
         for (int i = 0; i < ingredienti.length; i++) {
@@ -221,6 +256,33 @@ public class FirestoreManager {
                                     tempProdotto.setPeso(Integer.parseInt(ingredienti[finalI].get("peso")));
                                 }
                                 ingredientiRicetta.add(new Ingrediente(Integer.parseInt(ingredienti[finalI].get("peso")), tempProdotto));
+                            }
+                        }
+                    });
+        }
+        return ingredientiRicetta;
+    }
+
+     */
+
+    ArrayList<Ingrediente> getProductsOfRecipes(ArrayList<Map<String, String>> ingredienti) {
+        ArrayList<Ingrediente> ingredientiRicetta = new ArrayList<>();
+        for (int i = 0; i < ingredienti.size(); i++) {
+            int finalI = i;
+            productCollection
+                    .whereEqualTo("nome", ingredienti.get(i).get("nome"))
+                    .whereEqualTo("marca", ingredienti.get(i).get("marca"))
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Prodotto tempProdotto = null;
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                    tempProdotto = trasformCollectionProduct(documentSnapshot);
+                                    tempProdotto.setPeso(Integer.parseInt(ingredienti.get(finalI).get("peso")));
+                                }
+                                ingredientiRicetta.add(new Ingrediente(Integer.parseInt(ingredienti.get(finalI).get("peso")), tempProdotto));
                             }
                         }
                     });
@@ -357,8 +419,11 @@ public class FirestoreManager {
         void onSuccess() throws IOException;
     }
 
+    interface GetRecipes {
+        void onSuccess();
+    }
+
     interface GetUsername {
         void onSuccess(String username);
     }
-
 }

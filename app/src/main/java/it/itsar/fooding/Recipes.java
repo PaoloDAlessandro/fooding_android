@@ -128,13 +128,17 @@ public class Recipes extends Fragment {
 
 
 
-
+/*
         ricette = new ArrayList<>(Arrays.asList(
                 new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta1, ingredienti2Ricetta1, ingredienti3Ricetta1}), 11, 324, Ricetta.Difficolta.FACILE),
                 new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta2}), 8, 154, Ricetta.Difficolta.FACILE),
                 new Ricetta("Risotto", R.drawable.risotto, "Cookidoo", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta4, ingredienti2Ricetta4}), 30, 433, Ricetta.Difficolta.MEDIA),
                 new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta3, ingredienti2Ricetta3}), 5, 287, Ricetta.Difficolta.FACILE)
         ));
+
+ */
+
+        ricette = firestoreManager.getRecipes();
 
 
         recipeAdapter = new RecipeAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);

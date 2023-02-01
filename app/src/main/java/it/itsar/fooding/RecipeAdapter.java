@@ -79,7 +79,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             ricettaDifficolta.setText(ricetta.getDifficolta().toString().toLowerCase());
             ricettaDurata.setText(ricetta.getTempoPreparazione() + "min.");
             ricettaKcal.setText(ricetta.getKcal() + "kcal");
-            ricettaImage.setImageResource(ricetta.getImage());
+            downloadImage(ricetta.getImage());
 
 
         }
@@ -93,5 +93,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             intent.putExtra("position", position);
             activityResultLauncher.launch(intent);
         }
+
+         private void downloadImage(String imageUri) {
+             Picasso.get()
+                     .load(imageUri)
+                     .into(ricettaImage, new com.squareup.picasso.Callback() {
+                         @Override
+                         public void onSuccess(){
+                         }
+
+                         @Override
+                         public void onError(Exception e) {
+                         }
+                     });
+         }
     }
 }

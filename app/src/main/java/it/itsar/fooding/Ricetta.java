@@ -1,18 +1,20 @@
 package it.itsar.fooding;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Ricetta implements Serializable {
     private String nome;
-    private int image;
+    private String image;
     private String autore;
     private ArrayList<Ingrediente> ingredienti;
     private int tempoPreparazione;
     private int kcal;
     private Difficolta difficolta;
 
-    public Ricetta(String nome, int image, String autore, ArrayList<Ingrediente> ingredienti, int tempoPreparazione, int kcal, Difficolta difficolta) {
+    public Ricetta(String nome, String image, String autore, ArrayList<Ingrediente> ingredienti, int tempoPreparazione, int kcal, Difficolta difficolta) {
         this.nome = nome;
         this.image = image;
         this.autore = autore;
@@ -28,14 +30,6 @@ public class Ricetta implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public String getAutore() {
@@ -76,6 +70,14 @@ public class Ricetta implements Serializable {
 
     public void setIngredienti(ArrayList<Ingrediente> ingredienti) {
         this.ingredienti = ingredienti;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     enum Difficolta {

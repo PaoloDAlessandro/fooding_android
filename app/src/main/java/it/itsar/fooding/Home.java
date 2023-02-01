@@ -112,6 +112,7 @@ public class Home extends Fragment {
         } else {
             ultimeAggiunte = myProperties.getUltimeAggiunte();
         }
+        firestoreManager.getRecipes();
 
 
         if (ultimeAggiunte.size() != 0) {
@@ -171,12 +172,14 @@ public class Home extends Fragment {
         ingredienti2Ricetta3.put("peso", "15");
 
 
-
+/*
         ricette = new ArrayList<>(Arrays.asList(
                 new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta1, ingredienti2Ricetta1, ingredienti3Ricetta1}), 11, 324, Ricetta.Difficolta.FACILE),
                 new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta2}), 8, 154, Ricetta.Difficolta.FACILE),
                 new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta3, ingredienti2Ricetta3}), 5, 287, Ricetta.Difficolta.FACILE)
         ));
+
+ */
 
         RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
         ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);

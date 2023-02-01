@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class RicettaDetails extends AppCompatActivity {
@@ -72,7 +74,7 @@ public class RicettaDetails extends AppCompatActivity {
     }
 
     void populateXmlElements() {
-        ricettaImage.setImageResource(ricetta.getImage());
+        downloadImage(ricetta.getImage());
         ricettaNome.setText(ricetta.getNome());
         ricettaAutore.setText("by " + ricetta.getAutore());
         ricettaDurata.setText(ricetta.getTempoPreparazione() + "min.");
@@ -115,6 +117,20 @@ public class RicettaDetails extends AppCompatActivity {
         preparaButton.setOnClickListener(view -> {
 
         });
+    }
+
+    private void downloadImage(String imageUri) {
+        Picasso.get()
+                .load(imageUri)
+                .into(ricettaImage, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess(){
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
     }
 
 }
