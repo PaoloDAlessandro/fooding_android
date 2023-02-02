@@ -189,15 +189,6 @@ public class ProductAddition extends AppCompatActivity {
                 selectedProduct.setDateScadenza(new ArrayList<>(Arrays.asList(new ProductExpirationDate(Integer.parseInt(productStockInput.getText().toString()), LocalDate.parse(productExpirationDateInput.getText(), formatterDate)))));
             }
             checkProductInUserPantry();
-            /*
-            File file = new File(getFilesDir(), "storage.txt");
-            try {
-                localStorageManager.backupToFile(file, userProdotti);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-             */
         });
 
         cancelButton.setOnClickListener((view) -> goBack(Activity.RESULT_CANCELED));
@@ -271,14 +262,14 @@ public class ProductAddition extends AppCompatActivity {
                                 .collect(Collectors.toList()).get(0));
                 productExpirationDateOfProduct.get(productExpirationDateIndex).setAmount(selectedProduct.getDateScadenza().get(0).getAmount() + userProdotti.get(productIndex).getDateScadenza().get(productExpirationDateIndex).getAmount());
                 firestoreManager.editProductInUserCollection(userProdotti.get(productIndex), () -> {
-                    localStorageManager.backupToFile(new File(getFilesDir() + localStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
+                    localStorageManager.backupToFile(new File(getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
                     goBack(RESULT_OK);
                 });
             }
             else {
                 userProdotti.get(productIndex).addExpirationDate(new ProductExpirationDate(selectedProduct.getDateScadenza().get(0).getAmount(), selectedProduct.getDateScadenza().get(0).getExpirationDate()));
                 firestoreManager.editProductInUserCollection(userProdotti.get(productIndex), () -> {
-                    localStorageManager.backupToFile(new File(getFilesDir() + localStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
+                    localStorageManager.backupToFile(new File(getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
                     goBack(RESULT_OK);
                 });
             }

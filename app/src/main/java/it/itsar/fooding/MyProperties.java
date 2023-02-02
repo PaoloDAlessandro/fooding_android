@@ -1,5 +1,8 @@
 package it.itsar.fooding;
 
+import org.checkerframework.checker.units.qual.A;
+
+import java.sql.Array;
 import java.util.ArrayList;
 
 public class MyProperties {
@@ -8,6 +11,8 @@ public class MyProperties {
     private Prodotto[] prodotti;
     private ArrayList<Prodotto> userProdotti = new ArrayList<>();
     private ArrayList<Prodotto> ultimeAggiunte = new ArrayList<>();
+    private ArrayList<Ricetta> ricette = new ArrayList<>();
+
 
     private String userUsername;
 
@@ -58,5 +63,13 @@ public class MyProperties {
 
     public void setUserUsername(String userUsername) {
         this.userUsername = userUsername;
+    }
+
+    public ArrayList<Ricetta> getRicette() {
+        return ricette;
+    }
+
+    public void setRicette(ArrayList<Ricetta> ricette) {
+        this.ricette = ricette;
     }
 }

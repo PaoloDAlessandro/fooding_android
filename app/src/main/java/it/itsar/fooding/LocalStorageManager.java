@@ -14,6 +14,7 @@ public class LocalStorageManager {
 
     public static String USER_PRODUCT_FILE_NAME = "/storage.txt";
     public static String ULTIME_AGGIUNTE_FILE_NAME = "/ultime_aggiunte.txt";
+    public static String RICETTE_FILE_NAME = "/ricette.txt";
     private final MyProperties myProperties = MyProperties.getInstance();
 
     public LocalStorageManager() {
@@ -26,6 +27,27 @@ public class LocalStorageManager {
             oos.writeObject(prodotti.toArray(new Prodotto[0]));
             oos.flush();
         }
+    }
+
+    public void backupToRecipesFile(File file, ArrayList<Ricetta> ricette) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(file);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(ricette.toArray(new Ricetta[0]));
+            oos.flush();
+        }
+    }
+
+    public ArrayList<Ricetta> backupFromRecipesFile(String fileName) throws IOException {
+        try {
+            FileInputStream fileIn = new FileInputStream(fileName);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+            Ricetta[] ricette = (Ricetta[]) objectIn.readObject();
+            return new ArrayList<>(Arrays.asList(ricette));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     public ArrayList<Prodotto> backupFromFile(String fileName) throws IOException {

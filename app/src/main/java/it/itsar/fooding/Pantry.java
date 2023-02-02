@@ -159,7 +159,7 @@ public class Pantry extends Fragment {
     void filterInputProductManager(CharSequence charSequence) {
         ArrayList<Prodotto> prodottiFiltered = userProducts;
         prodottiFiltered = (ArrayList<Prodotto>) prodottiFiltered.stream()
-                .filter(prodotto -> prodotto.getNome().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                .filter(prodotto -> prodotto.getNome().toLowerCase().startsWith(charSequence.toString().toLowerCase()))
                 .collect(Collectors.toList());
         productAdapter.setProdotti(prodottiFiltered);
         recyclerView.setAdapter(productAdapter);

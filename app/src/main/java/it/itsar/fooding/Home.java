@@ -40,19 +40,14 @@ public class Home extends Fragment {
     private ArrayList<Ricetta> ricette;
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference userCollection = db.collection("user");
-    private CollectionReference productCollection = db.collection("product");
 
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-    private String userEmail;
     private String userUsername = "";
 
     private FirestoreManager firestoreManager;
 
-    private User userFromFile;
 
     private TextView welcomeMessage;
 
@@ -87,7 +82,7 @@ public class Home extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (firebaseUser != null) {
-            userEmail = firebaseUser.getEmail();
+            String userEmail = firebaseUser.getEmail();
         }
         welcomeMessage = getView().findViewById(R.id.welcomeMessage);
         if (myProperties.getUserUsername() != null) {

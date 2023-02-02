@@ -20,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -32,6 +34,9 @@ public class Recipes extends Fragment {
     private RecyclerView recipesRecyclerView;
     private ArrayList<Ricetta> ricette;
     private Spinner recipesSpinner;
+
+    private MyProperties myProperties = MyProperties.getInstance();
+    private LocalStorageManager localStorageManager = new LocalStorageManager();
 
     private RecipeAdapter recipeAdapter;
     private EditText recipesInput;
@@ -74,10 +79,38 @@ public class Recipes extends Fragment {
         adapter.setDropDownViewResource(R.layout.filter_spinner_item);
         recipesSpinner.setAdapter(adapter);
 
-        firestoreManager.getRecipes((recipesFromCollection)-> {
-            ricette = recipesFromCollection;
+        if (myProperties.getRicette().size() == 0) {
+            try {
+                if (localStorageManager.backupFromRecipesFile(getActivity().getFilesDir() + localStorageManager.RICETTE_FILE_NAME) != null) {
+                    ricette = localStorageManager.backupFromRecipesFile(getActivity().getFilesDir() + localStorageManager.RICETTE_FILE_NAME);
+                    myProperties.setRicette(ricette);
+                    initRecipesAdapter();
+                }
+                else {
+                    firestoreManager.getRecipes((recipesFromCollection) -> {
+                        ricette = recipesFromCollection;
+                        initRecipesAdapter();
+                        //if (recipesFromCollection == ricette) {
+                        myProperties.setRicette(ricette);
+                        recipeAdapter.setRicette(ricette);
+                        recipesRecyclerView.setAdapter(recipeAdapter);
+                        try {
+                            localStorageManager.backupToRecipesFile(new File(getActivity().getFilesDir() + localStorageManager.RICETTE_FILE_NAME), ricette);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            ricette = myProperties.getRicette();
             initRecipesAdapter();
-        });
+        }
+
+
 
 
         recipesInput.addTextChangedListener(new TextWatcher() {

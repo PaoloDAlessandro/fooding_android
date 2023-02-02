@@ -109,12 +109,10 @@ public class FirestoreManager {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 transformCollectionRecipe(documentSnapshot, (ricetta)-> {
-                                    if (!recipesFromCollection.contains(ricetta)) {
-                                        recipesFromCollection.add(ricetta);
-                                        getRecipesInterface.onSuccess(recipesFromCollection);
-                                    }
+                                    recipesFromCollection.add(ricetta);
                                 });
                             }
+                            getRecipesInterface.onSuccess(recipesFromCollection);
                         }
                     }
                 });
