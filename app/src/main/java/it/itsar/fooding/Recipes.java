@@ -38,6 +38,8 @@ public class Recipes extends Fragment {
 
     private int filterMode;
 
+    private FilterItemAdapter adapter;
+
 
     private ArrayList<Integer> spinnerItems = new ArrayList<>();
 
@@ -67,84 +69,16 @@ public class Recipes extends Fragment {
         spinnerItems.add(R.drawable.bolt_icon);
         spinnerItems.add(R.drawable.product_timer);
 
-        FilterItemAdapter adapter = new FilterItemAdapter(getContext(), R.layout.filter_spinner_item, spinnerItems);
+        adapter = new FilterItemAdapter(getContext(), R.layout.filter_spinner_item, spinnerItems);
 
         adapter.setDropDownViewResource(R.layout.filter_spinner_item);
         recipesSpinner.setAdapter(adapter);
 
-        recipesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                filterMode = adapter.getItem(i);
-                filterProductsManager();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+        firestoreManager.getRecipes((recipesFromCollection)-> {
+            ricette = recipesFromCollection;
+            initRecipesAdapter();
         });
 
-        HashMap<String, String> ingredienti1Ricetta1 = new HashMap<>();
-        HashMap<String, String> ingredienti2Ricetta1 = new HashMap<>();
-        HashMap<String, String> ingredienti3Ricetta1 = new HashMap<>();
-
-        HashMap<String, String> ingredienti1Ricetta2 = new HashMap<>();
-
-        HashMap<String, String> ingredienti1Ricetta3 = new HashMap<>();
-        HashMap<String, String> ingredienti2Ricetta3 = new HashMap<>();
-        HashMap<String, String> ingredienti3Ricetta3 = new HashMap<>();
-
-        ingredienti1Ricetta1.put("nome", "Tagliatelle n. 203");
-        ingredienti1Ricetta1.put("marca", "De Cecco");
-        ingredienti1Ricetta1.put("peso", "100");
-        ingredienti2Ricetta1.put("nome", "Ragù Contadino");
-        ingredienti2Ricetta1.put("marca", "Barilla");
-        ingredienti2Ricetta1.put("peso", "60");
-        ingredienti3Ricetta1.put("nome", "Pepe nero");
-        ingredienti3Ricetta1.put("marca", "Cannamela");
-        ingredienti3Ricetta1.put("peso", "5");
-
-        ingredienti1Ricetta2.put("nome", "Crema carciofi");
-        ingredienti1Ricetta2.put("marca", "Knorr");
-        ingredienti1Ricetta2.put("peso", "140");
-
-        ingredienti1Ricetta3.put("nome", "Uova guscio bianco");
-        ingredienti1Ricetta3.put("marca", "Le naturelle");
-        ingredienti1Ricetta3.put("peso", "160");
-        ingredienti2Ricetta3.put("nome", "Olio extra vergine di oliva");
-        ingredienti2Ricetta3.put("marca", "Dante");
-        ingredienti2Ricetta3.put("peso", "15");
-
-        HashMap<String, String> ingredienti1Ricetta4 = new HashMap<>();
-        HashMap<String, String> ingredienti2Ricetta4 = new HashMap<>();
-
-        ingredienti1Ricetta4.put("nome", "Riso");
-        ingredienti1Ricetta4.put("marca", "Gallo");
-        ingredienti1Ricetta4.put("peso", "120");
-        ingredienti2Ricetta4.put("nome", "Pepe nero");
-        ingredienti2Ricetta4.put("marca", "Cannamela");
-        ingredienti2Ricetta4.put("peso", "5");
-
-
-
-/*
-        ricette = new ArrayList<>(Arrays.asList(
-                new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta1, ingredienti2Ricetta1, ingredienti3Ricetta1}), 11, 324, Ricetta.Difficolta.FACILE),
-                new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta2}), 8, 154, Ricetta.Difficolta.FACILE),
-                new Ricetta("Risotto", R.drawable.risotto, "Cookidoo", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta4, ingredienti2Ricetta4}), 30, 433, Ricetta.Difficolta.MEDIA),
-                new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta3, ingredienti2Ricetta3}), 5, 287, Ricetta.Difficolta.FACILE)
-        ));
-
- */
-
-        ricette = firestoreManager.getRecipes();
-
-
-        recipeAdapter = new RecipeAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
-        recipesRecyclerView.setAdapter(recipeAdapter);
-        filterByDifficolta();
-        filterInputRecipeManager(recipesInput.getText().toString());
 
         recipesInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -162,7 +96,6 @@ public class Recipes extends Fragment {
 
             }
         });
-
     }
 
     void filterProductsManager() {
@@ -184,6 +117,25 @@ public class Recipes extends Fragment {
 
     }
 
+    void initRecipesAdapter() {
+        recipeAdapter = new RecipeAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
+        recipesRecyclerView.setAdapter(recipeAdapter);
+        filterByDifficolta();
+        filterInputRecipeManager(recipesInput.getText().toString());
+        recipesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                filterMode = adapter.getItem(i);
+                filterProductsManager();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
     void filterByDifficolta() {
         ArrayList<Ricetta> ricetteDaOrdinare = ricette;
 
@@ -201,7 +153,7 @@ public class Recipes extends Fragment {
     void filterByTempoPreparazione() {
         ArrayList<Ricetta> ricetteDaOrdinare = ricette;
 
-        ricetteDaOrdinare.sort((r1, r2) -> r2.getKcal() - r1.getKcal());
+        ricetteDaOrdinare.sort(Comparator.comparingInt(Ricetta::getTempoPreparazione));
 
         recipeAdapter.setRicette(ricetteDaOrdinare);
         recipeAdapter.notifyDataSetChanged();

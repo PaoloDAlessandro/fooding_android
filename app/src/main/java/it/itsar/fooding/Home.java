@@ -112,8 +112,6 @@ public class Home extends Fragment {
         } else {
             ultimeAggiunte = myProperties.getUltimeAggiunte();
         }
-        firestoreManager.getRecipes();
-
 
         if (ultimeAggiunte.size() != 0) {
             ultimeAggiunteAdapter = new UltimeAggiunteAdapter(ultimeAggiunte, getContext(), activityLauncher);
@@ -140,50 +138,12 @@ public class Home extends Fragment {
         ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        HashMap<String, String> ingredienti1Ricetta1 = new HashMap<>();
-        HashMap<String, String> ingredienti2Ricetta1 = new HashMap<>();
-        HashMap<String, String> ingredienti3Ricetta1 = new HashMap<>();
 
-        HashMap<String, String> ingredienti1Ricetta2 = new HashMap<>();
-
-        HashMap<String, String> ingredienti1Ricetta3 = new HashMap<>();
-        HashMap<String, String> ingredienti2Ricetta3 = new HashMap<>();
-        HashMap<String, String> ingredienti3Ricetta3 = new HashMap<>();
-
-        ingredienti1Ricetta1.put("nome", "Tagliatelle n. 203");
-        ingredienti1Ricetta1.put("marca", "De Cecco");
-        ingredienti1Ricetta1.put("peso", "100");
-        ingredienti2Ricetta1.put("nome", "Ragù Contadino");
-        ingredienti2Ricetta1.put("marca", "Barilla");
-        ingredienti2Ricetta1.put("peso", "60");
-        ingredienti3Ricetta1.put("nome", "Pepe nero");
-        ingredienti3Ricetta1.put("marca", "Cannamela");
-        ingredienti3Ricetta1.put("peso", "5");
-
-        ingredienti1Ricetta2.put("nome", "Crema carciofi");
-        ingredienti1Ricetta2.put("marca", "Knorr");
-        ingredienti1Ricetta2.put("peso", "140");
-
-        ingredienti1Ricetta3.put("nome", "Uova guscio bianco");
-        ingredienti1Ricetta3.put("marca", "Le naturelle");
-        ingredienti1Ricetta3.put("peso", "160");
-        ingredienti2Ricetta3.put("nome", "Olio extra vergine di oliva");
-        ingredienti2Ricetta3.put("marca", "Dante");
-        ingredienti2Ricetta3.put("peso", "15");
-
-
-/*
-        ricette = new ArrayList<>(Arrays.asList(
-                new Ricetta("Tagliatelle al ragù", R.drawable.tagliatelle_al_ragu, "GialloZafferano", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta1, ingredienti2Ricetta1, ingredienti3Ricetta1}), 11, 324, Ricetta.Difficolta.FACILE),
-                new Ricetta("Crema carciofi", R.drawable.crema_carciofi_ricetta, "Knorr", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta2}), 8, 154, Ricetta.Difficolta.FACILE),
-                new Ricetta("Omelette", R.drawable.omelette_ricetta, "BurroFuso", firestoreManager.getProductsOfRecipes(new HashMap[]{ingredienti1Ricetta3, ingredienti2Ricetta3}), 5, 287, Ricetta.Difficolta.FACILE)
-        ));
-
- */
-
-        RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
-        ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
-
+        firestoreManager.getSuggestedRecipes((suggestedRecipesFromCollection)-> {
+            ricette = suggestedRecipesFromCollection;
+            RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
+            ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
+        });
     }
 
     void updateUserProducts(ActivityResult result) {

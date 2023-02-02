@@ -1,6 +1,7 @@
 package it.itsar.fooding;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -24,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FirestoreManager {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -97,7 +99,7 @@ public class FirestoreManager {
     }
 
 
-    public ArrayList<Ricetta> getRecipes(GetRecipes getRecipesInterface){
+    public void getRecipes(GetRecipes getRecipesInterface) {
         ArrayList<Ricetta> recipesFromCollection = new ArrayList<>();
         recipeCollection
                 .get()
@@ -106,30 +108,74 @@ public class FirestoreManager {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                recipesFromCollection.add(transformCollectionRecipe(documentSnapshot));
+                                transformCollectionRecipe(documentSnapshot, (ricetta)-> {
+                                    if (!recipesFromCollection.contains(ricetta)) {
+                                        recipesFromCollection.add(ricetta);
+                                        getRecipesInterface.onSuccess(recipesFromCollection);
+                                    }
+                                });
                             }
                         }
                     }
                 });
-        return recipesFromCollection;
     }
 
-    Ricetta transformCollectionRecipe(QueryDocumentSnapshot recipeDocument) {
+    public void getSuggestedRecipes(GetRecipes getRecipesInterface) {
+        ArrayList<Ricetta> recipesFromCollection = new ArrayList<>();
+        recipeCollection
+                .limit(4)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                transformCollectionRecipe(documentSnapshot, (ricetta)-> {
+                                    if (!recipesFromCollection.contains(ricetta)) {
+                                        recipesFromCollection.add(ricetta);
+                                        getRecipesInterface.onSuccess(recipesFromCollection);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+    }
+
+     void transformCollectionRecipe(QueryDocumentSnapshot recipeDocument, OnRecipeCreated onRecipeCreatedInterface) {
 
         ArrayList<Map<String, String>> ingredientiRicetta = (ArrayList<Map<String, String>>) recipeDocument.get("ingredienti");
 
-        Ricetta ricetta = new Ricetta(
-                (String) recipeDocument.get("nome"),
-                (String) recipeDocument.get("image"),
-                (String) recipeDocument.get("autore"),
-                getProductsOfRecipes(ingredientiRicetta),
-                ((Number) recipeDocument.get("tempoPreparazione")).intValue(),
-                ((Number) recipeDocument.get("kcal")).intValue(),
-                Ricetta.Difficolta.MEDIA
-        );
+        Ricetta.Difficolta difficoltaRicetta = null;
 
-        return ricetta;
-    }
+        switch (((Number) recipeDocument.get("difficoltà")).intValue()) {
+            case 1:
+                difficoltaRicetta = Ricetta.Difficolta.FACILE;
+                break;
+
+            case 2:
+                difficoltaRicetta = Ricetta.Difficolta.MEDIA;
+                break;
+
+            case 3:
+                difficoltaRicetta = Ricetta.Difficolta.DIFFICILE;
+                break;
+        }
+
+         Ricetta.Difficolta finalDifficoltaRicetta = difficoltaRicetta;
+         getProductsOfRecipes(ingredientiRicetta, (ingredientes)-> {
+                 Ricetta ricetta = new Ricetta(
+                         (String) recipeDocument.get("nome"),
+                         (String) recipeDocument.get("image"),
+                         (String) recipeDocument.get("autore"),
+                         ingredientes,
+                         ((Number) (recipeDocument.get("tempoPreparazione"))).intValue(),
+                         ((Number) (recipeDocument.get("kcal"))).intValue(),
+                         finalDifficoltaRicetta
+                 );
+                 onRecipeCreatedInterface.onSuccess(ricetta);
+             });
+         }
 
 
     public void getUserProducts(FirestoreManagerCallback firestoreManagerCallback) {
@@ -237,35 +283,8 @@ public class FirestoreManager {
         }
     }
 
-    /*
-    ArrayList<Ingrediente> getProductsOfRecipes(HashMap<String, String>[] ingredienti) {
-        ArrayList<Ingrediente> ingredientiRicetta = new ArrayList<>();
-        for (int i = 0; i < ingredienti.length; i++) {
-            int finalI = i;
-            productCollection
-                    .whereEqualTo("nome", ingredienti[i].get("nome"))
-                    .whereEqualTo("marca", ingredienti[i].get("marca"))
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                Prodotto tempProdotto = null;
-                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    tempProdotto = trasformCollectionProduct(documentSnapshot);
-                                    tempProdotto.setPeso(Integer.parseInt(ingredienti[finalI].get("peso")));
-                                }
-                                ingredientiRicetta.add(new Ingrediente(Integer.parseInt(ingredienti[finalI].get("peso")), tempProdotto));
-                            }
-                        }
-                    });
-        }
-        return ingredientiRicetta;
-    }
 
-     */
-
-    ArrayList<Ingrediente> getProductsOfRecipes(ArrayList<Map<String, String>> ingredienti) {
+    void getProductsOfRecipes(ArrayList<Map<String, String>> ingredienti, GetIngredienti getProductFromIngredientInterface) {
         ArrayList<Ingrediente> ingredientiRicetta = new ArrayList<>();
         for (int i = 0; i < ingredienti.size(); i++) {
             int finalI = i;
@@ -280,14 +299,13 @@ public class FirestoreManager {
                                 Prodotto tempProdotto = null;
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                     tempProdotto = trasformCollectionProduct(documentSnapshot);
-                                    tempProdotto.setPeso(Integer.parseInt(ingredienti.get(finalI).get("peso")));
+                                    ingredientiRicetta.add(new Ingrediente(Integer.parseInt(Objects.requireNonNull(ingredienti.get(finalI).get("peso"))), tempProdotto));
                                 }
-                                ingredientiRicetta.add(new Ingrediente(Integer.parseInt(ingredienti.get(finalI).get("peso")), tempProdotto));
                             }
                         }
                     });
         }
-        return ingredientiRicetta;
+        getProductFromIngredientInterface.onSuccess(ingredientiRicetta);
     }
 
     boolean emptyExpirationDates(Prodotto userProduct) {
@@ -420,7 +438,15 @@ public class FirestoreManager {
     }
 
     interface GetRecipes {
-        void onSuccess();
+        void onSuccess(ArrayList<Ricetta> ricetteFromCollection);
+    }
+
+    interface OnRecipeCreated {
+        void onSuccess(Ricetta ricetta);
+    }
+
+    interface GetIngredienti {
+        void onSuccess(ArrayList<Ingrediente> ingredienti);
     }
 
     interface GetUsername {
