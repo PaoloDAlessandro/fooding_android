@@ -80,10 +80,22 @@ public class Ricetta implements Serializable {
         this.image = image;
     }
 
+    @Override
+    public String toString() {
+        return "Ricetta{" +
+                "nome='" + nome + '\'' +
+                ", image='" + image + '\'' +
+                ", autore='" + autore + '\'' +
+                ", ingredienti=" + ingredienti +
+                ", tempoPreparazione=" + tempoPreparazione +
+                ", kcal=" + kcal +
+                ", difficolta=" + difficolta +
+                '}';
+    }
+
     enum Difficolta {
         FACILE,
         MEDIA,
         DIFFICILE
     }
-
 }

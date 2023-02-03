@@ -85,12 +85,12 @@ public class Recipes extends Fragment {
                     ricette = localStorageManager.backupFromRecipesFile(getActivity().getFilesDir() + localStorageManager.RICETTE_FILE_NAME);
                     myProperties.setRicette(ricette);
                     initRecipesAdapter();
+                    compareLocalWithRecipeCollection();
                 }
                 else {
                     firestoreManager.getRecipes((recipesFromCollection) -> {
                         ricette = recipesFromCollection;
                         initRecipesAdapter();
-                        //if (recipesFromCollection == ricette) {
                         myProperties.setRicette(ricette);
                         recipeAdapter.setRicette(ricette);
                         recipesRecyclerView.setAdapter(recipeAdapter);
@@ -108,9 +108,8 @@ public class Recipes extends Fragment {
         } else {
             ricette = myProperties.getRicette();
             initRecipesAdapter();
+            compareLocalWithRecipeCollection();
         }
-
-
 
 
         recipesInput.addTextChangedListener(new TextWatcher() {
@@ -148,6 +147,21 @@ public class Recipes extends Fragment {
 
         filterInputRecipeManager(recipesInput.getText().toString());
 
+    }
+
+    void compareLocalWithRecipeCollection() {
+        firestoreManager.getRecipes((recipesFromCollection) -> {
+            if (ricette.retainAll(recipesFromCollection)) {
+                ricette = recipesFromCollection;
+                myProperties.setRicette(ricette);
+                initRecipesAdapter();
+            }
+            try {
+                localStorageManager.backupToRecipesFile(new File(getActivity().getFilesDir() + localStorageManager.RICETTE_FILE_NAME), ricette);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     void initRecipesAdapter() {
