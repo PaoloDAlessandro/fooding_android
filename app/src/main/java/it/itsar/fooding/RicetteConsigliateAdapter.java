@@ -47,6 +47,10 @@ public class RicetteConsigliateAdapter extends RecyclerView.Adapter<RicetteConsi
         return ricette.size() ;
     }
 
+    public void setRicette(ArrayList<Ricetta> ricette) {
+        this.ricette = ricette;
+    }
+
     class RicetteConsigliateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView ricettaImage;

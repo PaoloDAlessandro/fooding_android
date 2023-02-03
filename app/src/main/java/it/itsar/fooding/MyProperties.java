@@ -11,6 +11,7 @@ public class MyProperties {
     private Prodotto[] prodotti;
     private ArrayList<Prodotto> userProdotti = new ArrayList<>();
     private ArrayList<Prodotto> ultimeAggiunte = new ArrayList<>();
+    private ArrayList<Ricetta> ricetteConsigliate = new ArrayList<>();
     private ArrayList<Ricetta> ricette = new ArrayList<>();
 
 
@@ -71,5 +72,13 @@ public class MyProperties {
 
     public void setRicette(ArrayList<Ricetta> ricette) {
         this.ricette = ricette;
+    }
+
+    public ArrayList<Ricetta> getRicetteConsigliate() {
+        return ricetteConsigliate;
+    }
+
+    public void setRicetteConsigliate(ArrayList<Ricetta> ricetteConsigliate) {
+        this.ricetteConsigliate = ricetteConsigliate;
     }
 }

@@ -14,6 +14,7 @@ public class LocalStorageManager {
 
     public static String USER_PRODUCT_FILE_NAME = "/storage.txt";
     public static String ULTIME_AGGIUNTE_FILE_NAME = "/ultime_aggiunte.txt";
+    public static String RICETTE_CONSIGLIATE_FILE_NAME = "/ricette_consigliate.txt";
     public static String RICETTE_FILE_NAME = "/ricette.txt";
     private final MyProperties myProperties = MyProperties.getInstance();
 

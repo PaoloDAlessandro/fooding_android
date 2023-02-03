@@ -40,6 +40,8 @@ public class Home extends Fragment {
     private ArrayList<Ricetta> ricette;
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
+    private RicetteConsigliateAdapter ricetteConsigliateAdapter;
+
 
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -95,6 +97,7 @@ public class Home extends Fragment {
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);
         ultimeAggiunteProdotti.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         ultimeAggiunteAdapter = new UltimeAggiunteAdapter(ultimeAggiunte, getContext(), activityLauncher);
+        ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
         if (myProperties.getUltimeAggiunte().size() == 0) {
             try {
                 if (localStorageManager.backupFromFile(getActivity().getFilesDir() + localStorageManager.ULTIME_AGGIUNTE_FILE_NAME) != null) {
@@ -133,11 +136,60 @@ public class Home extends Fragment {
         ricetteConsigliate = view.findViewById(R.id.ricetteConsigliate);
         ricetteConsigliate.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
+        if (myProperties.getRicetteConsigliate().size() == 0) {
+            try {
+                if (localStorageManager.backupFromRecipesFile(getActivity().getFilesDir() + localStorageManager.RICETTE_CONSIGLIATE_FILE_NAME) != null) {
+                    ricette = localStorageManager.backupFromRecipesFile(getActivity().getFilesDir() + localStorageManager.RICETTE_CONSIGLIATE_FILE_NAME);
+                    myProperties.setRicetteConsigliate(ricette);
+                    initRecipesAdapter();
+                    compareLocalWithRecipeCollection();
+                }
+                else {
+                    firestoreManager.getRecipes((recipesFromCollection) -> {
+                        ricette = recipesFromCollection;
+                        myProperties.setRicetteConsigliate(ricette);
+                        initRecipesAdapter();
+                        try {
+                            localStorageManager.backupToRecipesFile(new File(getActivity().getFilesDir() + localStorageManager.RICETTE_CONSIGLIATE_FILE_NAME), ricette);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            ricette = myProperties.getRicetteConsigliate();
+            initRecipesAdapter();
+            compareLocalWithRecipeCollection();
+        }
 
         firestoreManager.getSuggestedRecipes((suggestedRecipesFromCollection)-> {
             ricette = suggestedRecipesFromCollection;
             RicetteConsigliateAdapter ricetteConsigliateAdapter = new RicetteConsigliateAdapter(ricette, getContext(), ricettaDetailsActivityLauncher);
             ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
+        });
+    }
+
+    void initRecipesAdapter() {
+        ricetteConsigliateAdapter.setRicette(ricette);
+        ricetteConsigliate.setAdapter(ricetteConsigliateAdapter);
+    }
+
+    void compareLocalWithRecipeCollection() {
+        firestoreManager.getSuggestedRecipes((recipesFromCollection) -> {
+            if (ricette.retainAll(recipesFromCollection)) {
+                ricette = recipesFromCollection;
+                myProperties.setRicetteConsigliate(ricette);
+                initRecipesAdapter();
+            }
+            try {
+                localStorageManager.backupToRecipesFile(new File(getActivity().getFilesDir() + localStorageManager.RICETTE_CONSIGLIATE_FILE_NAME), ricette);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
