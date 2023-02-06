@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:src="@drawable/fooding_logo_black_ext"
+            android:src="@drawable/fooding_logo_blu"
             android:contentDescription="@string/fooding_logo_alt" />
 
 
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:backgroundTint="@color/product_name"
+        android:backgroundTint="@color/fooding_color"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="@id/productNameInputCard"
         app:layout_constraintTop_toBottomOf="@id/labelActivitylogo">
@@ -89,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:backgroundTint="@color/product_name"
+        android:backgroundTint="@color/fooding_color"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="@id/productNameInputCard"
         app:layout_constraintTop_toBottomOf="@id/productNameInputCard">
@@ -141,7 +141,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:backgroundTint="@color/product_name"
+        android:backgroundTint="@color/fooding_color"
         app:cardCornerRadius="20dp"
         app:layout_constraintStart_toStartOf="@id/productNameInputCard"
         app:layout_constraintTop_toBottomOf="@id/productExpirationDateInputCard">
@@ -182,7 +182,7 @@
                 android:id="@+id/decreaseStockButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:backgroundTint="@color/product_name"
+                android:backgroundTint="@color/fooding_color"
                 android:fontFamily="@font/poppins_semibold"
                 android:textColor="@color/button_color_selector"
                 android:text="-"
@@ -214,8 +214,7 @@
                     android:id="@+id/increaseStockButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-
-                    android:backgroundTint="@color/product_name"
+                    android:backgroundTint="@color/fooding_color"
                     android:fontFamily="@font/poppins_semibold"
                     android:text="+"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -232,7 +231,7 @@
         android:id="@+id/productAddictionCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/product_name"
+        android:backgroundTint="@color/fooding_color"
         android:fontFamily="@font/poppins"
         android:layout_marginTop="200dp"
         android:text="@string/annulla_button_text"
@@ -249,7 +248,7 @@
         android:id="@+id/productAdditionConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/product_name"
+        android:backgroundTint="@color/fooding_color"
         android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
         android:textAllCaps="false"

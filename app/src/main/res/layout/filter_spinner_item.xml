@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/product_name"
+        app:tint="@color/fooding_color"
         tools:src="@drawable/calendar_expiration_date_v2"
         android:contentDescription="@string/filter_icon_alt" />
 
