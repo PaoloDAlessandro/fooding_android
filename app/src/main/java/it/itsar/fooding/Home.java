@@ -19,6 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -42,6 +46,8 @@ public class Home extends Fragment {
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
     private RicetteConsigliateAdapter ricetteConsigliateAdapter;
 
+
+    private GoogleSignInAccount account;
 
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -90,8 +96,13 @@ public class Home extends Fragment {
         if (myProperties.getUserUsername() != null) {
             userUsername = myProperties.getUserUsername();
             welcomeMessage.setText("Bentornato " + userUsername);
-
         }
+
+        account = GoogleSignIn.getLastSignedInAccount(getContext());
+        if (account != null) {
+            Log.d("EMAIL: ", account.getEmail());
+        }
+
         ultimeAggiunte = new ArrayList<>();
         firestoreManager = new FirestoreManager();
         ultimeAggiunteProdotti = view.findViewById(R.id.ultimeAggiunteProdotti);

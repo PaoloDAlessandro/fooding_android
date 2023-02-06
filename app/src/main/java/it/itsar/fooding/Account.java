@@ -30,8 +30,7 @@ public class Account extends Fragment {
     public FragmentManager fragmentManager;
     private MyProperties myProperties = MyProperties.getInstance();
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     private ImageButton logoutButton;
 

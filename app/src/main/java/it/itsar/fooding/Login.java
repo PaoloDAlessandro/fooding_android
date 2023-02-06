@@ -1,5 +1,9 @@
 package it.itsar.fooding;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -20,14 +24,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.BeginSignInResult;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends Fragment {
 
@@ -36,10 +61,19 @@ public class Login extends Fragment {
     private EditText passwordInput;
     private MaterialCardView emailInputCard;
     private MaterialCardView passwordInputCard;
+    private MaterialCardView googleLoginButton;
     private Button accediButton;
     private TextView loginError;
 
+    private FirebaseAuth mAuth;
+
+    private static final int REQ_ONE_TAP = 2;
+
+
     FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
 
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -59,6 +93,11 @@ public class Login extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         emailInput = view.findViewById(R.id.emailInput);
@@ -67,6 +106,19 @@ public class Login extends Fragment {
         emailInputCard = view.findViewById(R.id.emailInputCard);
         passwordInputCard = view.findViewById(R.id.passwordInputCard);
         registratiButton = view.findViewById(R.id.registratiTextClickable);
+        googleLoginButton = view.findViewById(R.id.loginGoogleBox);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        oneTapClient = Identity.getSignInClient(getContext());
+        signInRequest = BeginSignInRequest.builder()
+                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        .setServerClientId(getString(R.string.default_web_client_id))
+                        .setFilterByAuthorizedAccounts(false)
+                        .build())
+                .build();
+
 
         loginError = view.findViewById(R.id.loginError);
 
@@ -106,6 +158,29 @@ public class Login extends Fragment {
 
         });
 
+        googleLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                oneTapClient.beginSignIn(signInRequest)
+                        .addOnSuccessListener(getActivity(), new OnSuccessListener<BeginSignInResult>() {
+                            @Override
+                            public void onSuccess(BeginSignInResult result) {
+                                try {
+                                    startIntentSenderForResult(result.getPendingIntent().getIntentSender(), REQ_ONE_TAP, null, 0, 0, 0, null);
+                                } catch (IntentSender.SendIntentException e) {
+                                    Log.d("ERROR: ", e.getLocalizedMessage());
+                                }
+                            }
+                        })
+                        .addOnFailureListener(getActivity(), new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("ERROR: ", e.getLocalizedMessage());
+                            }
+                        });
+            }
+        });
+
         registratiButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -117,6 +192,40 @@ public class Login extends Fragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_ONE_TAP:
+                try {
+                    SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
+                    String idToken = credential.getGoogleIdToken();
+                    if (idToken != null) {
+                        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
+                        mAuth.signInWithCredential(firebaseCredential)
+                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            Log.d("CREDENTIAL: ", credential.getDisplayName() + " " + user.getEmail());
+                                            addUserToUsersCollection(credential.getDisplayName(), user.getEmail());
+                                            goToHome();
+                                            Log.d("STATUS: ", "LOGGED");
+                                        } else {
+                                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                        }
+                                    }
+                                });
+                    }
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+        }
     }
 
     void setTextChangeListenerForInput(EditText input) {
@@ -137,6 +246,34 @@ public class Login extends Fragment {
             }
         });
     }
+
+    void addUserToUsersCollection(String username, String email) {
+        Map<String , Object> data = new HashMap<>();
+        data.put("username", username);
+        data.put("email", email);
+
+        userCollection.whereEqualTo("username", username)
+                        .whereEqualTo("email", email)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful() && task.getResult().size() != 0) {
+                                    Log.d("STATUS: ", "USER ALREADY EXIST");
+                                } else {
+                                    Log.d("STATUS: ", "NEW USER");
+                                    userCollection.add(data)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.d("Result: ", "Success");
+                                                }
+                                            });
+                                }
+                            }
+                        });
+    }
+
 
     void hideInputError() {
         emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));

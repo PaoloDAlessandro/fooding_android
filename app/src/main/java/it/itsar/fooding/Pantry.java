@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class Pantry extends Fragment {
 
     public MyProperties myProperties = MyProperties.getInstance();
     private Spinner productFilter;
-    private Button addProductButton;
+    private FloatingActionButton addProductButton;
     private ArrayList<Prodotto> userProducts = new ArrayList<>();
 
     private LocalStorageManager localStorageManager = new LocalStorageManager();
