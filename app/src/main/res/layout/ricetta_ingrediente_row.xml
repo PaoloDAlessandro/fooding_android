@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ingredienteContainer"
-    android:layout_width="200dp"
+    android:id="@+id/productCard"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="10dp"
-    android:paddingHorizontal="4dp"
+    android:layout_marginLeft="24dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="24dp"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ingredienteContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="4dp"
     >
 
     <ImageView
-        android:id="@+id/ingredienteStatus"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        app:tint="#14870c"
-        android:src="@drawable/ingredient_present"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ingredienteName"
+        android:id="@+id/ingredienteImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/crema_carciofi" />
 
     <TextView
         android:id="@+id/ingredienteName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="5g Pepe nero"
-        android:textSize="13sp"
+        app:layout_constraintStart_toEndOf="@id/ingredienteImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:fontFamily="@font/poppins_medium"
         android:textColor="@color/product_name"
-        app:layout_constraintTop_toTopOf="parent"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="4dp"
-        app:layout_constraintStart_toEndOf="@id/ingredienteStatus"
+        tools:text="Crema carciofi"
         />
 
+    <ImageView
+        android:id="@+id/ingredienteStatus"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:src="@drawable/ingredient_present"
+        tools:tint="@color/crema_carciofi"
+        android:layout_marginEnd="20dp"/>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

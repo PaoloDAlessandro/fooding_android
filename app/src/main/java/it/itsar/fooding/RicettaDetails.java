@@ -54,6 +54,7 @@ public class RicettaDetails extends AppCompatActivity {
 
 
         ingredientiRicettaAdapter = new IngredientiRicettaAdapter(ricetta.getIngredienti());
+        /*
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2) {
             @Override
             public boolean canScrollVertically() {
@@ -61,6 +62,7 @@ public class RicettaDetails extends AppCompatActivity {
             }
         };
         ingredientiList.setLayoutManager(layoutManager);
+         */
         ingredientiList.setAdapter(ingredientiRicettaAdapter);
     }
 

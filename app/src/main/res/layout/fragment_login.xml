@@ -11,15 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <ImageView
-            android:id="@+id/foodingLogo"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:contentDescription="logo"
-            android:src="@drawable/fooding_logo_blu"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/signUpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In"
+            android:textSize="20dp"
+            android:textColor="@color/product_name"
+            android:fontFamily="@font/poppins_semibold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/emailInputCard"
@@ -29,8 +30,9 @@
             android:backgroundTint="@color/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/foodingLogo"
+            app:layout_constraintTop_toBottomOf="@id/signUpTitle"
             app:strokeColor="#d4d4d4"
+            app:cardCornerRadius="24dp"
             app:strokeWidth="0.6dp">
 
             <EditText
@@ -40,7 +42,7 @@
                 android:background="@null"
                 android:fontFamily="@font/poppins"
                 android:hint="Email"
-                android:paddingHorizontal="10dp"
+                android:paddingHorizontal="16dp"
                 android:paddingVertical="10dp"
                 android:textColor="@color/product_name"
                 android:textSize="14sp" />
@@ -57,6 +59,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailInputCard"
             app:strokeColor="#d4d4d4"
+            app:cardCornerRadius="24dp"
             app:strokeWidth="0.6dp">
 
             <EditText
@@ -67,7 +70,7 @@
                 android:fontFamily="@font/poppins"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:paddingHorizontal="10dp"
+                android:paddingHorizontal="16dp"
                 android:paddingVertical="10dp"
                 android:textColor="@color/product_name"
                 android:textSize="14sp" />
@@ -87,13 +90,14 @@
             android:textSize="12sp"/>
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/accediButton"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
             android:text="Accedi"
+            app:cornerRadius="24dp"
             android:backgroundTint="@color/fooding_color"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -203,7 +207,7 @@
                    android:textSize="15sp"
                    android:fontFamily="@font/poppins"
                    android:layout_marginEnd="10dp"
-                   android:text="Sign up with Google"/>
+                   android:text="Sign in with Google"/>
 
                 <ImageView
                     android:layout_width="20dp"
