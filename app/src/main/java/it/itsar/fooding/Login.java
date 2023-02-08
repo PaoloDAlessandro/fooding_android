@@ -38,6 +38,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 
 import com.google.firebase.auth.AuthCredential;
@@ -62,8 +63,11 @@ public class Login extends Fragment {
     private MaterialCardView emailInputCard;
     private MaterialCardView passwordInputCard;
     private MaterialCardView googleLoginButton;
+    private TextView resetPasswordClickable;
     private Button accediButton;
     private TextView loginError;
+    private BottomNavigationView bottomNavigationView;
+
 
     private FirebaseAuth mAuth;
 
@@ -107,6 +111,8 @@ public class Login extends Fragment {
         passwordInputCard = view.findViewById(R.id.passwordInputCard);
         registratiButton = view.findViewById(R.id.registratiTextClickable);
         googleLoginButton = view.findViewById(R.id.loginGoogleBox);
+        resetPasswordClickable = view.findViewById(R.id.resetPasswordTextClickable);
+        bottomNavigationView = getActivity().findViewById(R.id.bottomMenu);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -118,7 +124,6 @@ public class Login extends Fragment {
                         .setFilterByAuthorizedAccounts(false)
                         .build())
                 .build();
-
 
         loginError = view.findViewById(R.id.loginError);
 
@@ -143,7 +148,8 @@ public class Login extends Fragment {
                                 if (task.isSuccessful()) {
                                     if (auth.getCurrentUser().isEmailVerified()) {
                                         Log.d("EMAIL: ", auth.getCurrentUser().getEmail());
-                                        goToHome();
+                                        bottomNavigationView.setVisibility(View.VISIBLE);
+                                        gotToFragment(Home.class);
                                     } else {
                                         displayLoginError("Per favore verifica il tuo indirizzo email");
                                     }
@@ -181,16 +187,14 @@ public class Login extends Fragment {
             }
         });
 
-        registratiButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, Signin.class, null)
-                        .setReorderingAllowed(true)
-                        .addToBackStack("name")
-                        .commit();
-                return true;
-            }
+        resetPasswordClickable.setOnTouchListener((view12, motionEvent) -> {
+            gotToFragment(ResetPassword.class);
+            return true;
+        });
+
+        registratiButton.setOnTouchListener((view13, motionEvent) -> {
+            gotToFragment(Signin.class);
+            return true;
         });
     }
 
@@ -212,7 +216,9 @@ public class Login extends Fragment {
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             Log.d("CREDENTIAL: ", credential.getDisplayName() + " " + user.getEmail());
                                             addUserToUsersCollection(credential.getDisplayName(), user.getEmail());
-                                            goToHome();
+                                            bottomNavigationView.setVisibility(View.VISIBLE);
+                                            gotToFragment(Home.class);
+
                                             Log.d("STATUS: ", "LOGGED");
                                         } else {
                                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -288,9 +294,9 @@ public class Login extends Fragment {
         passwordInputCard.setStrokeColor(Color.RED);
     }
 
-    void goToHome() {
+    void gotToFragment(Class destinationClass) {
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, Home.class, null)
+                .replace(R.id.fragmentContainer, destinationClass, null)
                 .setReorderingAllowed(true)
                 .addToBackStack("name")
                 .commit();

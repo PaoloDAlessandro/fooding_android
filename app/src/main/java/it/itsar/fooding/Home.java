@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +46,9 @@ public class Home extends Fragment {
     private LocalStorageManager localStorageManager = new LocalStorageManager();
     private UltimeAggiunteAdapter ultimeAggiunteAdapter;
     private RicetteConsigliateAdapter ricetteConsigliateAdapter;
+
+    private FragmentManager fragmentManager;
+
 
 
     private GoogleSignInAccount account;
@@ -83,14 +87,21 @@ public class Home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        fragmentManager = getParentFragmentManager();
+        if (firebaseUser == null) {
+            gotToFragment(Login.class);
+        }
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fragmentManager = getParentFragmentManager();
         if (firebaseUser != null) {
             String userEmail = firebaseUser.getEmail();
+        } else {
+            gotToFragment(Login.class);
         }
         welcomeMessage = getView().findViewById(R.id.welcomeMessage);
         if (myProperties.getUserUsername() != null) {
@@ -242,6 +253,14 @@ public class Home extends Fragment {
                 welcomeMessage.setText("Bentornato " + userUsername);
             }
         });
+    }
+
+    void gotToFragment(Class destinationClass) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, destinationClass, null)
+                .setReorderingAllowed(true)
+                .addToBackStack("name")
+                .commit();
     }
 
     @Override

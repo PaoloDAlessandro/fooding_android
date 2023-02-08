@@ -18,12 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     public FragmentManager fragmentManager = getSupportFragmentManager();
-    private final AuthStorageManager authStorageManager = new AuthStorageManager();
 
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-    private User userFromFile;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userCollection = db.collection("user");
@@ -36,10 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottomMenu);
-        userFromFile = authStorageManager.backupFromFile(getFilesDir() + AuthStorageManager.AUTH_FILE_NAME);
-        if (firebaseUser == null) {
-            configFragmentManager(Login.class);
-        }
+        isUserLogged();
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -71,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     if (firebaseAuth.getCurrentUser() != null) {
                         configFragmentManager(Account.class);
                     } else {
+                        bottomNavigationView.setVisibility(View.GONE);
                         configFragmentManager(Login.class);
                     }
                     break;
@@ -94,10 +89,20 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    private void isUserLogged() {
+        if (firebaseAuth.getCurrentUser() == null) {
+            bottomNavigationView.setVisibility(View.GONE);
+            configFragmentManager(Login.class);
+        } else {
+            bottomNavigationView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        isUserLogged();
     }
 }

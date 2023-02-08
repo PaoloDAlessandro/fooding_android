@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,6 +35,9 @@ public class Account extends Fragment {
 
     private ImageButton logoutButton;
 
+    private BottomNavigationView bottomNavigationView;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class Account extends Fragment {
 
         fragmentManager = getParentFragmentManager();
         logoutButton = getActivity().findViewById(R.id.logoutIcon);
+        bottomNavigationView = getActivity().findViewById(R.id.bottomMenu);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +62,7 @@ public class Account extends Fragment {
                 myProperties.setUserUsername(null);
                 myProperties.setUserProdotti(new ArrayList<>());
                 myProperties.setUltimeAggiunte(new ArrayList<>());
+                bottomNavigationView.setVisibility(View.GONE);
                 configFragmentManager(Login.class);
             }
         });
