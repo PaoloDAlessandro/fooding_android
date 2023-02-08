@@ -294,11 +294,11 @@ public class Login extends Fragment {
         passwordInputCard.setStrokeColor(Color.RED);
     }
 
-    void gotToFragment(Class destinationClass) {
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, destinationClass, null)
-                .setReorderingAllowed(true)
-                .addToBackStack("name")
-                .commit();
-    }
+        void gotToFragment(Class destinationClass) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, destinationClass, null)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("name")
+                    .commit();
+        }
 }
