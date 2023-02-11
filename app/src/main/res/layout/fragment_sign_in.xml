@@ -8,6 +8,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:translationY="-10dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
@@ -196,6 +206,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/confirmPasswordError" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:id="@+id/accediText"
             android:layout_width="wrap_content"
@@ -203,11 +215,12 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
             android:text="Hai già un'account?"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/product_marca"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/accediTextClickable"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registratiButton" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
             android:id="@+id/accediTextClickable"
@@ -216,13 +229,21 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
             android:text="Accedi"
+            android:layout_marginBottom="10dp"
             android:textColor="#09259e"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/accediText"
-            app:layout_constraintTop_toBottomOf="@id/registratiButton" />
-
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
+        android:alpha="0.4"
+        android:background="@color/product_marca" />
 
 </FrameLayout>
