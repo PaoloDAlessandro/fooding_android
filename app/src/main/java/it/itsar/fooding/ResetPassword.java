@@ -31,6 +31,8 @@ public class ResetPassword extends Fragment {
     private TextView emailInputError;
     private TextView loginTextClickable;
 
+    private FirestoreManager firestoreManager = new FirestoreManager();
+
     private FragmentManager fragmentManager;
 
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -60,6 +62,18 @@ public class ResetPassword extends Fragment {
             public void onClick(View view) {
                 if (isEmailValid(emailInput.getText().toString())) {
                     hideInputError(emailInputCard, emailInputError);
+                    firestoreManager.searchUserEmail(emailInput.getText().toString(), new FirestoreManager.SearchUserEmail() {
+                        @Override
+                        public void onSuccess() {
+                            auth.sendPasswordResetEmail(emailInput.getText().toString());
+                            gotToFragment(ResetPasswordComplete.class);
+                        }
+
+                        @Override
+                        public void onFailure() {
+                            displayInputError(emailInputCard, emailInputError);
+                        }
+                    });
                     auth.sendPasswordResetEmail(emailInput.getText().toString());
                 } else {
                     displayInputError(emailInputCard, emailInputError);

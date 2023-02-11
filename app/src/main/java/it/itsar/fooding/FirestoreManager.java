@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -210,6 +211,20 @@ public class FirestoreManager {
         }
     }
 
+    public void searchUserEmail(String email, SearchUserEmail searchUserEmailInferface) {
+        userCollection.whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult().size() != 0) {
+                            searchUserEmailInferface.onSuccess();
+                        } else {
+                            searchUserEmailInferface.onFailure();
+                        }
+                    }
+                });
+    }
 
     public void getProdotti(FirestoreManagerCallback firestoreManagerCallback) {
         productCollection
@@ -440,6 +455,11 @@ public class FirestoreManager {
 
     interface OnRecipeCreated {
         void onSuccess(Ricetta ricetta);
+    }
+
+    interface SearchUserEmail {
+        void onSuccess();
+        void onFailure();
     }
 
     interface GetIngredienti {
