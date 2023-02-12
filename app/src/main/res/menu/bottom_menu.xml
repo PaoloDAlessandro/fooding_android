@@ -9,21 +9,21 @@
 
 <item
     android:id="@+id/pantryButton"
-    android:title="pantry"
+    android:title="dispensa"
     android:icon="@drawable/box_icon"
     android:iconTint="@color/icon"
     />
 
 <item
     android:id="@+id/reciptsButton"
-    android:title="recipts"
+    android:title="ricette"
     android:icon="@drawable/utensils_icon"
     android:iconTint="@color/icon"
     />
 
 <item
     android:id="@+id/userButton"
-    android:title="user"
+    android:title="profilo"
     android:icon="@drawable/user_icon"
     android:iconTint="@color/icon"
 />

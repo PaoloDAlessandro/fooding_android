@@ -3,14 +3,144 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
     tools:context=".Account">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Coming soon!"
-        android:fontFamily="@font/poppins"
-        android:textSize="18sp"
-        android:layout_gravity="center"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/userImageCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"
+            app:cardCornerRadius="50dp"
+            app:cardElevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/userImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/user_placeholder" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/listaSpesaCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="40dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/listaSpesa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:cropToPadding="true"
+                android:padding="14dp"
+                android:src="@drawable/lista_spesa"
+                app:tint="@color/product_name" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:textColor="@color/product_name"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="@id/userImageCard"
+            app:layout_constraintTop_toBottomOf="@id/userImageCard"
+            tools:text="Ciao, Vincenzo!" />
+
+        <TextView
+            android:id="@+id/resultDeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:alpha="0.75"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Coming soon!"
+            android:textColor="@color/fooding_color"
+            app:layout_constraintStart_toStartOf="@id/userName"
+            app:layout_constraintTop_toBottomOf="@id/userName" />
+
+        <TextView
+            android:id="@+id/resultDeadlineSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@color/product_name"
+            app:layout_constraintStart_toStartOf="@id/resultDeadline"
+            app:layout_constraintTop_toBottomOf="@id/resultDeadline" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/feature1Card"
+            android:layout_width="350dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="40dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="5dp"
+            app:layout_constraintEnd_toEndOf="@id/listaSpesaCard"
+            app:layout_constraintStart_toStartOf="@id/resultDeadlineSub"
+            app:layout_constraintTop_toTopOf="@id/resultDeadlineSub">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Coming soon!"
+                android:textColor="@color/product_marca" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/feature2Card"
+            android:layout_width="200dp"
+            android:layout_height="180dp"
+            app:layout_constraintTop_toBottomOf="@id/feature1Card"
+            app:layout_constraintStart_toStartOf="@id/feature1Card"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Coming soon!"
+                android:textColor="@color/product_marca" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="130dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toEndOf="@id/feature2Card"
+            app:layout_constraintTop_toBottomOf="@id/feature1Card"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
