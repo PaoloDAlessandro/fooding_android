@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "40080208768-46t68l823boet23nr7ggg554c9mrdaf2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.itsar.fooding",
+            "certificate_hash": "12627e0b67a5b1ca3743cb1555e41ea62692bccd"
+          }
+        },
+        {
           "client_id": "40080208768-492es97jgm02fv7876bpaf16iabkjkmn.apps.googleusercontent.com",
           "client_type": 3
         }
