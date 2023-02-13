@@ -68,11 +68,9 @@ public class Login extends Fragment {
     private TextView loginError;
     private BottomNavigationView bottomNavigationView;
 
-
     private FirebaseAuth mAuth;
 
     private static final int REQ_ONE_TAP = 2;
-
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -136,7 +134,6 @@ public class Login extends Fragment {
         accediButton.setOnClickListener(view1 -> {
             String emailFromInput = emailInput.getText().toString();
             String passwordFromInput = passwordInput.getText().toString();
-
             emailInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
             passwordInputCard.setStrokeColor(Color.parseColor("#d4d4d4"));
 

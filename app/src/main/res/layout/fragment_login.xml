@@ -46,7 +46,7 @@
                 <EditText
                     android:id="@+id/emailInput"
                     android:layout_width="260dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:background="@null"
                     android:fontFamily="@font/poppins"
                     android:hint="Email"
@@ -73,7 +73,7 @@
                 <EditText
                     android:id="@+id/passwordInput"
                     android:layout_width="260dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:background="@null"
                     android:fontFamily="@font/poppins"
                     android:hint="Password"
@@ -187,7 +187,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/loginGoogleBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="3dp"
