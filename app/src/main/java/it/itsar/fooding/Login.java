@@ -80,6 +80,7 @@ public class Login extends Fragment {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
 
+    private FirestoreManager firestoreManager = new FirestoreManager();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userCollection = db.collection("user");
 
@@ -212,7 +213,7 @@ public class Login extends Fragment {
                                         if (task.isSuccessful()) {
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             Log.d("CREDENTIAL: ", credential.getDisplayName() + " " + user.getEmail());
-                                            addUserToUsersCollection(credential.getDisplayName(), user.getEmail());
+                                            firestoreManager.addUserToUsersCollection(credential.getDisplayName(), user.getEmail());
                                             bottomNavigationView.setVisibility(View.VISIBLE);
                                             gotToFragment(Home.class);
 
@@ -250,32 +251,7 @@ public class Login extends Fragment {
         });
     }
 
-    void addUserToUsersCollection(String username, String email) {
-        Map<String , Object> data = new HashMap<>();
-        data.put("username", username);
-        data.put("email", email);
 
-        userCollection.whereEqualTo("username", username)
-                        .whereEqualTo("email", email)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() && task.getResult().size() != 0) {
-                                    Log.d("STATUS: ", "USER ALREADY EXIST");
-                                } else {
-                                    Log.d("STATUS: ", "NEW USER");
-                                    userCollection.add(data)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Log.d("Result: ", "Success");
-                                                }
-                                            });
-                                }
-                            }
-                        });
-    }
 
 
     void hideInputError() {

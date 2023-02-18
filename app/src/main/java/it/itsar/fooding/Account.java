@@ -42,6 +42,8 @@ public class Account extends Fragment {
     private TextView userGreating;
     private ImageView userImage;
 
+    private ImageButton shoppingListButton;
+
     private BottomNavigationView bottomNavigationView;
 
 
@@ -61,6 +63,7 @@ public class Account extends Fragment {
         bottomNavigationView = getActivity().findViewById(R.id.bottomMenu);
         userGreating = view.findViewById(R.id.userName);
         userImage = view.findViewById(R.id.userImage);
+        shoppingListButton = view.findViewById(R.id.listaSpesa);
 
         if (firebaseAuth.getCurrentUser().getPhotoUrl() != null) {
             downloadImage(Objects.requireNonNull(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getPhotoUrl()).toString());
@@ -92,6 +95,11 @@ public class Account extends Fragment {
                 configFragmentManager(Login.class);
             }
         });
+
+        shoppingListButton.setOnClickListener(view1 -> {
+            configFragmentManager(ShoppingList.class);
+        });
+
     }
 
     private void configFragmentManager(Class fragmentClass) {

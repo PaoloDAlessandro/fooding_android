@@ -79,7 +79,7 @@
             tools:listitem="@layout/shoppinglist_row" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addProductButton"
+            android:id="@+id/addShoppingListItem"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/fooding_color"

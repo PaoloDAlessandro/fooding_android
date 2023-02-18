@@ -3,6 +3,7 @@ package it.itsar.fooding;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
@@ -130,13 +131,13 @@ public class ProductAddition extends AppCompatActivity {
 
         decreaseStockInput.setOnClickListener(view -> {
             productStockInput.setText(String.valueOf(Integer.parseInt(productStockInput.getText().toString()) - 1));
-            if(Integer.parseInt(productStockInput.getText().toString()) == 1) {
+            if (Integer.parseInt(productStockInput.getText().toString()) == 1) {
                 decreaseStockInput.setEnabled(false);
             }
         });
 
         increaseStockInput.setOnClickListener(view -> {
-            if(Integer.parseInt(productStockInput.getText().toString()) == 1) {
+            if (Integer.parseInt(productStockInput.getText().toString()) == 1) {
                 decreaseStockInput.setEnabled(true);
             }
             productStockInput.setText(String.valueOf(Integer.parseInt(productStockInput.getText().toString()) + 1));
@@ -150,22 +151,22 @@ public class ProductAddition extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() >= 2) {
+                if (charSequence.length() >= 2) {
                     prodottiFiltrati = prodotti.stream()
                             .filter(prodotto ->
                                     prodotto.getNome().toLowerCase().contains(productNameAutoComplete.getText().toString().substring(0, charSequence.length()).toLowerCase()))
                             .collect(Collectors.toList());
 
-                    if(prodottiFiltrati.size() != 0) {
-                            selectedProduct = prodottiFiltrati.get(0);
-                            checkInputsStatus();
+                    if (prodottiFiltrati.size() != 0) {
+                        selectedProduct = prodottiFiltrati.get(0);
+                        checkInputsStatus();
 
-                            ProductNameAutoCompleteAdapter productNameAutoCompleteAdapterAfterChange = new ProductNameAutoCompleteAdapter(getApplicationContext(), new ArrayList<>(prodottiFiltrati));
-                            productNameAutoComplete.setAdapter(productNameAutoCompleteAdapterAfterChange);
-                            productNameAutoCompleteAdapterAfterChange.notifyDataSetChanged();
-                        }
+                        ProductNameAutoCompleteAdapter productNameAutoCompleteAdapterAfterChange = new ProductNameAutoCompleteAdapter(getApplicationContext(), new ArrayList<>(prodottiFiltrati));
+                        productNameAutoComplete.setAdapter(productNameAutoCompleteAdapterAfterChange);
+                        productNameAutoCompleteAdapterAfterChange.notifyDataSetChanged();
+                    }
                 }
-                }
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -176,8 +177,7 @@ public class ProductAddition extends AppCompatActivity {
         productNameAutoComplete.setOnItemClickListener((parent, arg1, position, arg3) -> {
             if (prodottiFiltrati.size() == 1) {
                 selectedProduct = (Prodotto) parent.getItemAtPosition(0); //who wrote Java is an idiot
-            }
-            else {
+            } else {
                 selectedProduct = (Prodotto) parent.getItemAtPosition(position);
             }
             checkInputsStatus();
@@ -202,7 +202,7 @@ public class ProductAddition extends AppCompatActivity {
     void checkProductInUserPantry() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-        selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
+            selectedProduct.getDateScadenza().get(0).setExpirationDate(LocalDate.parse(productExpirationDateInput.getText(), formatter));
         }
 
         firestoreManager.getUserProducts((userProductsFromCollection) -> {
@@ -225,16 +225,15 @@ public class ProductAddition extends AppCompatActivity {
     }
 
     void checkInputsStatus() {
-        if(prodottiFiltrati != null) {
+        if (prodottiFiltrati != null) {
             boolean firstCondition = prodottiFiltrati.stream().anyMatch(prodotto -> prodotto.getNome().equals(productNameAutoComplete.getText().toString()));
             boolean secondCondition = productExpirationDateInput.getText().toString().length() > 0;
             boolean thirdCondition = isNumeric(productStockInput.getText().toString());
 
-            if(!firstCondition) {
+            if (!firstCondition) {
                 productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
                 productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
-            }
-            else {
+            } else {
                 productNameAutoComplete.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.product_marca));
             }
 
@@ -243,13 +242,13 @@ public class ProductAddition extends AppCompatActivity {
     }
 
     void verifyProductStatusInUserPantry() {
-        if(userProdotti.stream().anyMatch(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
+        if (userProdotti.stream().anyMatch(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
                 prodotto.getMarca().equals(selectedProduct.getMarca()))) {
 
             int productIndex = userProdotti.indexOf(userProdotti.stream().filter(prodotto -> prodotto.getNome().equals(selectedProduct.getNome()) &&
                     prodotto.getMarca().equals(selectedProduct.getMarca())).collect(Collectors.toList()).get(0));
 
-            if(userProdotti.get(productIndex).getDateScadenza().stream().anyMatch(productExpirationDate -> productExpirationDate.getExpirationDate().equals(selectedProduct.getDateScadenza().get(0).getExpirationDate()))) {
+            if (userProdotti.get(productIndex).getDateScadenza().stream().anyMatch(productExpirationDate -> productExpirationDate.getExpirationDate().equals(selectedProduct.getDateScadenza().get(0).getExpirationDate()))) {
                 ArrayList<ProductExpirationDate> productExpirationDateOfProduct = userProdotti.get(productIndex).getDateScadenza();
                 int productExpirationDateIndex = productExpirationDateOfProduct.indexOf(
                         userProdotti.get(productIndex).getDateScadenza()
@@ -265,16 +264,14 @@ public class ProductAddition extends AppCompatActivity {
                     localStorageManager.backupToFile(new File(getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
                     goBack(RESULT_OK);
                 });
-            }
-            else {
+            } else {
                 userProdotti.get(productIndex).addExpirationDate(new ProductExpirationDate(selectedProduct.getDateScadenza().get(0).getAmount(), selectedProduct.getDateScadenza().get(0).getExpirationDate()));
                 firestoreManager.editProductInUserCollection(userProdotti.get(productIndex), () -> {
                     localStorageManager.backupToFile(new File(getFilesDir() + LocalStorageManager.USER_PRODUCT_FILE_NAME), userProdotti);
                     goBack(RESULT_OK);
                 });
             }
-        }
-        else {
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 userProdotti.add(new Prodotto(
                         selectedProduct.getNome(),

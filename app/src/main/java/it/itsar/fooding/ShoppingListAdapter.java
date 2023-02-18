@@ -1,5 +1,6 @@
 package it.itsar.fooding;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -36,7 +38,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public int getItemCount() {
-       return shoppingList.size();
+        return shoppingList.size();
     }
 
     protected static class ShoppingListViewHolder extends RecyclerView.ViewHolder {
@@ -45,6 +47,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         private TextView productMarca;
         private ImageView productImage;
         private CheckBox productStatus;
+        private CardView productImageCard;
 
 
         public ShoppingListViewHolder(@NonNull View itemView) {
@@ -53,13 +56,19 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             productName = itemView.findViewById(R.id.productName);
             productMarca = itemView.findViewById(R.id.productBrand);
             productStatus = itemView.findViewById(R.id.productStatus);
+            productImageCard = itemView.findViewById(R.id.productImageCard);
         }
 
         void bind(Prodotto prodotto) {
-            productName.setText(prodotto.getNome());
+            if (prodotto.getNome().length() > 16) {
+                productName.setText(prodotto.getNome().substring(0, 16) + "...");
+            } else {
+                productName.setText(prodotto.getNome());
+            }
             productMarca.setText(prodotto.getMarca());
             downloadImage(prodotto.getImage());
             productStatus.setChecked(false);
+            productImageCard.setBackgroundColor(Color.parseColor("#" + prodotto.getColore()));
         }
 
         private void downloadImage(String imageUri) {
@@ -67,7 +76,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
                     .load(imageUri)
                     .into(productImage, new com.squareup.picasso.Callback() {
                         @Override
-                        public void onSuccess(){
+                        public void onSuccess() {
                         }
 
                         @Override

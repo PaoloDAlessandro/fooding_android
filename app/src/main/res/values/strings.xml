@@ -39,4 +39,9 @@
     <string name="ricette_consigliate_label">Ricette consigliate</string>
     <string name="logout_icon">logout_icon</string>
     <string name="ricette_filter_placeholder">Cerca ricette</string>
+    <string name="product_name_hint_shopping_list">Penne rigate N.73</string>
+    <string name="product_marca_hint_shopping_list">Barilla</string>
+    <string name="product_formato_hint_shopping_list">500g</string>
+    <string name="product_marca_label_shopping_list">Marca</string>
+    <string name="product_formato_label_shopping_list">Formato</string>
 </resources>

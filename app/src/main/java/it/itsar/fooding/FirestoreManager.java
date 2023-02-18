@@ -19,6 +19,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,7 +66,7 @@ public class FirestoreManager {
                                                             ArrayList<Prodotto> productsFromCollection = new ArrayList<>();
                                                             for (QueryDocumentSnapshot productDocument : task.getResult()) {
                                                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                                    Prodotto tempProduct = trasformCollectionProduct(productDocument);
+                                                                    Prodotto tempProduct = transformCollectionProduct(productDocument);
                                                                     productsFromCollection.add(tempProduct);
                                                                 }
                                                             }
@@ -196,7 +198,7 @@ public class FirestoreManager {
                                                 ArrayList<Prodotto> userProductsFromCollection = new ArrayList<>();
                                                 for (QueryDocumentSnapshot productDocument : task.getResult()) {
                                                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                        Prodotto tempProduct = trasformCollectionProduct(productDocument);
+                                                        Prodotto tempProduct = transformCollectionProduct(productDocument);
                                                         userProductsFromCollection.add(tempProduct);
                                                     }
                                                 }
@@ -236,7 +238,7 @@ public class FirestoreManager {
                             ArrayList<Prodotto> productFromCollection = new ArrayList<>();
                             for (QueryDocumentSnapshot productDocument : task.getResult()) {
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                    Prodotto tempProduct = trasformCollectionProduct(productDocument);
+                                    Prodotto tempProduct = transformCollectionProduct(productDocument);
                                     productFromCollection.add(tempProduct);
                                 }
                             }
@@ -244,6 +246,41 @@ public class FirestoreManager {
                         }
                     }
                 });
+    }
+
+    public void getUserShoppingList(FirestoreManagerCallback firestoreManagerCallback) {
+        if (firebaseUser != null) {
+            String userEmail = firebaseUser.getEmail();
+            userCollection
+                    .whereEqualTo("email", userEmail)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    CollectionReference userShoppingList = db.collection("user").document(document.getId()).collection("shopping_list");
+                                    userShoppingList.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                ArrayList<Prodotto> shoppingListitems = new ArrayList<>();
+                                                if (task.getResult().size() == 0) {
+                                                    Log.d("STATUS: ", "empty user shopping list");
+                                                }
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    Prodotto tempProduct = transformCollectionProduct(document);
+                                                    shoppingListitems.add(tempProduct);
+                                                }
+                                                firestoreManagerCallback.onFinish(shoppingListitems);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+        }
     }
 
     public void addProductToUserCollection(Prodotto userProduct, OnProductAddition onProductAddition) {
@@ -311,7 +348,7 @@ public class FirestoreManager {
                             if (task.isSuccessful()) {
                                 Prodotto tempProdotto = null;
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    tempProdotto = trasformCollectionProduct(documentSnapshot);
+                                    tempProdotto = transformCollectionProduct(documentSnapshot);
                                     ingredientiRicetta.add(new Ingrediente(Integer.parseInt(Objects.requireNonNull(ingredienti.get(finalI).get("peso"))), tempProdotto));
                                 }
                             }
@@ -394,7 +431,34 @@ public class FirestoreManager {
         }
     }
 
-    private Prodotto trasformCollectionProduct(QueryDocumentSnapshot productDocument) {
+    void addUserToUsersCollection(String username, String email) {
+        Map<String , Object> data = new HashMap<>();
+        data.put("username", username);
+        data.put("email", email);
+
+        userCollection.whereEqualTo("username", username)
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult().size() != 0) {
+                            Log.d("STATUS: ", "USER ALREADY EXIST");
+                        } else {
+                            Log.d("STATUS: ", "NEW USER");
+                            userCollection.add(data)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Log.d("Result: ", "Success");
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
+    private Prodotto transformCollectionProduct(QueryDocumentSnapshot productDocument) {
         Prodotto tempProduct = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             HashMap<String, Long> valoriNutrizionaliValues = (HashMap<String, java.lang.Long>) productDocument.getData().get("valoriNutrizionali");
